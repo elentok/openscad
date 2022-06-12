@@ -59,7 +59,7 @@ module label(width, depth, height) {
       cylinder(h = width + 1, r = depth, center = true);
     };
 
-    $triangle_width = 5;
+    $triangle_width = 2;
 
     // Left triangle
     label_triangle(depth, $triangle_width);
