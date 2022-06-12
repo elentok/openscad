@@ -47,8 +47,33 @@ module box_with_label(width, depth, height, radius, border_width) {
     $label_height = 10;
 
     translate([-$label_width / 2, width/2 - $label_depth, height - $label_height])
-    cube([$label_width, $label_depth, $label_height]);
+    label($label_width, $label_depth, $label_height);
 }
 
-box_with_label($box_width, $box_depth, $box_height, $radius, $border_width);
+module label(width, depth, height) {
+    difference() {
+      cube([width, depth, height]);
 
+      translate([width/2, 0, -1])
+      rotate([90, 0, 90])
+      cylinder(h = width + 1, r = depth, center = true);
+    };
+
+    $triangle_width = 5;
+
+    // Left triangle
+    label_triangle(depth, $triangle_width);
+    
+    // Right triangle
+    translate([width - $triangle_width, 0, 0])
+    label_triangle(depth, $triangle_width);
+}
+
+module label_triangle(size, triangle_width) {
+    rotate([90, 0, 90])
+    linear_extrude(triangle_width)
+    polygon([[size, size], [0, size], [size, 0]]);
+}
+    
+
+box_with_label($box_width, $box_depth, $box_height, $radius, $border_width);
