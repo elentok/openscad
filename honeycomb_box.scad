@@ -5,17 +5,21 @@ module honeycomb_box(width, depth, height, border_radius, wall_width, hexagon_ra
     
     $honeycomb_height = height - padding_bottom - padding_top;
     $honeycomb_width = width - padding_horizontal * 2;
+    $honeycomb_depth = depth - padding_horizontal * 2;
 
     difference() {
         box_with_label(width, depth, height, border_radius, wall_width);
         
+        // Pattern on the label side
         translate([padding_horizontal-width/2, (depth+10)/2, padding_bottom])
         rotate([90, 0, 0])
         blocked_hexagons(depth+10, hexagon_radius, hexagon_dist, $honeycomb_width, $honeycomb_height);
+
     
-        translate([-(width+10)/2, padding_horizontal-width/2, padding_bottom])
+        // Pattern on the other side
+        translate([-(width+10)/2, padding_horizontal-depth/2, padding_bottom])
         rotate([90, 0, 90])
-        blocked_hexagons(width+10, hexagon_radius, hexagon_dist, $honeycomb_width, $honeycomb_height);
+        blocked_hexagons(width+10, hexagon_radius, hexagon_dist, $honeycomb_depth, $honeycomb_height);
     }
 }
 

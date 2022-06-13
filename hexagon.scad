@@ -44,8 +44,8 @@ module hexagons(extrusion_height, radius, distance, x_reps, y_reps) {
 module blocked_hexagons(extrusion_height, radius, distance, width, height) {
     $hexagon_height = radius * 2;
     $hexagon_width = sqrt(3) * radius;
-    $x_reps = ceil(width / ($hexagon_width + distance));
-    $y_reps = ceil(height / ($hexagon_height + distance));
+    $x_reps = ceil(width / ($hexagon_width + distance)) + 1;
+    $y_reps = ceil(height / ($hexagon_height + distance)) + 1;
     
     intersection() {
         cube([width, height, extrusion_height]);
