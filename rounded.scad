@@ -37,7 +37,40 @@ module quarter_rounded_cube(width, depth, height, radius) {
     }
 }
 
+module negative_edge(width, radius) {
+    difference() {
+        cube([width, radius, radius]);
+
+        translate([0, radius, 0])
+        rotate([0,90,0])
+        cylinder(h = width + 1, r = radius);        
+    }
+}
+
+
+module rounded_edge(width, depth, height, radius) {
+    assert(radius <= height, "Radius must be less or equal to the height");
+    union() {
+        translate([0, radius, 0])
+        cube([width, depth - radius, height]);
+
+        cube([width, radius, height - radius]);
+       
+        translate([0, radius, (height - radius)])
+        quarter_cylinder(height = width, radius = radius);
+    }
+    
+}
+
+module quarter_cylinder(height, radius) {   
+    rotate([90, -90, 90])
+    rotate_extrude(angle = 90)
+    square([radius, height]);
+}
+
 //cube([10,20,30]);
 //rounded_cube(30, 50, 12, 5);
 //half_rounded_cube(30, 50, 6, 5);
 //quarter_rounded_cube(30, 25, 6, 5);
+rounded_edge(30, 50, 12, 11);
+//half_cylinder(30, 5);
