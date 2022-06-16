@@ -58,8 +58,12 @@ module rounded_edge(width, depth, height, radius) {
        
         translate([0, radius, (height - radius)])
         quarter_cylinder(height = width, radius = radius);
-    }
-    
+    }    
+}
+
+module centered_rounded_edge(width, depth, height, radius) {
+    translate([-width/2, -depth/2, -height/2])
+    rounded_edge(width, depth, height, radius);
 }
 
 module quarter_cylinder(height, radius) {   
@@ -72,5 +76,5 @@ module quarter_cylinder(height, radius) {
 //rounded_cube(30, 50, 12, 5);
 //half_rounded_cube(30, 50, 6, 5);
 //quarter_rounded_cube(30, 25, 6, 5);
-rounded_edge(30, 50, 12, 11);
+//centered_rounded_edge(30, 50, 12, 11);
 //half_cylinder(30, 5);
