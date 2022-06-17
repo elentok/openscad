@@ -2,7 +2,9 @@ $fn=50;
 
 use <rounded.scad>
 
-module grip(grip_depth, object_width, object_height, thingy_depth = 30, bottom_wall_width = 3, wall_width = 2) {
+module grip(grip_depth, object_width, object_height, thingy_depth = 30, bottom_wall_width = 3, wall_width = 1.7) {
+    $large_fillet_radius = 3;
+    
     union() {
         // Horizontal Left
         translate([0, -thingy_depth/2 - object_width/2, bottom_wall_width/2])
@@ -12,6 +14,15 @@ module grip(grip_depth, object_width, object_height, thingy_depth = 30, bottom_w
         translate([0, thingy_depth/2 + object_width/2, bottom_wall_width/2])
         rotate([0,0,180])
         grip_thingy(width = grip_depth, depth = thingy_depth, height = bottom_wall_width);
+        
+        // Fillet Left
+        translate([0, - $large_fillet_radius/2 - wall_width - object_width/2, $large_fillet_radius/2 + bottom_wall_width])
+        rotate([0, 0, 180])
+        negative_edge(width = grip_depth, radius = $large_fillet_radius);
+        
+        // Fillet Right
+        translate([0, + $large_fillet_radius/2 + wall_width + object_width/2, $large_fillet_radius/2 + bottom_wall_width])
+        negative_edge(width = grip_depth, radius = $large_fillet_radius);
         
         // Vertical Left
         translate([0, -wall_width/2 - object_width/2, object_height/2 + wall_width/2])
@@ -53,4 +64,10 @@ module chamfered_hole(height, hole_diameter, chamfer_diameter) {
 }
 
 //grip_thingy(width = 15, depth = 30, height = 3);
-grip(grip_depth = 15, object_width = 100, object_height = 30);
+//grip(grip_depth = 15, object_width = 100, object_height = 30);
+
+// 4-port USB Charger
+//grip(grip_depth = 34, object_width = 59, object_height = 28);
+
+// Type-C Charger
+grip(grip_depth = 24, object_width = 74.5, object_height = 28);

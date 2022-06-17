@@ -1,3 +1,5 @@
+$fn=50;
+
 module rounded_rectangle(width, height, radius) {
     minkowski() {
         square([width - radius*2, height - radius*2], center=true);
@@ -39,11 +41,11 @@ module quarter_rounded_cube(width, depth, height, radius) {
 
 module negative_edge(width, radius) {
     difference() {
-        cube([width, radius, radius]);
+        cube([width, radius, radius], center = true);
 
-        translate([0, radius, 0])
+        translate([0, radius/2, radius/2])
         rotate([0,90,0])
-        cylinder(h = width + 1, r = radius);        
+        cylinder(h = width + 0.1, r = radius, center = true);
     }
 }
 
@@ -76,5 +78,6 @@ module quarter_cylinder(height, radius) {
 //rounded_cube(30, 50, 12, 5);
 //half_rounded_cube(30, 50, 6, 5);
 //quarter_rounded_cube(30, 25, 6, 5);
-//centered_rounded_edge(30, 50, 12, 11);
+//centered_rounded_edge(100, 30, 12, 11);
 //half_cylinder(30, 5);
+//negative_edge(40, 5);
