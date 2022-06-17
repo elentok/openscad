@@ -11,7 +11,9 @@ module 2d_hook(width, inner_height, opening_height, thickness) {
     $small_ext_diameter = $outer_height - thickness - opening_height;
     $bottom_square_width = width - $outer_height / 2;
     $top_square_width = $bottom_square_width - $small_ext_diameter / 2;
+    $middle_square_width =  $top_square_width/3;
     
+    translate([-($top_square_width-$middle_square_width)/2, 0, 0])
     union() {
         // Base
         union() {
@@ -35,9 +37,9 @@ module 2d_hook(width, inner_height, opening_height, thickness) {
         half_circle($small_ext_diameter, thickness);
 
         // Small knob to prevent cables from sliding out
-        translate([$top_square_width*2/3, thickness + opening_height, 0])
+        translate([$top_square_width - $middle_square_width, thickness + opening_height, 0])
         union() {
-            square([$top_square_width/3, thickness]);
+            square([$middle_square_width, thickness]);
             // fillet
             translate([0, thickness/2, 0])
             circle(d = thickness);
@@ -58,4 +60,4 @@ module half_circle(outer_diameter, thickness) {
 }
 
 //half_circle(30, 2);
-hook(width = 60, inner_height = 25, opening_height = 10, thickness = 4);
+hook(width = 60, depth = 20, inner_height = 25, opening_height = 10, thickness = 4);
