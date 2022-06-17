@@ -45,7 +45,7 @@ module grip_thingy(width, depth, height, screw_hole_diameter = 4, radius = 1.5) 
     $cone_height = 2;
     difference() {
       centered_rounded_edge(width, depth, height, radius);
-      chamfered_hole(height + 0.1, screw_hole_diameter, screw_hole_diameter + 3);
+      chamfered_hole(height + 0.1, screw_hole_diameter, screw_hole_diameter + 4.5);
     }
 }
 
