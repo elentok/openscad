@@ -10,7 +10,7 @@ module rounded_rectangle(width, height, radius) {
 module rounded_rectangle_border(width, height, radius, wall_width) {
     difference() {
       rounded_rectangle(width, height, radius);
-      rounded_rectangle(width - wall_width*2, height - wall_width*2, radius);       
+      rounded_rectangle(width - wall_width*2, height - wall_width*2, radius);
     }
 }
 
@@ -24,7 +24,7 @@ module rounded_cube(width, depth, height, radius) {
 module half_rounded_cube(width, depth, height, radius) {
     intersection() {
         rounded_cube(width, depth, height*2, radius);
-        
+
         translate([-width/2, -depth/2, 0])
         cube([width, depth, height]);
     }
@@ -33,7 +33,7 @@ module half_rounded_cube(width, depth, height, radius) {
 module quarter_rounded_cube(width, depth, height, radius) {
     intersection() {
         rounded_cube(width, depth*2, height*2, radius);
-        
+
         translate([-width/2, 0, 0])
         cube([width, depth, height]);
     }
@@ -57,10 +57,10 @@ module rounded_edge(width, depth, height, radius) {
         cube([width, depth - radius, height]);
 
         cube([width, radius, height - radius]);
-       
+
         translate([0, radius, (height - radius)])
         quarter_cylinder(height = width, radius = radius);
-    }    
+    }
 }
 
 module centered_rounded_edge(width, depth, height, radius) {
@@ -68,7 +68,7 @@ module centered_rounded_edge(width, depth, height, radius) {
     rounded_edge(width, depth, height, radius);
 }
 
-module quarter_cylinder(height, radius) {   
+module quarter_cylinder(height, radius) {
     rotate([90, -90, 90])
     rotate_extrude(angle = 90)
     square([radius, height]);
