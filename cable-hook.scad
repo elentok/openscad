@@ -1,6 +1,7 @@
 $fn = 50;
 
 use <chamfer.scad>
+use <lib/2d.scad>
 
 module 2d_hook(width, inner_height, opening_height, thickness) {
   $outer_height = inner_height + 2 * thickness;
@@ -54,27 +55,6 @@ module 2d_hook(width, inner_height, opening_height, thickness) {
       arc(2 * $outer_height, thickness);
       translate([ -$outer_height + thickness / 2, 0, 0 ])
           square([ $outer_height, thickness ]);
-    }
-  }
-}
-
-module arc(outer_diameter, thickness) {
-  intersection() {
-    half_circle(2 * $outer_height, thickness);
-
-    translate([ -$outer_height, 0, 0 ]) square($outer_height);
-  }
-}
-
-module half_circle(outer_diameter, thickness) {
-  $inner_diameter = outer_diameter - 2 * thickness;
-
-  difference() {
-    circle(d = outer_diameter);
-    circle(d = $inner_diameter);
-
-    translate([ 0, -outer_diameter / 2, 0 ]) {
-      square([ outer_diameter / 2, outer_diameter ]);
     }
   }
 }
