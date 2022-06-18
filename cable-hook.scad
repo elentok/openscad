@@ -1,5 +1,7 @@
 $fn = 50;
 
+use <chamfer.scad>
+
 module 2d_hook(width, inner_height, opening_height, thickness) {
   $outer_height = inner_height + 2 * thickness;
   $large_ext_diameter = $outer_height;
@@ -65,14 +67,22 @@ module half_circle(outer_diameter, thickness) {
 }
 
 module hook(width, depth, inner_height, opening_height, thickness) {
-  linear_extrude(depth, center = true) {
-    2d_hook(width, inner_height, opening_height, thickness);
-  }
+  difference() {
+    linear_extrude(depth, center = true) {
+      2d_hook(width, inner_height, opening_height, thickness);
+    }
 
-  //    cylinder(h = inner_height + thickness*2 + 0.1, d = 4, center = true);
+    // Screw hole
+    translate([ 0, thickness / 2, 0 ]) {
+      rotate([ -90, 0, 0 ]) { chamfered_hole(thickness + 0.1, 4, 9); }
+    }
+
+    // Top hole (for screwdriver)
+    translate([ 0, inner_height + thickness - 0.1, 0 ]) {
+      rotate([ -90, 0, 0 ]) { cylinder(d = 8, h = thickness + 0.2); }
+    }
+  }
 }
 
-// half_circle(30, 2);
-
 hook(width = 60, depth = 20, inner_height = 25, opening_height = 10,
-     thickness = 5);
+     thickness = 3);
