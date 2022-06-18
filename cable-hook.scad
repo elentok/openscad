@@ -1,7 +1,7 @@
 $fn = 50;
 
-use <chamfer.scad>
 use <lib/2d.scad>
+use <lib/chamfer.scad>
 
 module 2d_hook(width, inner_height, opening_height, thickness) {
   $outer_height = inner_height + 2 * thickness;

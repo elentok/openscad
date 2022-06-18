@@ -1,6 +1,6 @@
 $fn = 50;
 
-use <chamfer.scad>
+use <lib/chamfer.scad>
 use <lib/rounded.scad>
 
 module grip(grip_depth, object_width, object_height, thingy_depth = 30,
