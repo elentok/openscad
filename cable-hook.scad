@@ -8,7 +8,7 @@ module 2d_hook(width, inner_height, opening_height, thickness) {
   $small_ext_diameter = $outer_height - thickness - opening_height;
   $bottom_square_width = width - $outer_height / 2;
   $top_square_width = $bottom_square_width - $small_ext_diameter / 2;
-  $middle_square_width = $top_square_width / 3;
+  $middle_square_width = $top_square_width / 4;
 
   translate([ -($top_square_width - $middle_square_width) / 2, 0, 0 ]) {
     union() {
@@ -49,6 +49,11 @@ module 2d_hook(width, inner_height, opening_height, thickness) {
           translate([ 0, thickness / 2, 0 ]) { circle(d = thickness); }
         }
       }
+
+      // Thicken the corner closer to the desk to make it stronger
+      //     intersection() {
+      // #square($large_ext_diameter);
+      //   }
     }
   }
 }
@@ -84,5 +89,5 @@ module hook(width, depth, inner_height, opening_height, thickness) {
   }
 }
 
-hook(width = 60, depth = 20, inner_height = 25, opening_height = 10,
+hook(width = 55, depth = 20, inner_height = 15, opening_height = 5,
      thickness = 3);
