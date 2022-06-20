@@ -7,10 +7,10 @@ $magnet_outer_diameter = 14.74;
 $magnet_inner_diameter = 3.78;
 $magnet_depth = 2.58;
 
-$magnet_slot_depth = 2.65;
-$magnet_slot_diameter = 14.9;
-$magnet_wall_width = 0.7;
-$magnet_removal_hole_diameter = 1;
+$magnet_slot_depth = 2.62;     // first print was 2.65
+$magnet_slot_diameter = 14.8;  // first print was 14.9
+$magnet_wall_width = 0.5;      // first print was 0.7
+$magnet_removal_hole_diameter = 1.5;
 
 module magnet_holder(
     width, height, depth, magnet_slot_diameter = $magnet_slot_diameter,
@@ -50,4 +50,4 @@ module magnet_slot(diameter, depth, height) {
   }
 }
 
-magnet_holder(24, 20, 7);
+magnet_holder(22, 20, 5);
