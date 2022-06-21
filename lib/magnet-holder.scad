@@ -1,6 +1,5 @@
 $fn = 50;
 
-use <2d.scad>
 use <3d.scad>
 
 $magnet_outer_diameter = 14.74;
@@ -10,7 +9,7 @@ $magnet_depth = 2.58;
 $magnet_slot_depth = 2.62;     // first print was 2.65
 $magnet_slot_diameter = 14.8;  // first print was 14.9
 $magnet_wall_width = 0.5;      // first print was 0.7
-$magnet_removal_hole_diameter = 1.5;
+$magnet_removal_hole_diameter = 2;
 
 module magnet_holder(
     width, height, depth, magnet_slot_diameter = $magnet_slot_diameter,
@@ -32,8 +31,10 @@ module magnet_holder(
     }
 
     // Hole to allow removing the magnet
-    translate([ 0, 0, $magnet_z_offset ]) rotate([ 90, 0, 0 ]) {
-      cylinder(d = magnet_removal_hole_diameter, h = height, center = true);
+    translate([ 0, 0, $magnet_z_offset ]) {
+      rotate([ 90, 0, 0 ]) {
+        cylinder(d = magnet_removal_hole_diameter, h = height, center = true);
+      }
     }
   }
 }
