@@ -4,8 +4,7 @@ use <lib/2d.scad>
 use <lib/chamfer.scad>
 use <lib/rounded.scad>
 
-module 2d_hook(width, inner_height, opening_height, thickness, bottom_thickness,
-               fillet = true) {
+module 2d_hook(width, inner_height, opening_height, thickness, fillet = true) {
   outer_height = inner_height + 2 * thickness;
   large_ext_diameter = outer_height;
   small_ext_diameter = outer_height - thickness - opening_height;
