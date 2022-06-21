@@ -3,58 +3,65 @@ $fn = 50;
 use <lib/2d.scad>
 use <lib/chamfer.scad>
 
-module 2d_hook(width, inner_height, opening_height, thickness) {
-  $outer_height = inner_height + 2 * thickness;
-  $large_ext_diameter = $outer_height;
-  $small_ext_diameter = $outer_height - thickness - opening_height;
-  $bottom_square_width = width - $outer_height / 2;
-  $top_square_width = $bottom_square_width - $small_ext_diameter / 2;
-  $middle_square_width = $top_square_width / 5;
+module 2d_hook(width, inner_height, opening_height, thickness, bottom_thickness,
+               fillet = true) {
+  outer_height = inner_height + 2 * thickness;
+  large_ext_diameter = outer_height;
+  small_ext_diameter = outer_height - thickness - opening_height;
+  bottom_square_width = width - small_ext_diameter / 2 - large_ext_diameter;
+  bottom_square_right = bottom_square_width + large_ext_diameter;
+  middle_square_width = bottom_square_width / 5;
 
-  translate([ -($top_square_width - $middle_square_width) / 2, 0, 0 ]) {
+  // the base square need to be cropped a little so it doesn't
+  // exceed from the arc
+  arc_offset = thickness / 2;
+
+  translate([ -width / 2, 0, 0 ]) {
     union() {
       // Base
       union() {
-        square([ $bottom_square_width, thickness ]);
-        // fillet
-        translate([ $bottom_square_width, thickness / 2, 0 ]) {
-          circle(d = thickness);
-        }
+        translate([ arc_offset, 0, 0 ])
+            square([ width - arc_offset, thickness ]);
+        // TODO: add fillet
+        /* if (fillet) { */
+        /*   // fillet */
+        /*   translate([ $bottom_square_width, thickness / 2, 0 ]) { */
+        /*     circle(d = thickness); */
+        /*   } */
+        /* } */
       }
 
       // Large half-circle
-      translate([ 0, $outer_height / 2, 0 ]) {
-        half_circle($outer_height, thickness);
+      translate([ outer_height, outer_height / 2, 0 ]) {
+        half_circle(outer_height, thickness);
       }
 
-      // Top square
-      translate([ 0, inner_height + thickness, 0 ]) {
-        square([ $top_square_width, thickness ]);
+      // Bottom square
+      translate([ large_ext_diameter, inner_height + thickness, 0 ]) {
+        square([ bottom_square_width, thickness ]);
       }
 
       // Small half circle
       translate([
-        $top_square_width, $small_ext_diameter / 2 + opening_height + thickness,
-        0
+        bottom_square_right,
+        small_ext_diameter / 2 + opening_height + thickness, 0
       ]) {
-        rotate([ 0, 0, 180 ]) { half_circle($small_ext_diameter, thickness); }
+        rotate([ 0, 0, 180 ]) { half_circle(small_ext_diameter, thickness); }
       }
 
       // Small knob to prevent cables from sliding out
       translate([
-        $top_square_width - $middle_square_width, thickness + opening_height, 0
+        bottom_square_right - middle_square_width, thickness + opening_height, 0
       ]) {
         union() {
-          square([ $middle_square_width, thickness ]);
+          square([ middle_square_width, thickness ]);
           // fillet
           translate([ 0, thickness / 2, 0 ]) { circle(d = thickness); }
         }
       }
 
       // Add an arc to make it stronger
-      arc(2 * $outer_height, thickness);
-      translate([ -$outer_height + thickness / 2, 0, 0 ])
-          square([ $outer_height, thickness ]);
+      translate([ outer_height, 0, 0 ]) arc(2 * outer_height, thickness);
     }
   }
 }
@@ -62,7 +69,7 @@ module 2d_hook(width, inner_height, opening_height, thickness) {
 module hook(width, depth, inner_height, opening_height, thickness) {
   difference() {
     linear_extrude(depth, center = true) {
-      2d_hook(width, inner_height, opening_height, thickness);
+      2d_hook(width, inner_height, opening_height, thickness, thickness);
     }
 
     // Screw hole
@@ -79,5 +86,5 @@ module hook(width, depth, inner_height, opening_height, thickness) {
 
 // 2d_hook(width = 55, inner_height = 15, opening_height = 5, thickness = 3);
 
-hook(width = 50, depth = 20, inner_height = 15, opening_height = 5,
+hook(width = 60, depth = 20, inner_height = 15, opening_height = 5,
      thickness = 2.5);
