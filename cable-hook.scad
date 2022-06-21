@@ -2,6 +2,7 @@ $fn = 50;
 
 use <lib/2d.scad>
 use <lib/chamfer.scad>
+use <lib/rounded.scad>
 
 module 2d_hook(width, inner_height, opening_height, thickness, bottom_thickness,
                fillet = true) {
@@ -19,16 +20,14 @@ module 2d_hook(width, inner_height, opening_height, thickness, bottom_thickness,
   translate([ -width / 2, 0, 0 ]) {
     union() {
       // Base
-      union() {
+      difference() {
         translate([ arc_offset, 0, 0 ])
             square([ width - arc_offset, thickness ]);
-        // TODO: add fillet
-        /* if (fillet) { */
-        /*   // fillet */
-        /*   translate([ $bottom_square_width, thickness / 2, 0 ]) { */
-        /*     circle(d = thickness); */
-        /*   } */
-        /* } */
+        if (fillet) {
+          translate([ width - thickness / 2, thickness / 2, 0 ]) {
+            negative_2d_edge(thickness / 2);
+          }
+        }
       }
 
       // Large half-circle

@@ -25,6 +25,13 @@ module half_circle(outer_diameter, thickness) {
   }
 }
 
+module negative_2d_edge(radius) {
+  difference() {
+    square(radius);
+    circle(r = radius);
+  }
+}
+
 module slot(width, height) {
   $diameter = height;
   $square_width = width - $diameter;
