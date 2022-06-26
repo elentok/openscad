@@ -66,14 +66,24 @@ module flat_hook(width, inner_height, opening_height, thickness,
 }
 
 module hook(width, depth, inner_height, opening_height, thickness) {
+  linear_extrude(depth, center = true) {
+    flat_hook(width, inner_height, opening_height, thickness, thickness);
+  }
+}
+
+module hook_with_screw_hole(width, depth, inner_height, opening_height,
+                            thickness) {
+  hole_diameter = 4;
+  hole_chamfered_diameter = 9;
+
   difference() {
-    linear_extrude(depth, center = true) {
-      flat_hook(width, inner_height, opening_height, thickness, thickness);
-    }
+    hook(width, depth, inner_height, opening_height, thickness);
 
     // Screw hole
     translate([ 0, thickness / 2, 0 ]) {
-      rotate([ -90, 0, 0 ]) { chamfered_hole(thickness + 0.1, 4, 9); }
+      rotate([ -90, 0, 0 ]) {
+        chamfered_hole(thickness + 0.1, hole_diameter, hole_chamfered_diameter);
+      }
     }
 
     // Top hole (for screwdriver)
@@ -85,9 +95,17 @@ module hook(width, depth, inner_height, opening_height, thickness) {
 
 // flat_hook(width = 55, inner_height = 15, opening_height = 5, thickness = 3);
 
-// hook(width = 60, depth = 20, inner_height = 15, opening_height = 5,
-//      thickness = 2.5);
+// hook_with_screw_hole(width = 60, depth = 20, inner_height = 15,
+//                      opening_height = 5, thickness = 2.5);
 
-// mini-hook
-hook(width = 40, depth = 15, inner_height = 8, opening_height = 4,
-     thickness = 2);
+// mini-hook (mark 1)
+// hook_with_screw_hole(width = 40, depth = 15, inner_height = 8,
+//                      opening_height = 4, thickness = 2);
+
+// mini-hook (mark 2)
+// hook(width = 40, depth = 20, inner_height = 15, opening_height = 4,
+//      thickness = 2.2);
+
+// mini-hook (mark 3)
+hook_with_screw_hole(width = 40, depth = 20, inner_height = 15,
+                     opening_height = 4, thickness = 2.2);
