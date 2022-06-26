@@ -3,9 +3,9 @@ $fn = 50;
 use <lib/2d.scad>
 use <lib/chamfer.scad>
 
-module flat_hook(width, inner_height, opening_height, thickness,
+module flat_hook(width, outer_height, opening_height, thickness,
                  fillet = true) {
-  outer_height = inner_height + 2 * thickness;
+  inner_height = outer_height - 2 * thickness;
   large_ext_diameter = outer_height;
   small_ext_diameter = outer_height - thickness - opening_height;
   bottom_square_width = width - small_ext_diameter / 2 - large_ext_diameter;
@@ -65,19 +65,19 @@ module flat_hook(width, inner_height, opening_height, thickness,
   }
 }
 
-module hook(width, depth, inner_height, opening_height, thickness) {
+module hook(width, depth, outer_height, opening_height, thickness) {
   linear_extrude(depth, center = true) {
-    flat_hook(width, inner_height, opening_height, thickness, thickness);
+    flat_hook(width, outer_height, opening_height, thickness, thickness);
   }
 }
 
-module hook_with_screw_hole(width, depth, inner_height, opening_height,
+module hook_with_screw_hole(width, depth, outer_height, opening_height,
                             thickness) {
   hole_diameter = 4;
   hole_chamfered_diameter = 9;
 
   difference() {
-    hook(width, depth, inner_height, opening_height, thickness);
+    hook(width, depth, outer_height, opening_height, thickness);
 
     // Screw hole
     translate([ 0, thickness / 2, 0 ]) {
@@ -87,25 +87,25 @@ module hook_with_screw_hole(width, depth, inner_height, opening_height,
     }
 
     // Top hole (for screwdriver)
-    translate([ 0, inner_height + thickness - 0.1, 0 ]) {
+    translate([ 0, outer_height + thickness - 0.1, 0 ]) {
       rotate([ -90, 0, 0 ]) { cylinder(d = 8, h = thickness + 0.2); }
     }
   }
 }
 
-// flat_hook(width = 55, inner_height = 15, opening_height = 5, thickness = 3);
+// flat_hook(width = 55, outer_height = 21, opening_height = 5, thickness = 3);
 
-// hook_with_screw_hole(width = 60, depth = 20, inner_height = 15,
+// hook_with_screw_hole(width = 60, depth = 20, outer_height = 15,
 //                      opening_height = 5, thickness = 2.5);
 
 // mini-hook (mark 1)
-// hook_with_screw_hole(width = 40, depth = 15, inner_height = 8,
+// hook_with_screw_hole(width = 40, depth = 15, outer_height = 12,
 //                      opening_height = 4, thickness = 2);
 
 // mini-hook (mark 2)
-// hook(width = 40, depth = 20, inner_height = 15, opening_height = 4,
+// hook(width = 40, depth = 20, outer_height = 19.4, opening_height = 4,
 //      thickness = 2.2);
 
 // mini-hook (mark 3)
-hook_with_screw_hole(width = 40, depth = 20, inner_height = 15,
+hook_with_screw_hole(width = 40, depth = 20, outer_height = 19.4,
                      opening_height = 4, thickness = 2.2);
