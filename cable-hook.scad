@@ -2,9 +2,9 @@ $fn = 50;
 
 use <lib/2d.scad>
 use <lib/chamfer.scad>
-use <lib/rounded.scad>
 
-module 2d_hook(width, inner_height, opening_height, thickness, fillet = true) {
+module flat_hook(width, inner_height, opening_height, thickness,
+                 fillet = true) {
   outer_height = inner_height + 2 * thickness;
   large_ext_diameter = outer_height;
   small_ext_diameter = outer_height - thickness - opening_height;
@@ -20,8 +20,9 @@ module 2d_hook(width, inner_height, opening_height, thickness, fillet = true) {
     union() {
       // Base
       difference() {
-        translate([ arc_offset, 0, 0 ])
-            square([ width - arc_offset, thickness ]);
+        translate([ arc_offset, 0, 0 ]) {
+          square([ width - arc_offset, thickness ]);
+        }
         if (fillet) {
           translate([ width - thickness / 2, thickness / 2, 0 ]) {
             negative_2d_edge(thickness / 2);
@@ -59,7 +60,7 @@ module 2d_hook(width, inner_height, opening_height, thickness, fillet = true) {
       }
 
       // Add an arc to make it stronger
-      translate([ outer_height, 0, 0 ]) arc(2 * outer_height, thickness);
+      translate([ outer_height, 0, 0 ]) { arc(2 * outer_height, thickness); }
     }
   }
 }
@@ -67,7 +68,7 @@ module 2d_hook(width, inner_height, opening_height, thickness, fillet = true) {
 module hook(width, depth, inner_height, opening_height, thickness) {
   difference() {
     linear_extrude(depth, center = true) {
-      2d_hook(width, inner_height, opening_height, thickness, thickness);
+      flat_hook(width, inner_height, opening_height, thickness, thickness);
     }
 
     // Screw hole
@@ -82,7 +83,11 @@ module hook(width, depth, inner_height, opening_height, thickness) {
   }
 }
 
-// 2d_hook(width = 55, inner_height = 15, opening_height = 5, thickness = 3);
+// flat_hook(width = 55, inner_height = 15, opening_height = 5, thickness = 3);
 
-hook(width = 60, depth = 20, inner_height = 15, opening_height = 5,
-     thickness = 2.5);
+// hook(width = 60, depth = 20, inner_height = 15, opening_height = 5,
+//      thickness = 2.5);
+
+// mini-hook
+hook(width = 40, depth = 15, inner_height = 8, opening_height = 4,
+     thickness = 2);

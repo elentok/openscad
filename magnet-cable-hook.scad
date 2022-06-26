@@ -9,7 +9,7 @@ module magnet_hook(width, depth, inner_height, opening_height, thickness) {
 
   union() {
     linear_extrude(depth, center = true) {
-      2d_hook(width, inner_height, opening_height, thickness);
+      flat_hook(width, inner_height, opening_height, thickness);
     }
 
     translate([ -holder_width / 2, -holder_depth / 2, 0 ]) {
