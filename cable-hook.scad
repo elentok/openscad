@@ -80,15 +80,13 @@ module hook_with_screw_hole(size, opening_height, thickness) {
     hook(size, opening_height, thickness);
 
     // Screw hole
-    translate([ 0, thickness / 2, 0 ]) {
-      rotate([ -90, 0, 0 ]) {
-        chamfered_hole(thickness + 0.1, hole_diameter, hole_chamfered_diameter);
-      }
+    translate([ 0, 0, thickness / 2 ]) {
+      chamfered_hole(thickness + 0.1, hole_diameter, hole_chamfered_diameter);
     }
 
     // Top hole (for screwdriver)
-    translate([ 0, size.y + thickness - 0.1, 0 ]) {
-      rotate([ -90, 0, 0 ]) { cylinder(d = 8, h = thickness + 0.2); }
+    translate([ 0, 0, size.z - thickness - 0.1 ]) {
+      cylinder(d = 8, h = thickness + 0.2);
     }
   }
 }
@@ -106,5 +104,5 @@ module hook_with_screw_hole(size, opening_height, thickness) {
 // hook([40, 20, 19.4], opening_height = 4, thickness = 2.2);
 
 // mini-hook (mark 3)
-// hook_with_screw_hole([ 40, 20, 19.4 ], opening_height = 4, thickness = 2.2);
-hook([ 40, 20, 19.4 ], opening_height = 4, thickness = 2.2);
+hook_with_screw_hole([ 60, 20, 19.4 ], opening_height = 4, thickness = 2.2);
+// hook([ 40, 20, 18 ], opening_height = 4, thickness = 2.2);
