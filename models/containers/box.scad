@@ -1,4 +1,4 @@
-fn = 50;
+$fn = 50;
 
 use <../../lib/rounded.scad>
 use <../../lib/shelf.scad>
