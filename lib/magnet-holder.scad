@@ -18,7 +18,8 @@ module magnet_holder(
     magnet_removal_hole_diameter = $magnet_removal_hole_diameter) {
   assert(width > magnet_slot_diameter, "Slot must be wider than the magnet.");
   assert(height > magnet_slot_diameter, "Slot must be higher than the magnet.");
-  assert(depth > magnet_slot_depth, "Slot must be deeper than the magnet.");
+  assert(depth > magnet_slot_depth + magnet_wall_width,
+         "Slot must be deeper than the magnet + wall.");
 
   difference() {
     cube([ width, height, depth ], center = true);
@@ -51,4 +52,4 @@ module magnet_slot(diameter, depth, height) {
   }
 }
 
-magnet_holder(22, 20, 5);
+magnet_holder(22, 20, 3.5);
