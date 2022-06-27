@@ -1,7 +1,7 @@
 $fn = 50;
 
-use <lib/2d.scad>
-use <lib/chamfer.scad>
+use <../../lib/2d.scad>
+use <../../lib/chamfer.scad>
 
 module flat_hook(size, opening_height, thickness, fillet = true) {
   assert(size.x >= 2 * size.y, "Width must be at least 2x outer height");

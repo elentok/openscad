@@ -1,7 +1,7 @@
 $fn = 50;
 
-use <lib/rcube.scad>
-use <lib/rounded.scad>
+use <../../lib/rcube.scad>
+use <../../lib/rounded.scad>
 
 module tall_hook(size, thickness, inner_radius, opening_height = 5, latch = 8) {
   inner_radius =

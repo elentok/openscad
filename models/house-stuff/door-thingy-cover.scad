@@ -1,6 +1,6 @@
 $fn = 50;
 
-use <lib/3d.scad>
+use <../../lib/3d.scad>
 
 module door_thingy_cover(diameter = 38) {
   difference() {

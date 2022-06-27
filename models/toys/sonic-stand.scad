@@ -1,6 +1,6 @@
 $fn = 60;
 
-use <lib/3d.scad>
+use <../../lib/3d.scad>
 
 module sonic_stand() {
   base_height = 2.1;

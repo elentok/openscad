@@ -1,7 +1,7 @@
 $fn = 50;
 
+use <../../lib/magnet-holder.scad>
 use <cable-hook.scad>
-use <lib/magnet-holder.scad>
 
 module magnet_hook(width, depth, inner_height, opening_height, thickness) {
   holder_width = width / 2;
@@ -9,7 +9,7 @@ module magnet_hook(width, depth, inner_height, opening_height, thickness) {
 
   union() {
     linear_extrude(depth, center = true) {
-      flat_hook(width, inner_height, opening_height, thickness);
+      flat_hook([ width, inner_height ], opening_height, thickness);
     }
 
     translate([ -holder_width / 2, -holder_depth / 2, 0 ]) {

@@ -47,7 +47,7 @@ module magnet_slot(diameter, depth, height) {
     }
 
     // The magnet
-    disc(diameter, depth, center = true);
+    disc(diameter, depth);
   }
 }
 
