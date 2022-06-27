@@ -1,9 +1,11 @@
 $fn = 50;
 
+use <../../lib/chamfer.scad>
 use <../../lib/rcube.scad>
 use <../../lib/rounded.scad>
 
-module tall_hook(size, thickness, inner_radius, opening_height = 5, latch = 8) {
+module tall_hook(size, thickness, opening_height = 5, latch = 8, inner_radius,
+                 outer_radius) {
   inner_radius =
       is_undef(inner_radius) ? min(size.z / 3, size.x / 3) : inner_radius;
   outer_radius =
@@ -49,9 +51,34 @@ module tall_hook(size, thickness, inner_radius, opening_height = 5, latch = 8) {
   }
 }
 
+module tall_hook_with_screw_hole(size, thickness, opening_height = 5, latch = 8,
+                                 inner_radius, outer_radius) {
+  hole_diameter = 4;
+  hole_chamfered_diameter = 9;
+
+  difference() {
+    tall_hook(size, thickness, opening_height, latch, inner_radius,
+              outer_radius);
+
+    // Screw hole
+    translate([ 0, 0, -size.z / 2 + thickness / 2 ]) {
+      chamfered_hole(thickness + 0.1, hole_diameter, hole_chamfered_diameter);
+    }
+
+    // Top hole (for screwdriver)
+    translate([ 0, 0, size.z / 2 - thickness - 0.1 ]) {
+      cylinder(d = 8, h = thickness + 0.2);
+    }
+  }
+}
+
 // Mark 1:
 // tall_hook([ 40, 20, 40 ], thickness = 3, inner_radius = 15, outer_radius =
 // 10);
 
 // Mark 2:
-tall_hook([ 40, 20, 30 ], thickness = 3);
+// tall_hook([ 40, 20, 30 ], thickness = 3);
+
+// Micro - Mark 1:
+// tall_hook([ 30, 20, 20 ], thickness = 3);
+tall_hook_with_screw_hole([ 28, 15, 20 ], thickness = 2.5);
