@@ -33,15 +33,15 @@ module negative_2d_edge(radius) {
 }
 
 module slot(width, height) {
-  $diameter = height;
-  $square_width = width - $diameter;
+  diameter = height;
+  square_width = width - diameter;
 
   union() {
-    translate([ -$square_width / 2, 0, 0 ]) circle(d = $diameter);
+    translate([ -square_width / 2, 0, 0 ]) circle(d = diameter);
 
-    square([ $square_width, height ], center = true);
+    square([ square_width, height ], center = true);
 
-    translate([ $square_width / 2, 0, 0 ]) circle(d = $diameter);
+    translate([ square_width / 2, 0, 0 ]) circle(d = diameter);
   }
 }
 

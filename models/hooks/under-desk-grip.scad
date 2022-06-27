@@ -5,7 +5,7 @@ use <../../lib/rounded.scad>
 
 module grip(grip_depth, object_width, object_height, thingy_depth = 30,
             bottom_wall_width = 3, wall_width = 1.7) {
-  $large_fillet_radius = 3;
+  large_fillet_radius = 3;
 
   union() {
     // Horizontal Left
@@ -22,18 +22,18 @@ module grip(grip_depth, object_width, object_height, thingy_depth = 30,
 
     // Fillet Left
     translate([
-      0, -$large_fillet_radius / 2 - wall_width - object_width / 2,
-      $large_fillet_radius / 2 +
+      0, -large_fillet_radius / 2 - wall_width - object_width / 2,
+      large_fillet_radius / 2 +
       bottom_wall_width
     ]) rotate([ 0, 0, 180 ])
-        negative_edge(width = grip_depth, radius = $large_fillet_radius);
+        negative_edge(width = grip_depth, radius = large_fillet_radius);
 
     // Fillet Right
     translate([
-      0, +$large_fillet_radius / 2 + wall_width + object_width / 2,
-      $large_fillet_radius / 2 +
+      0, +large_fillet_radius / 2 + wall_width + object_width / 2,
+      large_fillet_radius / 2 +
       bottom_wall_width
-    ]) negative_edge(width = grip_depth, radius = $large_fillet_radius);
+    ]) negative_edge(width = grip_depth, radius = large_fillet_radius);
 
     // Vertical Left
     translate([
@@ -60,7 +60,7 @@ module grip(grip_depth, object_width, object_height, thingy_depth = 30,
 // The part that touches the table (where the screw goes)
 module grip_thingy(width, depth, height, screw_hole_diameter = 4,
                    radius = 1.5) {
-  $cone_height = 2;
+  cone_height = 2;
   difference() {
     centered_rounded_edge(width, depth, height, radius);
     chamfered_hole(height + 0.1, screw_hole_diameter,
