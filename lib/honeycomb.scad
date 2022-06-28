@@ -25,10 +25,10 @@ module honeycomb_rectangle(size, hexagon_height, distance) {
   hexagon_width = calc_hexagon_width(hexagon_height);
   pattern_height = hexagon_height * 1.5;
 
-  x_reps = ceil(size.x / hexagon_width);
-  y_reps = ceil(size.y / pattern_height);
+  x_reps = ceil(size.x / hexagon_width) + 1;
+  y_reps = ceil(size.y / pattern_height) + 1;
 
-  intersection() {
+  translate([ -size.x / 2, -size.y / 2 ]) intersection() {
     square(size);
     honeycomb_pattern(x_reps, y_reps, hexagon_height, distance);
   }
@@ -43,11 +43,11 @@ module honeycomb_pattern(x_reps, y_reps, hexagon_height, distance) {
   thickness = distance / 2;
   pattern_height = 1.5 * hexagon_height;
 
-  for (index_x = [0:x_reps - 1]) {
+  for (index_x = [-1:x_reps - 1]) {
     x1 = index_x * hexagon_width;
     x2 = x1 + hexagon_width / 2;
 
-    for (index_y = [0:y_reps - 1]) {
+    for (index_y = [-1:y_reps - 1]) {
       y1 = index_y * pattern_height;
       translate([ x1, y1 ]) hexagon_shell(hexagon_height, thickness);
 
