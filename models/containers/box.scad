@@ -4,9 +4,9 @@ use <../../lib/rsquare.scad>
 use <../../lib/shelf.scad>
 
 module box(size, radius, wall_width) {
-  linear_extrude(size.z) { rsquare_shell(size.x, size.y, radius, wall_width); }
+  linear_extrude(size.z) { rsquare_shell(size, radius, wall_width); }
 
-  linear_extrude(wall_width) { rsquare(size.x, size.y, radius); }
+  linear_extrude(wall_width) { rsquare(size, radius); }
 }
 
 module box_with_label(size, radius, wall_width) {
