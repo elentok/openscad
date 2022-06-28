@@ -48,5 +48,37 @@ module rsquare2_shell(size, radius, thickness) {
   }
 }
 
-linear_extrude(2) rsquare_shell([ 20, 40 ], 3, 2);
-translate([ 0, 0, 10 ]) linear_extrude(2) rsquare_shell([ 20, 40 ], 3, 2);
+// ------------------------------------------------------------
+// Rounded Square (hull)
+// ------------------------------------------------------------
+
+module rsquare3(size, radius) {
+  x = size.x - radius * 2;
+  y = size.y - radius * 2;
+
+  assert(radius < size.x / 2, "Radius must be less than half the height");
+  assert(radius < size.y / 2, "Radius must be less than half the width");
+
+  hull() {
+    translate([ -x / 2, -y / 2 ]) circle(r = radius);
+    translate([ x / 2, -y / 2 ]) circle(r = radius);
+    translate([ -x / 2, y / 2 ]) circle(r = radius);
+    translate([ x / 2, y / 2 ]) circle(r = radius);
+  }
+}
+
+module rsquare3_shell(size, radius, thickness) {
+  difference() {
+    rsquare3(size, radius);
+
+    x = size.x - thickness * 2;
+    y = size.y - thickness * 2;
+    rsquare3([ x, y ], radius);
+  }
+}
+
+color("green") linear_extrude(2) rsquare_shell([ 20, 40 ], 3, 2);
+color("red") translate([ 0, 0, 2 ]) linear_extrude(2)
+    rsquare2_shell([ 20, 40 ], 3, 2);
+color("blue") translate([ 0, 0, 4 ]) linear_extrude(2)
+    rsquare3_shell([ 20, 40 ], 3, 2);
