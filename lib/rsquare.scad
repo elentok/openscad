@@ -77,6 +77,10 @@ module rsquare3_shell(size, radius, thickness) {
   }
 }
 
+// ------------------------------------------------------------
+// Test
+// ------------------------------------------------------------
+
 color("green") linear_extrude(2) rsquare_shell([ 20, 40 ], 3, 2);
 color("red") translate([ 0, 0, 2 ]) linear_extrude(2)
     rsquare2_shell([ 20, 40 ], 3, 2);
