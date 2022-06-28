@@ -59,21 +59,19 @@ module box_with_label(size, radius, wall_width) {
 // ============================================================
 
 module box(size, radius, wall_width) {
-  linear_extrude(size.z) {
-    rounded_rectangle_border(size.x, size.y, radius, wall_width);
-  }
+  linear_extrude(size.z) { rsquare_shell(size.x, size.y, radius, wall_width); }
 
-  linear_extrude(wall_width) { rounded_rectangle(size.x, size.y, radius); }
+  linear_extrude(wall_width) { rsquare(size.x, size.y, radius); }
 }
 
 // ============================================================
 // Rounded Rectangle Border Module
 // ============================================================
 
-module rounded_rectangle_border(width, height, radius, wall_width) {
+module rsquare_shell(width, height, radius, wall_width) {
   difference() {
-    rounded_rectangle(width, height, radius);
-    rounded_rectangle(width - wall_width * 2, height - wall_width * 2, radius);
+    rsquare(width, height, radius);
+    rsquare(width - wall_width * 2, height - wall_width * 2, radius);
   }
 }
 
@@ -81,7 +79,7 @@ module rounded_rectangle_border(width, height, radius, wall_width) {
 // Rounded Rectangle Module
 // ============================================================
 
-module rounded_rectangle(width, height, radius) {
+module rsquare(width, height, radius) {
   minkowski() {
     square([ width - radius * 2, height - radius * 2 ], center = true);
     circle(radius);
