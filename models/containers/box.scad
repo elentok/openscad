@@ -1,6 +1,6 @@
 $fn = 50;
 
-use <../../lib/rsquare.scad>
+use <../../lib/rounded_square.scad>
 use <../../lib/shelf.scad>
 
 // ------------------------------------------------------------
@@ -8,9 +8,9 @@ use <../../lib/shelf.scad>
 // ------------------------------------------------------------
 
 module box(size, radius, wall_width) {
-  linear_extrude(size.z) { rsquare_shell(size, radius, wall_width); }
+  linear_extrude(size.z) { rounded_shell(size, wall_width, radius); }
 
-  linear_extrude(wall_width) { rsquare(size, radius); }
+  linear_extrude(wall_width) { rounded_square(size, radius); }
 }
 
 // ------------------------------------------------------------
