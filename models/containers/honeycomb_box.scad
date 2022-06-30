@@ -1,4 +1,5 @@
 use <../../lib/honeycomb.scad>
+use <../../lib/mirror_copy.scad>
 use <box.scad>
 
 module honeycomb_box(size, border_radius, wall_width, x_hexagons, y_hexagons,
@@ -22,29 +23,17 @@ module honeycomb_box(size, border_radius, wall_width, x_hexagons, y_hexagons,
 
     z = honeycomb_height / 2 + padding_bottom;
 
-    // Honeycomb on X-Axis (1/2)
+    // Honeycomb on X-Axis
     y1 = -size.y / 2 + wall_width;
-    translate([ 0, y1, z ]) rotate([ 90, 0, 0 ]) linear_extrude(wall_width)
-        honeycomb_rectangle([ honeycomb_width + 0.4, honeycomb_height + 0.4 ],
-                            x_hexagons);
+    mirror_copy([ 0, 1, 0 ]) translate([ 0, y1, z ]) rotate([ 90, 0, 0 ])
+        linear_extrude(wall_width) honeycomb_rectangle(
+            [ honeycomb_width + 0.4, honeycomb_height + 0.4 ], x_hexagons);
 
-    // Honeycomb on X-Axis (2/2)
-    y2 = size.y / 2;
-    translate([ 0, y2, z ]) rotate([ 90, 0, 0 ]) linear_extrude(wall_width)
-        honeycomb_rectangle([ honeycomb_width + 0.4, honeycomb_height + 0.4 ],
-                            x_hexagons);
-
-    // Honeycomb on Y-Axis (1/2)
+    // Honeycomb on Y-Axis
     x1 = -size.x / 2;
-    translate([ x1, 0, z ]) rotate([ 90, 0, 90 ]) linear_extrude(wall_width)
-        honeycomb_rectangle([ honeycomb_depth + 0.4, honeycomb_height + 0.4 ],
-                            y_hexagons);
-
-    // Honeycomb on Y-Axis (1/2)
-    x2 = size.x / 2 - wall_width;
-    translate([ x2, 0, z ]) rotate([ 90, 0, 90 ]) linear_extrude(wall_width)
-        honeycomb_rectangle([ honeycomb_depth + 0.4, honeycomb_height + 0.4 ],
-                            y_hexagons);
+    mirror_copy([ 1, 0, 0 ]) translate([ x1, 0, z ]) rotate([ 90, 0, 90 ])
+        linear_extrude(wall_width) honeycomb_rectangle(
+            [ honeycomb_depth + 0.4, honeycomb_height + 0.4 ], y_hexagons);
   }
 }
 
