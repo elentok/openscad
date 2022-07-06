@@ -37,6 +37,11 @@ module honeycomb_box(size, border_radius, wall_width, x_hexagons, y_hexagons,
   }
 }
 
-honeycomb_box([ 80, 100, 130 ], border_radius = 5, wall_width = 1.2,
-              x_hexagons = 7, y_hexagons = 9, padding_bottom = 25,
+// honeycomb_box([ 80, 100, 130 ], border_radius = 5, wall_width = 1.2,
+//               x_hexagons = 7, y_hexagons = 9, padding_bottom = 25,
+//               padding_top = 15, padding_horizontal = 10);
+
+// For charger drawer
+honeycomb_box([ 107, 90, 75 ], border_radius = 5, wall_width = 1.2,
+              x_hexagons = 9, y_hexagons = 8, padding_bottom = 15,
               padding_top = 15, padding_horizontal = 10);
