@@ -16,50 +16,61 @@ function calc_pole_position(outer_size, pole_diameter, wall_width, pole_dist) =
     ];
 
 module curtain_hook_cover(hook_size, pole_diameter, pole_dist, wall_width = 1.6,
-                          screw_area_z = 15, screw_hole_diameter = 2.8) {
+                          screw_area_z = 15, screw_hole_diameter = 2.8,
+                          screw_head_height = 2.5, screw_head_diameter = 8) {
   outer_size = calc_outer_size(hook_size, wall_width);
   pole_position =
       calc_pole_position(outer_size, pole_diameter, wall_width, pole_dist);
 
-  // hook cover
-  translate([ 0, 0, -hook_size.z / 2 - wall_width ])
-      curtain_hook_component(hook_size, pole_diameter, pole_dist, wall_width);
-
   // screw part
   screw_part_size = [ hook_size.x, hook_size.y, screw_area_z ];
+  screw_tube_diameter = screw_head_diameter * 1.2;
+
+  wall1_x = pole_position.x - pole_diameter / 2 - wall_width;
+  wall1_y = -hook_size.y / 2 - wall_width;
+  wall2_x = pole_position.x + pole_diameter / 2;
+  wall2_y = wall1_y;
+
+  screw_tube_x = wall2_x + pole_dist.x / 2;
+  screw_tube_y = screw_tube_diameter / 2;
 
   difference() {
     union() {
+      // hook cover
+      translate([ 0, 0, -hook_size.z / 2 - wall_width ]) curtain_hook_component(
+          hook_size, pole_diameter, pole_dist, wall_width);
+
       translate([ 0, 0, screw_area_z / 2 ]) curtain_hook_component(
           screw_part_size, pole_diameter, pole_dist, wall_width);
 
       // wall1
-      wall1_x = pole_position.x - pole_diameter / 2 - wall_width;
-      wall1_y = -hook_size.y / 2 - wall_width;
       translate([ wall1_x, wall1_y, 0 ])
           cube([ wall_width, hook_size.y, screw_area_z ]);
 
       // wall2
-      wall2_x = pole_position.x + pole_diameter / 2;
-      wall2_y = wall1_y;
       translate([ wall2_x, wall2_y, 0 ])
           cube([ wall_width, hook_size.y, screw_area_z ]);
 
       // screw tube
-      screw_tube_diameter = screw_hole_diameter + wall_width * 2;
-      screw_tube_x = wall2_x + pole_dist.x / 2;
-      screw_tube_y = screw_tube_diameter / 2;
       translate([ screw_tube_x, screw_tube_y, screw_tube_diameter / 2 ])
           rotate([ 0, 90, 0 ])
               cylinder(h = pole_dist.x, d = screw_tube_diameter, center = true);
     }
 
     // screw hole
-    screw_hole_height = pole_dist.x + wall_width;
+    screw_hole_height = pole_dist.x + wall_width * 2;
     screw_hole_x = pole_dist.x + wall_width;
+    screw_hole_y = screw_hole_diameter / 2 + screw_tube_diameter / 4;
     screw_hole_z = screw_hole_diameter / 2 + wall_width;
-    translate([ screw_hole_x, 0, screw_hole_z ]) rotate([ 0, 90, 0 ])
-#cylinder(h = screw_hole_height, d = screw_hole_diameter);
+    translate([ screw_hole_x, screw_hole_y, screw_hole_z ]) rotate([ 0, 90, 0 ])
+        cylinder(h = screw_hole_height, d = screw_hole_diameter);
+
+    // inset for screw head
+    // screw_head_x = outer_size.x / 2 - screw_head_height / 2;
+    // translate([ screw_head_x, screw_tube_y, screw_hole_z ]) rotate([ 0, 90, 0
+    // ])
+    //     cylinder(h = screw_head_height + 0.2, d = screw_head_diameter,
+    //              center = true);
   }
 }
 
