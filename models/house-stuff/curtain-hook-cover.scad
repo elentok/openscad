@@ -15,10 +15,58 @@ function calc_pole_position(outer_size, pole_diameter, wall_width, pole_dist) =
       outer_size.y / 2 - pole_diameter / 2 - wall_width - pole_dist.y
     ];
 
+module curtain_hook_cover(hook_size, pole_diameter, pole_dist, wall_width = 1.6,
+                          screw_area_z = 15, screw_hole_diameter = 2.8) {
+  outer_size = calc_outer_size(hook_size, wall_width);
+  pole_position =
+      calc_pole_position(outer_size, pole_diameter, wall_width, pole_dist);
+
+  // hook cover
+  translate([ 0, 0, -hook_size.z / 2 - wall_width ])
+      curtain_hook_component(hook_size, pole_diameter, pole_dist, wall_width);
+
+  // screw part
+  screw_part_size = [ hook_size.x, hook_size.y, screw_area_z ];
+
+  difference() {
+    union() {
+      translate([ 0, 0, screw_area_z / 2 ]) curtain_hook_component(
+          screw_part_size, pole_diameter, pole_dist, wall_width);
+
+      // wall1
+      wall1_x = pole_position.x - pole_diameter / 2 - wall_width;
+      wall1_y = -hook_size.y / 2 - wall_width;
+      translate([ wall1_x, wall1_y, 0 ])
+          cube([ wall_width, hook_size.y, screw_area_z ]);
+
+      // wall2
+      wall2_x = pole_position.x + pole_diameter / 2;
+      wall2_y = wall1_y;
+      translate([ wall2_x, wall2_y, 0 ])
+          cube([ wall_width, hook_size.y, screw_area_z ]);
+
+      // screw tube
+      screw_tube_diameter = screw_hole_diameter + wall_width * 2;
+      screw_tube_x = wall2_x + pole_dist.x / 2;
+      screw_tube_y = screw_tube_diameter / 2;
+      translate([ screw_tube_x, screw_tube_y, screw_tube_diameter / 2 ])
+          rotate([ 0, 90, 0 ])
+              cylinder(h = pole_dist.x, d = screw_tube_diameter, center = true);
+    }
+
+    // screw hole
+    screw_hole_height = pole_dist.x + wall_width;
+    screw_hole_x = pole_dist.x + wall_width;
+    screw_hole_z = screw_hole_diameter / 2 + wall_width;
+    translate([ screw_hole_x, 0, screw_hole_z ]) rotate([ 0, 90, 0 ])
+#cylinder(h = screw_hole_height, d = screw_hole_diameter);
+  }
+}
+
 // hook_size = [x, y, z]
 // pole_dist = [x, y]
-module curtain_hook_cover(hook_size, pole_diameter, pole_dist, pole_dist,
-                          wall_width = 1.6) {
+module curtain_hook_component(hook_size, pole_diameter, pole_dist,
+                              wall_width = 1.6) {
   outer_size = calc_outer_size(hook_size, wall_width);
   pole_position =
       calc_pole_position(outer_size, pole_diameter, wall_width, pole_dist);
