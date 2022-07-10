@@ -11,27 +11,42 @@ function main() {
     process.exit(1);
   }
 
-  watch(filesToBuild);
+  filesToBuild.forEach(buildFile);
+  watch(filesToBuild, [".", ...dirs(".")]);
 }
 
-function watch(filesToBuild) {
-  console.log("Watching:", filesToBuild.join(", "));
+function dirs(root) {
+  return fs
+    .readdirSync(root, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+}
+
+// On OSX only "rename" is sent.
+const EVENTS = ["change", "rename"];
+
+function watch(filesToBuild, dirsToWatch) {
+  console.info("- Files to build:", filesToBuild.join(", "));
   let timeoutId = null;
 
-  fs.watch(".", (event, filename) => {
-    if (event === "change" && filename && filename.endsWith(".py")) {
-      if (timeoutId != null) clearTimeout(timeoutId);
+  dirsToWatch.forEach((dir) => {
+    console.info(`- Watching ${dir}`);
+    fs.watch(dir, (event, filename) => {
+      if (EVENTS.includes(event) && filename && filename.endsWith(".py")) {
+        if (timeoutId != null) clearTimeout(timeoutId);
 
-      timeoutId = setTimeout(() => {
-        timeoutId = null;
-        filesToBuild.forEach(buildFile);
-      }, 300);
-    }
+        timeoutId = setTimeout(() => {
+          console.info(`- Detected change in ${filename}`);
+          timeoutId = null;
+          filesToBuild.forEach(buildFile);
+        }, 300);
+      }
+    });
   });
 }
 
 function buildFile(filename) {
-  console.info(`- Detected changes, rebuilding ${filename}...`);
+  console.info(`- Building ${filename}...`);
   exec(`python3 ${filename}`);
   console.info(`- Done building ${filename}`);
 }
