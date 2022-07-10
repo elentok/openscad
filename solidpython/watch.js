@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
-const { exec } = require("child_process");
+const { spawn } = require("child_process");
 
 function main() {
   const filesToBuild = process.argv.slice(2);
@@ -47,8 +47,10 @@ function watch(filesToBuild, dirsToWatch) {
 
 function buildFile(filename) {
   console.info(`- Building ${filename}...`);
-  exec(`python3 ${filename}`);
-  console.info(`- Done building ${filename}`);
+  const p = spawn("python3", [filename], { stdio: "inherit" });
+  p.on("close", () => {
+    console.info(`- Done building ${filename}`);
+  });
 }
 
 function usage() {
