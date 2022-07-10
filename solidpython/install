@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#
+# This script installs jeff-dh's Solid Python branch
+
+set -euo pipefail
+
+pip install git+https://github.com/jeff-dh/SolidPython.git@exp_solid
