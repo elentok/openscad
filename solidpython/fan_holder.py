@@ -1,5 +1,7 @@
 from solid import *
 
+# from solid.extensions.bosl2 import *
+
 from lib.chamfer import chamfered_hole
 
 # Settings for a 92mm fan
@@ -13,32 +15,35 @@ hole_distance = (distance_between_holes - grip_diameter / 2) / 2 * 0.75
 
 
 def fan_holder():
-    hole = back(grip_diameter / 2 - padding / 2)(
-        rotateX(-90)(
-            chamfered_hole(padding + 0.2, screw_hole_diameter, chamfer_diameter)
-        )
-    )
     return (
-        linear_extrude(width, center=True)(flat_fan_holder())
-        - left(hole_distance)(hole)
-        - right(hole_distance)(hole)
+        flat_fan_holder().linear_extrude(width, center=True)
+        - hole().left(hole_distance)
+        - hole().right(hole_distance)
+    )
+
+
+def hole():
+    return (
+        chamfered_hole(padding + 0.2, screw_hole_diameter, chamfer_diameter)
+        .rotateX(-90)
+        .back(grip_diameter / 2 - padding / 2)
     )
 
 
 def flat_fan_holder():
     return (
-        left(distance_between_holes / 2)(grip())
-        + right(distance_between_holes / 2)(grip())
-        + back(grip_diameter / 2 - padding / 2)(
-            square([distance_between_holes, padding], center=True)
+        grip().left(distance_between_holes / 2)
+        + grip().right(distance_between_holes / 2)
+        + square([distance_between_holes, padding], center=True).back(
+            grip_diameter / 2 - padding / 2
         )
     )
 
 
 def grip():
     return hull()(
-        back(grip_diameter / 2 - padding / 2)(
-            square(size=[grip_diameter, padding], center=True)
+        square(size=[grip_diameter, padding], center=True).back(
+            grip_diameter / 2 - padding / 2
         )
         + circle(d=grip_diameter)
     ) - circle(d=screw_hole_diameter)
