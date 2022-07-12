@@ -41,7 +41,7 @@ class Jar:
         )
 
         hole = cylinder(
-            d=self.diameter - 2 * self.wall_width,
+            d=self.diameter - 3 * self.wall_width,
             h=self.thread_height + 0.1,
             center=True,
         )
