@@ -61,11 +61,10 @@ module tall_hook_with_screw_hole(size, thickness, opening_height = 5, latch = 8,
 }
 
 // Large:
-// cable_hook_mark2([ 40, 20, 40 ], thickness = 3, inner_radius = 15, outer_radius =
-// 10);
+// tall_hook_with_screw_hole([ 40, 20, 40 ], thickness = 3, inner_radius = 15);
 
 // Medium:
-// cable_hook_mark2([ 40, 20, 30 ], thickness = 3);
+tall_hook_with_screw_hole([ 40, 20, 30 ], thickness = 3);
 
 // Small:
-tall_hook_with_screw_hole([ 28, 15, 20 ], thickness = 2.5);
+// tall_hook_with_screw_hole([ 28, 15, 20 ], thickness = 2.5);
