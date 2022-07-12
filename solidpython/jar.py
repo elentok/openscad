@@ -7,30 +7,57 @@ from solid.extensions.bosl2 import threading
 class Jar:
     diameter: float
     height: float
+    wall_width: float
+    thread_height: float
+    non_thread_height: float
+    thread_pitch: float
 
     def __init__(self, diameter, height, wall_width, thread_height=None):
         self.diameter = diameter
         self.height = height
         self.wall_width = wall_width
         self.thread_height = thread_height or 0.2 * self.height
+        self.non_thread_height = self.height - self.thread_height
+        self.thread_pitch = 1
 
     def render_body(self):
-        jar = cylinder(d=self.diameter, h=self.wall_width) + hollow_cylinder(
-            self.diameter, self.height, self.wall_width
+        bottom = cylinder(d=self.diameter, h=self.wall_width)
+        wall = hollow_cylinder(
+            self.diameter, self.non_thread_height, self.wall_width
+        ).up(self.non_thread_height / 2)
+        thread = self.jar_thread().up(self.non_thread_height)
+
+        return bottom + wall + thread
+
+    def render_lid(self):
+        bottom = cylinder(d=self.diameter, h=self.wall_width)
+        return bottom + self.lid_thread().up(self.wall_width)
+
+    def lid_thread(self):
+        thread = threading.threaded_rod(
+            d=self.diameter - self.wall_width,
+            l=self.thread_height,
+            pitch=self.thread_pitch,
         )
 
-        return jar
+        hole = cylinder(
+            d=self.diameter - 2 * self.wall_width,
+            h=self.thread_height + 0.1,
+            center=True,
+        )
 
-        # thread = cylinder(
-        #     d=self.diameter, h=self.thread_height, center=True
-        # ) - threading.threaded_rod(
-        #     d=self.diameter - self.wall_width,
-        #     l=self.thread_height + 0.1,
-        #     pitch=self.thread_height / 5,
-        #     internal=True,
-        # )
-        # return jar + thread
-        # return jar - thread
+        return (thread - hole).up(self.thread_height / 2)
+
+    def jar_thread(self):
+        return (
+            cylinder(d=self.diameter, h=self.thread_height, center=True)
+            - threading.threaded_rod(
+                d=self.diameter - self.wall_width,
+                l=self.thread_height + 0.1,
+                pitch=self.thread_pitch,
+                internal=True,
+            )
+        ).up(self.thread_height / 2)
 
 
 def hollow_cylinder(d: float, h: float, thickness: float):
@@ -39,5 +66,6 @@ def hollow_cylinder(d: float, h: float, thickness: float):
     )
 
 
-jar = Jar(diameter=25, height=30, wall_width=2)
-render(jar.render_body())
+if __name__ == "__main__":
+    jar = Jar(diameter=25, height=30, wall_width=2)
+    render(jar.render_body() + jar.render_lid().up(50))
