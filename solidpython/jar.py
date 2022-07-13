@@ -12,13 +12,17 @@ class Jar:
     non_thread_height: float
     thread_pitch: float
 
-    def __init__(self, diameter, height, wall_width, thread_height=None):
+    # The lid thread is slightly smaller so that it fits in the jar thread
+    gap: float
+
+    def __init__(self, diameter, height, wall_width, thread_height=None, gap=0.3):
         self.diameter = diameter
         self.height = height
         self.wall_width = wall_width
         self.thread_height = thread_height or 0.2 * self.height
         self.non_thread_height = self.height - self.thread_height
         self.thread_pitch = 1
+        self.gap = gap
 
     def render_body(self):
         bottom = cylinder(d=self.diameter, h=self.wall_width)
@@ -35,7 +39,7 @@ class Jar:
 
     def lid_thread(self):
         thread = threading.threaded_rod(
-            d=self.diameter - self.wall_width,
+            d=self.diameter - self.wall_width - self.gap * 2,
             l=self.thread_height,
             pitch=self.thread_pitch,
         )
