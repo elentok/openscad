@@ -15,7 +15,9 @@ body_hole_diameter = 5
 
 
 def dc_power_socket_jar_body():
-    jar_body = Jar(diameter, height, wall_width).render_body()
+    jar_body = Jar(
+        diameter, height, wall_width, thread_height=0.2 * height
+    ).render_body()
     hole = cylinder(d=body_hole_diameter, h=wall_width + 0.2).down(0.1)
     return jar_body - hole
 
@@ -32,12 +34,6 @@ def dc_power_socket_jar_lid():
     )
     return jar_lid - hole
     # return hole
-
-
-def both():
-    # jar = dc_power_socket_jar_body()
-    jar = dc_power_socket_jar_lid()
-    return jar
 
 
 lid = dc_power_socket_jar_lid()
