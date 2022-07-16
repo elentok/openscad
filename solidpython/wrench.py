@@ -40,13 +40,18 @@ class Wrench:
         head = difference()(
             circle(d=self.head_diameter),
             circle(d=hexagon_diameter, _fn=6),
+            # Remove the area from the hexagon to the right (so it can fit over
+            # the screw head).
             square([self.head_diameter / 2, self.hexagon_width]).back(
                 self.hexagon_width / 2
             ),
+            # Remove the sharp corners the remain after removing the center.
             circle(d=self.head_diameter * 1.2, _fn=6)
             .scale([0.8, 1])
             .right(self.head_diameter * 1.2 / 2),
         )
+
+        # Round the corners.
         return head.offset(r=-3).offset(r=3)
 
     def render_handle(self):
@@ -55,7 +60,9 @@ class Wrench:
                 circle(d=self.handle_d1).left(self.handle_dist_between_circles)
                 + circle(d=self.handle_d2)
             ),
+            # Make sure not to exceed the head of the wrench.
             circle(d=self.head_diameter * 0.8, _fn=6),
+            # Make a hole at the base of the handle.
             circle(d=self.handle_d1 * 0.7).left(self.handle_dist_between_circles),
         )
 
