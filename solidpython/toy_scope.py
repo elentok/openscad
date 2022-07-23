@@ -4,12 +4,21 @@ from lib.rounded_polyline import rounded_polyline
 
 
 class Scope:
+    thickness: float
     length: float
     r1: float
     r2: float
     r3: float
+    l1: float
+    l1to2: float
+    l2: float
+    l2to3: float
+    l3: float
 
-    def __init__(self, length: float, r1: float, r2: float, r3: float):
+    def __init__(
+        self, thickness: float, length: float, r1: float, r2: float, r3: float
+    ):
+        self.thickness = thickness
         self.length = length
         self.r1 = r1
         self.r2 = r2
@@ -20,7 +29,9 @@ class Scope:
         self.l2to3 = self.length * 0.1
 
     def render(self):
-        return self.render2d().rotate_extrude()
+        return (self.render2d().rotate_extrude() + self.render_crosshair()).down(
+            self.l1 + self.l1to2 + self.thickness / 2
+        )
 
     def render2d(self):
         return rounded_polyline(
@@ -35,6 +46,88 @@ class Scope:
             ],
         ).rotateZ(90)
 
+    def render_crosshair(self):
+        return (
+            cube([self.thickness, self.r2 * 2, self.thickness], center=True)
+            + cube([self.r2 * 2, self.thickness, self.thickness], center=True)
+        ).up(self.l1 + self.l1to2 + self.thickness * 2)
+
+
+class Grip:
+    scope: Scope
+    distance: float  # Distance between the largest part of the scope to the toy
+    height: float  # Scope max height + distance
+    width: float
+    screw_diameter: float
+    screwdriver_diameter: float
+
+    def __init__(
+        self,
+        scope: Scope,
+        width: float,
+        distance: float,
+        screw_diameter: float = 4,
+        screwdriver_diameter: float = 7,
+    ):
+        self.scope = scope
+        self.distance = distance
+        self.width = width
+        self.size_y = self.scope.r3 + distance
+        self.triangle_height = self.size_y
+        self.screw_diameter = screw_diameter
+        self.screwdriver_diameter = screwdriver_diameter
+
+    def render(self):
+        return self.render2d().linear_extrude(self.scope.l2) - self.triangle_mask()
+
+    def holes_mask(self):
+        return union()(
+            self.hole().up(self.scope.l2 - self.screwdriver_diameter * 0.7),
+            self.hole().up(self.triangle_height - self.screwdriver_diameter * 0.6),
+        )
+
+    def triangle_mask(self):
+        return (
+            polygon(
+                [
+                    [0, 0],
+                    [0, self.triangle_height + 0.1],
+                    [self.size_y / 2, self.triangle_height + 0.1],
+                ]
+            )
+            .linear_extrude(self.width, center=True)
+            .rotateY(90 * 3)
+        )
+
+    def hole(self):
+        screw_hole = (
+            cylinder(d=self.screw_diameter, h=self.size_y + 0.2, center=True)
+            .rotateY(90)
+            .rotateZ(90)
+            .forward(self.size_y / 2)
+        )
+
+        screwdriver_hole = (
+            cylinder(
+                d=self.screwdriver_diameter,
+                h=self.size_y * 2,
+                center=True,
+            )
+            .rotateY(90)
+            .rotateZ(90)
+            .back(4)  # screw height
+        )
+
+        return screw_hole + screwdriver_hole
+
+    def render2d(self):
+        return square([self.width, self.size_y]).left(self.width / 2) - circle(
+            r=self.scope.r2
+        )
+
 
 if __name__ == "__main__":
-    render(Scope(length=100, r1=10, r2=8, r3=15).render())
+    scope = Scope(length=100, thickness=2, r1=10, r2=7, r3=14)
+    grip = Grip(scope, width=10, distance=5)
+    render(scope.render() + grip.render() - grip.holes_mask())
+    # render(grip.render())
