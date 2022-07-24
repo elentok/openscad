@@ -5,6 +5,7 @@ from lib.rounded_polyline import rounded_polyline
 
 class Scope:
     thickness: float
+    crosshair_thickness: float
     length: float
     r1: float
     r2: float
@@ -19,6 +20,7 @@ class Scope:
         self, thickness: float, length: float, r1: float, r2: float, r3: float
     ):
         self.thickness = thickness
+        self.crosshair_thickness = thickness / 2
         self.length = length
         self.r1 = r1
         self.r2 = r2
@@ -29,9 +31,13 @@ class Scope:
         self.l2to3 = self.length * 0.1
 
     def render(self):
-        return (self.render2d().rotate_extrude() + self.render_crosshair()).down(
-            self.l1 + self.l1to2 + self.thickness / 2
-        )
+        return union()(
+            self.render2d().rotate_extrude(),
+            self.render_crosshair(self.r2).up(
+                self.l1 + self.l1to2 + self.thickness * 2
+            ),
+            self.render_crosshair(self.r2).up(self.l1 + self.l1to2 + self.l2),
+        ).down(self.l1 + self.l1to2 + self.thickness / 2)
 
     def render2d(self):
         return rounded_polyline(
@@ -46,11 +52,14 @@ class Scope:
             ],
         ).rotateZ(90)
 
-    def render_crosshair(self):
-        return (
-            cube([self.thickness, self.r2 * 2, self.thickness], center=True)
-            + cube([self.r2 * 2, self.thickness, self.thickness], center=True)
-        ).up(self.l1 + self.l1to2 + self.thickness * 2)
+    def render_crosshair(self, radius: float):
+        return cube(
+            [self.crosshair_thickness, radius * 2, self.crosshair_thickness],
+            center=True,
+        ) + cube(
+            [radius * 2, self.crosshair_thickness, self.crosshair_thickness],
+            center=True,
+        )
 
 
 class Grip:
@@ -67,18 +76,19 @@ class Grip:
         width: float,
         distance: float,
         screw_diameter: float = 4,
-        screwdriver_diameter: float = 7,
+        screwdriver_diameter: float = 7.5,
     ):
         self.scope = scope
         self.distance = distance
         self.width = width
+        self.size_z = self.scope.l2 - 0.1  # - self.scope.thickness / 2
         self.size_y = self.scope.r3 + distance
         self.triangle_height = self.size_y
         self.screw_diameter = screw_diameter
         self.screwdriver_diameter = screwdriver_diameter
 
     def render(self):
-        return self.render2d().linear_extrude(self.scope.l2) - self.triangle_mask()
+        return self.render2d().linear_extrude(self.size_z) - self.triangle_mask()
 
     def holes_mask(self):
         return union()(
