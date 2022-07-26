@@ -1,6 +1,10 @@
 use <./cable-hook-mark2.scad>
 
-hook_size = [ 40, 20, 40 ];
+// Large
+// hook_size = [ 40, 20, 30 ];
+
+// Medium
+hook_size = [ 40, 20, 30 ];
 
 ziptie_width = 9.5;
 ziptie_height = 2;
@@ -19,6 +23,6 @@ module ziptie_grip() {
 }
 
 union() {
-  cable_hook_mark2(hook_size, thickness = 3, inner_radius = 15);
+  cable_hook_mark2(hook_size, thickness = 3);
   ziptie_grip();
 }
