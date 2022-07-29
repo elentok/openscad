@@ -20,13 +20,15 @@ hexagon_height = 8
 screw_tight_hole_dist = 4.5
 screw_tight_hole_diameter = 1.85
 
-handle = hull()(
+handle_mark1 = hull()(
     circle(d=handle_d1),
     circle(d=handle_d2).left(handle_width / 2),
     circle(d=handle_d2).right(handle_width / 2),
 ).linear_extrude(handle_height)
 
-rounded_handle = minkowski()(handle, sphere(d=2))
+handle_mark2 = cylinder(d=handle_d1, h=handle_height, _fn=6)
+
+rounded_handle = minkowski()(handle_mark2, sphere(d=2))
 
 bottom = union()(
     cylinder(d=d1, h=h1),
