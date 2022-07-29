@@ -3,8 +3,9 @@ from lib.render import render
 from solid.extensions.bosl2 import rounding
 
 border_radius = 1
+top_radius = 2
 faces = 8
-d1 = 15
+d1 = 20
 d2 = 30
 h1 = 6
 h2 = 3
@@ -31,7 +32,7 @@ def rounded_hectagon(d, h, r=border_radius):
 diamond = hull()(
     hectagon(d1, h1),
     rounded_hectagon(d2, h2).up(h1),
-    sphere(r=border_radius).up(h1 + h2 + h3),
+    sphere(r=top_radius).up(h1 + h2 + h3),
 )
 
 render(diamond)
