@@ -8,17 +8,17 @@ d3 = 15
 h1 = 2.2
 h1to2 = 1
 h2 = 3
-h3 = 1.7
+h3 = 3
 
 handle_height = 8
 handle_d1 = d3
 handle_d2 = d3 * 0.3
 handle_width = 25
 
-hexagon_diameter = 5.55
-hexagon_height = 7.8
+hexagon_diameter = 5.65
+hexagon_height = 8
 screw_tight_hole_dist = 4.5
-screw_tight_hole_diameter = 1.75
+screw_tight_hole_diameter = 1.85
 
 handle = hull()(
     circle(d=handle_d1),
