@@ -4,11 +4,11 @@ from solid.extensions.bosl2 import rounding
 
 border_radius = 1
 faces = 8
-d1 = 10
-d2 = 20
-h1 = 5
+d1 = 15
+d2 = 30
+h1 = 6
 h2 = 3
-h3 = 20
+h3 = 15
 
 
 def flat_hectagon(d):
@@ -24,9 +24,13 @@ def hectagon(d, h):
     return flat_hectagon(d).linear_extrude(h)
 
 
+def rounded_hectagon(d, h, r=border_radius):
+    return minkowski()(hectagon(d - r * 2, h), sphere(r=r))
+
+
 diamond = hull()(
     hectagon(d1, h1),
-    hectagon(d2, h2).up(h1),
+    rounded_hectagon(d2, h2).up(h1),
     sphere(r=border_radius).up(h1 + h2 + h3),
 )
 
