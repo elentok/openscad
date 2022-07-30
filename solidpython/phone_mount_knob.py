@@ -10,7 +10,7 @@ h1to2 = 1
 h2 = 3
 h3 = 3
 
-handle_height = 8
+handle_height = 15
 handle_d1 = d3
 handle_d2 = d3 * 0.3
 handle_width = 25
