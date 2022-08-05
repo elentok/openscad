@@ -19,6 +19,7 @@ function dirs(root) {
   return fs
     .readdirSync(root, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
+    .filter((entry) => entry.name !== "__pycache__")
     .map((entry) => entry.name);
 }
 
