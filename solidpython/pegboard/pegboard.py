@@ -3,6 +3,7 @@ from solid import *
 from lib.render import render
 from lib.rounded_square import RoundedSquare
 from lib.types import Size2D, Radius
+from lib.threed import half_sphere, Side
 from dataclasses import dataclass
 from typing import Optional
 
@@ -86,6 +87,7 @@ class Pegboard:
 @dataclass
 class PegboardMount:
     pegboard: Pegboard
+    width: float
 
     def render(self):
         return union()(
@@ -102,10 +104,9 @@ class PegboardMount:
 
     def render_bar(self):
         p = self.pegboard
-        width = p.peg_diameter() * 2  # TODO
         height = p.hole_spacing + p.hole_diameter * 2
         return (
-            RoundedSquare(Size2D(width, height), Radius(p.hole_diameter / 2))
+            RoundedSquare(Size2D(self.width, height), Radius(p.hole_diameter / 2))
             .render()
             .linear_extrude(p.thickness, center=True)
             .rotateY(90)
@@ -187,10 +188,34 @@ class PegboardMount:
         return union()(bar, top_peg, bottom_peg)
 
 
-# @dataclass
-# class PegboardHook:
+class PegboardHook:
+    mount: PegboardMount
+    pegboard: Pegboard
+    depth: float
+    thickness: float
+
+    def __init__(self, pegboard: Pegboard, depth: float, thickness: float = 5):
+        self.pegboard = pegboard
+        self.mount = PegboardMount(pegboard, width=thickness)
+        self.depth = depth
+        self.thickness = thickness
+
+    def render(self):
+        return union()(self.mount.render(), self.render_hook())
+
+    def render_hook(self):
+        sphere1 = (
+            half_sphere(d=self.thickness, side=Side.LEFT)
+            .left(self.pegboard.thickness / 2)
+            .scale([1, 2, 1])
+        ).back(self.thickness)
+
+        sphere2 = sphere(d=self.thickness).left(self.depth)
+        sphere3 = sphere(d=self.thickness).left(self.depth).forward(self.depth)
+        return hull()(sphere1, sphere2) + hull()(sphere2, sphere3)
 
 
 pegboard = Pegboard()
 # render(Pegboard().render())
-render(PegboardMount(pegboard).render())
+# render(PegboardMount(pegboard).render())
+render(PegboardHook(pegboard, depth=10).render())
