@@ -1,7 +1,7 @@
 from solid import *
 from lib.render import render
 
-from jar import Jar
+from lib.jar import Jar
 
 height = 30
 diameter = 25
