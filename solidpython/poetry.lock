@@ -1,0 +1,37 @@
+[[package]]
+name = "ply"
+version = "3.11"
+description = "Python Lex & Yacc"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "solidpython"
+version = "2.0.0-beta-01"
+description = "Python interface to the OpenSCAD declarative geometry language"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+develop = false
+
+[package.dependencies]
+ply = "^3.11"
+
+[package.source]
+type = "git"
+url = "https://github.com/jeff-dh/SolidPython.git"
+reference = "exp_solid"
+resolved_reference = "2e7799755391752e1acf50ed50337c9f90045869"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.9"
+content-hash = "8bfb6dec9da304473b544c6f84f05bfe3f45992522829ae1fb3fb21a493108d3"
+
+[metadata.files]
+ply = [
+    {file = "ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce"},
+    {file = "ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3"},
+]
+solidpython = []

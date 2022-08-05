@@ -47,7 +47,10 @@ function watch(filesToBuild, dirsToWatch) {
 
 function buildFile(filename) {
   console.info(`- Building ${filename}...`);
-  const p = spawn("python3", [filename], { stdio: "inherit" });
+  const moduleName = filename.replace(/.py$/, "").replace(/\//g, ".");
+  const p = spawn("poetry", ["run", "python", "-m", moduleName], {
+    stdio: "inherit",
+  });
   p.on("close", () => {
     console.info(`- Done building ${filename}`);
   });

@@ -7,7 +7,21 @@ set -euo pipefail
 function main() {
   identify-platform
   install-bosl2
-  install-solid-python
+
+  install-poetry
+  poetry install
+
+  # install-solid-python
+}
+
+function install-poetry() {
+  if ! has-command poetry; then
+    curl -sSL https://install.python-poetry.org | python3 -
+  fi
+}
+
+function has-command() {
+  type "$1" > /dev/null 2>&1
 }
 
 function identify-platform() {
