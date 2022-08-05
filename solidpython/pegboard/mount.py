@@ -3,7 +3,7 @@ from .pegboard import Pegboard
 from dataclasses import dataclass
 from lib.rounded_square import RoundedSquare
 from lib.types import Size2D, Radius
-from lib.render import render
+from lib.scad import save_scad
 
 
 @dataclass
@@ -112,4 +112,4 @@ class PegboardMount:
 
 if __name__ == "__main__":
     pegboard = Pegboard()
-    render(PegboardMount(pegboard, width=10).render())
+    save_scad(PegboardMount(pegboard, width=10).render())

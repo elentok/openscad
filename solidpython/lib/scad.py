@@ -7,7 +7,7 @@ import re
 LIBS_RE = re.compile("^(include <)[^>]+libs/(.*>;)")
 
 
-def render(scad_object, filename=None, segments=60):
+def save_scad(scad_object, filename=None, segments=60):
     if filename is None:
         filename = _output_filename()
 

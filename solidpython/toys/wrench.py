@@ -1,7 +1,7 @@
 # from solid import *
 from solid import hull, debug
 from solid.extensions.bosl2 import circle, square, difference
-from lib.render import render
+from lib.scad import save_scad
 from lib.hexagon_shell import calc_hexagon_height
 
 
@@ -76,4 +76,4 @@ wrench = Wrench(
     thickness=5,
 )
 
-render(wrench.render())
+save_scad(wrench.render())

@@ -1,5 +1,5 @@
 from solid import *
-from lib.render import render
+from lib.scad import save_scad
 
 from solid.extensions.bosl2 import threading
 
@@ -72,4 +72,4 @@ def hollow_cylinder(d: float, h: float, thickness: float):
 
 if __name__ == "__main__":
     jar = Jar(diameter=25, height=30, wall_width=2)
-    render(jar.render_body() + jar.render_lid().up(50))
+    save_scad(jar.render_body() + jar.render_lid().up(50))

@@ -1,5 +1,5 @@
 from solid import *
-from lib.render import render
+from lib.scad import save_scad
 
 d1 = 12
 d2 = 8.9
@@ -47,4 +47,4 @@ knob = (
     - tight_hole.up(screw_tight_hole_dist)
 )
 
-render(knob)
+save_scad(knob)

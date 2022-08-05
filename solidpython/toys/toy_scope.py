@@ -1,5 +1,5 @@
 from solid import *
-from lib.render import render
+from lib.scad import save_scad
 from lib.rounded_polyline import rounded_polyline
 
 
@@ -139,5 +139,5 @@ class Grip:
 if __name__ == "__main__":
     scope = Scope(length=100, thickness=2, r1=10, r2=7, r3=14)
     grip = Grip(scope, width=10, distance=5)
-    render(scope.render() + grip.render() - grip.holes_mask())
+    save_scad(scope.render() + grip.render() - grip.holes_mask())
     # render(grip.render())

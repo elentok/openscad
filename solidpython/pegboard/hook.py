@@ -1,7 +1,7 @@
 from solid import *
 from lib.threed import half_sphere, Side
 from lib.types import Size2D, Radius
-from lib.render import render
+from lib.scad import save_scad
 from .pegboard import Pegboard
 from .mount import PegboardMount
 
@@ -35,4 +35,4 @@ class PegboardHook:
 
 if __name__ == "__main__":
     pegboard = Pegboard()
-    render(PegboardHook(pegboard, depth=20).render())
+    save_scad(PegboardHook(pegboard, depth=20).render())

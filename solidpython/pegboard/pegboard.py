@@ -1,6 +1,6 @@
 from solid import *
 
-from lib.render import render
+from lib.scad import save_scad
 from lib.rounded_square import RoundedSquare
 from lib.types import Size2D, Radius
 from dataclasses import dataclass
@@ -84,4 +84,4 @@ class Pegboard:
 
 
 if __name__ == "__main__":
-    render(Pegboard().render())
+    save_scad(Pegboard().render())

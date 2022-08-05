@@ -1,5 +1,5 @@
 from solid import *
-from lib.render import render
+from lib.scad import save_scad
 
 from lib.jar import Jar
 
@@ -39,6 +39,6 @@ def dc_power_socket_jar_lid():
 lid = dc_power_socket_jar_lid()
 body = dc_power_socket_jar_body()
 
-render(lid, "dc_power_socked_jar_lid.scad")
-render(body, "dc_power_socket_jar_body.scad")
-render(body + lid.up(height * 1.3), "dc_power_socket.scad")
+save_scad(lid, "dc_power_socked_jar_lid.scad")
+save_scad(body, "dc_power_socket_jar_body.scad")
+save_scad(body + lid.up(height * 1.3), "dc_power_socket.scad")

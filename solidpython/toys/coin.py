@@ -1,5 +1,5 @@
 from solid import *
-from lib.render import render
+from lib.scad import save_scad
 from dataclasses import dataclass
 from solid.extensions.bosl2 import back_half
 from typing import Optional
@@ -69,4 +69,4 @@ all_coins = union()(
     coin5.render().right(coin5.diameter).back(coin5.diameter),
 )
 
-render(coin1.render())
+save_scad(coin1.render())

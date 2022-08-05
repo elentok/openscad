@@ -1,5 +1,5 @@
 from solid import *
-from lib.render import render
+from lib.scad import save_scad
 from solid.extensions.bosl2 import rounding
 
 border_radius = 1
@@ -35,4 +35,4 @@ diamond = hull()(
     sphere(r=top_radius).up(h1 + h2 + h3),
 )
 
-render(diamond)
+save_scad(diamond)
