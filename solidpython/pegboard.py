@@ -14,7 +14,6 @@ class Pegboard:
     wall_distance: float = 7  # 12.7
     holes_x: int = 10
     holes_y: int = 10
-    padding: float = 10
     border_radius: float = 10
     thickness: float = 2.5
     border_width: float = 2
@@ -24,18 +23,21 @@ class Pegboard:
         return (
             (self.holes_x - 1) * self.hole_spacing
             + self.hole_diameter
-            + self.padding * 2
+            + self.padding() * 2
         )
 
     def height(self):
         return (
             (self.holes_y - 1) * self.hole_spacing
             + self.hole_diameter
-            + self.padding * 2
+            + self.padding() * 2
         )
 
     def size(self):
         return Size2D(self.width(), self.height())
+
+    def padding(self):
+        return self.hole_spacing / 2
 
     def render(self):
         return union()(
@@ -66,8 +68,8 @@ class Pegboard:
         return RoundedSquare(self.size(), Radius(self.border_radius)).render()
 
     def render_holes(self):
-        x0 = self.width() / 2 - self.padding - self.hole_diameter / 2
-        y0 = self.height() / 2 - self.padding - self.hole_diameter / 2
+        x0 = self.width() / 2 - self.padding() - self.hole_diameter / 2
+        y0 = self.height() / 2 - self.padding() - self.hole_diameter / 2
         holes = []
         for ix in range(self.holes_x):
             for iy in range(self.holes_y):
