@@ -11,6 +11,8 @@ def render(scad_object, filename=None, segments=60):
     if filename is None:
         filename = _output_filename()
 
+    print(f"Saving to file '{filename}'")
+
     with tempfile.TemporaryDirectory() as tmp:
         tmp_filename = os.path.join(tmp, "file.scad")
         scad_render_to_file(
