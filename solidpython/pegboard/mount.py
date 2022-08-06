@@ -2,8 +2,10 @@ from solid import *
 from .pegboard import Pegboard
 from dataclasses import dataclass
 from lib.rounded_square import RoundedSquare
-from lib.types import Size2D, Radius
+from lib.types import Size2D, Radius, Side
 from lib.scad import save_scad
+from lib.twod import quarter_circle
+from lib.arc import arc
 
 
 @dataclass
@@ -12,10 +14,62 @@ class PegboardMount:
     width: float
 
     def render(self):
-        return union()(
-            self.render_bar(),
-            self.render_pegs(),
+        return self.render2d().linear_extrude(self.pegboard.peg_diameter())
+        # return union()(
+        #     self.render_bar(),
+        #     self.render_pegs(),
+        # )
+
+    def bar_size(self) -> Size2D:
+        p = self.pegboard
+        peg_d = p.peg_diameter()
+        return Size2D(peg_d, p.hole_spacing + peg_d)
+
+    def render_bar2d(self):
+        r = self.pegboard.thickness / 2
+        return RoundedSquare(self.bar_size(), Radius(r, 0, 0, r)).render()
+
+    def render2d(self):
+        bar = self.render_bar2d()
+        top_peg = self.render_top_peg2d()
+        bottom_peg = self.render_bottom_peg2d()
+        return union()(bar, top_peg, bottom_peg)
+
+    def render_top_peg2d(self):
+        p = self.pegboard
+        peg_d = p.peg_diameter()
+
+        extension_width = p.thickness / 2
+        peg_extension = square([extension_width, peg_d], center=True).right(
+            self.bar_size().x / 2 + extension_width / 2
         )
+        peg_arc = arc(
+            outer_radius=p.wall_distance,
+            from_angle=-90,
+            to_angle=0,
+            thickness=peg_d,
+            fn=16,
+        ).right(peg_d / 2 + extension_width)
+
+        return union()(peg_extension, peg_arc).forward(p.hole_spacing / 2)
+
+    def render_bottom_peg2d(self):
+        p = self.pegboard
+        peg_d = p.peg_diameter()
+
+        knob_size = Size2D(3, 0.7)
+        peg_size = Size2D(p.thickness + 0.2 + knob_size.x, peg_d)
+        peg = (
+            RoundedSquare(peg_size, Radius(0, p.thickness / 2, 0, 0))
+            .render()
+            .right(peg_size.x / 2 + self.bar_size().x / 2)
+        )
+        knob = (
+            square([knob_size.x, knob_size.y])
+            .right(self.bar_size().x / 2 + peg_size.x - knob_size.x)
+            .back(peg_size.y / 2 + knob_size.y)
+        )
+        return union()(peg, knob).back(p.hole_spacing / 2)
 
     def render_pegs(self):
         p = self.pegboard
@@ -60,7 +114,7 @@ class PegboardMount:
             line2,
         ).back(p.hole_spacing / 2 - 0.2)
 
-    def render2d(self):
+    def render2dx(self):
         p = self.pegboard
         peg_radius = p.peg_diameter() / 2
 

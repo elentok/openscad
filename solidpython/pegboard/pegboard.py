@@ -20,7 +20,7 @@ class Pegboard:
     border_corner_percentage: float = 0.3
 
     def peg_diameter(self):
-        return self.hole_diameter - 0.7
+        return self.hole_diameter - 1
 
     def width(self):
         return (

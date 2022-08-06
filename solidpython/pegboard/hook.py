@@ -1,6 +1,6 @@
 from solid import *
 from lib.threed import half_sphere
-from lib.twod import half_circle
+from lib.twod import half_circle, quarter_circle
 from lib.types import Size2D, Radius, Side
 from lib.scad import save_scad
 from .pegboard import Pegboard
@@ -25,7 +25,8 @@ class PegboardHook:
 
     def render(self):
         # return self.render_hook2d().linear_extrude(self.thickness)
-        return union()(self.mount.render(), self.render_hook())
+        # return union()(self.mount.render(), self.render_hook())
+        return union()(self.mount.render())
 
     def render_hook(self):
         return self.render_hook2d().linear_extrude(self.thickness, center=True)
@@ -53,4 +54,8 @@ class PegboardHook:
 
 if __name__ == "__main__":
     pegboard = Pegboard()
-    save_scad(PegboardHook(pegboard, height=10, depth=20).render())
+    # save_scad(PegboardHook(pegboard, height=10, depth=20).render())
+    save_scad(
+        quarter_circle(d=10, side1=Side.BOTTOM, side2=Side.RIGHT)
+        - quarter_circle(d=7, side1=Side.BOTTOM, side2=Side.RIGHT)
+    )

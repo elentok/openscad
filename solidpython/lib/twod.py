@@ -1,15 +1,21 @@
-from solid import circle, square, difference, debug
+from solid import circle, square, intersection
 from .types import Side
 
 
-def half_circle(d: float, side: Side):
+def _mask(d: float, side: Side):
     if side == Side.TOP:
-        mask = square([d + 0.2, d / 2 + 0.2], center=True).back(d / 4 + 0.1)
+        return square([d + 0.2, d / 2 + 0.2], center=True).forward(d / 4 + 0.1)
     elif side == Side.BOTTOM:
-        mask = square([d + 0.2, d / 2 + 0.2], center=True).forward(d / 4 + 0.1)
+        return square([d + 0.2, d / 2 + 0.2], center=True).back(d / 4 + 0.1)
     elif side == Side.LEFT:
-        mask = square([d / 2 + 0.2, d + 0.2], center=True).right(d / 4 + 0.1)
+        return square([d / 2 + 0.2, d + 0.2], center=True).left(d / 4 + 0.1)
     else:  # right
-        mask = square([d / 2 + 0.2, d + 0.2], center=True).left(d / 4 + 0.1)
+        return square([d / 2 + 0.2, d + 0.2], center=True).right(d / 4 + 0.1)
 
-    return difference()(circle(d=d), mask)
+
+def half_circle(d: float, side: Side):
+    return intersection()(circle(d=d), _mask(d, side))
+
+
+def quarter_circle(d: float, side1: Side, side2: Side):
+    return intersection()(circle(d=d), _mask(d, side1), _mask(d, side2))
