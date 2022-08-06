@@ -11,7 +11,7 @@ from typing import Optional
 class Pegboard:
     hole_diameter: float = 4
     hole_spacing: float = 15  # 25
-    wall_distance: float = 7  # 12.7
+    wall_distance: float = 5  # 12.7
     holes_x: int = 10
     holes_y: int = 10
     border_radius: float = 10
@@ -20,7 +20,7 @@ class Pegboard:
     border_corner_percentage: float = 0.3
 
     def peg_diameter(self):
-        return self.hole_diameter - 0.8
+        return self.hole_diameter - 0.7
 
     def width(self):
         return (
@@ -84,4 +84,4 @@ class Pegboard:
 
 
 if __name__ == "__main__":
-    save_scad(Pegboard().render())
+    save_scad(Pegboard(holes_x=3, holes_y=3).render())

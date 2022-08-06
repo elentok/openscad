@@ -36,7 +36,8 @@ class PegboardMount:
 
     def render_top_peg(self):
         p = self.pegboard
-        radius = p.peg_diameter() + p.thickness
+        # radius = p.peg_diameter() + p.thickness
+        radius = p.wall_distance
         arc = (
             circle(d=p.peg_diameter())
             .left(radius)
@@ -45,16 +46,19 @@ class PegboardMount:
             .forward(radius)
         )
         end = sphere(d=p.peg_diameter()).forward(radius).right(radius)
-        return union()(arc, end).forward(p.hole_spacing / 2)
+        return union()(arc, end).forward(p.hole_spacing / 2 - 0.2)
 
     def render_bottom_peg(self):
         p = self.pegboard
         sphere1 = sphere(d=p.peg_diameter())
         sphere2 = sphere1.right(p.thickness)
-        return hull()(
-            sphere1,
-            sphere2,
-        ).back(p.hole_spacing / 2)
+        sphere3 = sphere2.scale([0.5, 1, 1]).right(p.peg_diameter() * 0.75).back(1)
+        line1 = hull()(sphere1, sphere2)
+        line2 = hull()(sphere2, sphere3)
+        return union()(
+            line1,
+            line2,
+        ).back(p.hole_spacing / 2 - 0.2)
 
     def render2d(self):
         p = self.pegboard
@@ -67,7 +71,7 @@ class PegboardMount:
             Radius(2),
         ).render()
 
-        top_peg_width = p.thickness + p.wall_distance / 2
+        top_peg_width = p.thickness + p.wall_distance / 2 + 20
         # top_peg = (
         #     hull()(
         #         square([p.peg_diameter(), p.peg_diameter()], center=True),

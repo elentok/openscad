@@ -1,5 +1,13 @@
-from typing import Optional
 from dataclasses import dataclass
+from enum import Enum
+from typing import Optional
+
+
+class Side(Enum):
+    TOP = 1
+    BOTTOM = 2
+    LEFT = 3
+    RIGHT = 4
 
 
 @dataclass

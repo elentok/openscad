@@ -1,12 +1,5 @@
-from enum import Enum
 from solid import sphere, cube, difference
-
-
-class Side(Enum):
-    TOP = 1
-    BOTTOM = 2
-    LEFT = 3
-    RIGHT = 4
+from .types import Side
 
 
 def half_sphere(d: float, side: Side):
