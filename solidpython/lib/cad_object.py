@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 
-from solid.core.builtins import OpenSCADObject
 from .scad import save_scad
-from solid import circle, square, union
-from typing import Union, List, Tuple
+from solid import circle, difference, square, union, OpenSCADObject
+from typing import Union, List
 
 numeric = Union[int, float]
 
@@ -32,8 +31,11 @@ class CadObject(ABC):
     def bounding_box(self) -> Coordinate:
         pass
 
-    def add(self, *objects: CadObject) -> CadObject:
-        return CadUnion(self, *objects)
+    def add(self, object: "CadObject") -> "CadObject":
+        return CadUnion(self, object)
+
+    def remove(self, object: "CadObject") -> "CadObject":
+        return CadDiff(self, object)
 
     def export(self):
         save_scad(self.render())
@@ -89,6 +91,31 @@ class CadUnion(CadObject):
     def bounding_box(self):
         pass
 
+    def add(self, object: "CadObject") -> "CadObject":
+        self.children.append(object)
+        return self
+
+
+class CadDiff(CadObject):
+    children: List[CadObject]
+
+    def __init__(self, *children: CadObject):
+        self.children = list(children)
+
+    def render(self):
+        openscad_objects = [child.render() for child in self.children]
+        return difference()(openscad_objects)
+
+    def corner(self):
+        pass
+
+    def bounding_box(self):
+        pass
+
+    def remove(self, object: "CadObject") -> "CadObject":
+        self.children.append(object)
+        return self
+
 
 if __name__ == "__main__":
-    Circle(d=10).export()
+    Circle(d=20).remove(Circle(d=10)).add(Circle(d=2)).export()
