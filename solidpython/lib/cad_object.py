@@ -35,6 +35,9 @@ class Coordinate:
         return [self.x, self.y, self.z]
 
 
+ZERO = Coordinate(0, 0, 0)
+
+
 class DynamicCoordinate:
     x: numeric_or_string
     y: numeric_or_string
@@ -67,7 +70,7 @@ class DynamicCoordinate:
 
 @dataclass
 class BoundingBox:
-    corner: Coordinate
+    center: Coordinate
     size: Coordinate
 
 
@@ -112,7 +115,7 @@ class CadTranslate(CadObject):
     def bounding_box(self):
         box = self.object.bounding_box()
         offset = self.offset.to_coordinate(box.size)
-        return BoundingBox(corner=box.corner.add(offset), size=box.size)
+        return BoundingBox(center=box.center.add(offset), size=box.size)
 
 
 class Circle(CadObject):
@@ -127,10 +130,7 @@ class Circle(CadObject):
         return circle(d=self.d, _fn=self.faces)
 
     def bounding_box(self):
-        return BoundingBox(
-            corner=Coordinate(-self.d / 2, -self.d / 2, 0),
-            size=Coordinate(self.d, self.d, 0),
-        )
+        return BoundingBox(center=ZERO, size=Coordinate(self.d, self.d, 0))
 
 
 class Cylinder(CadObject):
@@ -163,10 +163,7 @@ class Cylinder(CadObject):
 
     def bounding_box(self):
         d = max(self.d1, self.d2)
-        return BoundingBox(
-            corner=Coordinate(-d / 2, -d / 2, self.h / 2),
-            size=(Coordinate(d, d, self.h)),
-        )
+        return BoundingBox(center=ZERO, size=(Coordinate(d, d, self.h)))
 
 
 class Cube(CadObject):
@@ -180,9 +177,7 @@ class Cube(CadObject):
 
     def bounding_box(self):
         s = self.size
-        return BoundingBox(
-            corner=Coordinate(-s.x / 2, -s.y / 2, -s.z / 2), size=self.size
-        )
+        return BoundingBox(center=ZERO, size=self.size)
 
 
 class Square(CadObject):
@@ -196,7 +191,7 @@ class Square(CadObject):
 
     def bounding_box(self):
         s = self.size
-        return BoundingBox(corner=Coordinate(-s.x / 2, -s.y / 2, 0), size=self.size)
+        return BoundingBox(center=ZERO, size=self.size)
 
 
 class CadUnion(CadObject):
@@ -227,7 +222,7 @@ class CadDiff(CadObject):
         openscad_objects = [child.render() for child in self.children]
         return difference()(openscad_objects)
 
-    def corner(self):
+    def center(self):
         pass
 
     def bounding_box(self):
@@ -239,7 +234,7 @@ class CadDiff(CadObject):
 
 
 if __name__ == "__main__":
-    Cylinder(d1=5, d2=15, h=30).add(Cube(Coordinate(15, 15, 15))).export()
+    Cylinder(d1=5, d2=15, h=30).add(Cube(Coordinate(15, 15, 15)).move(y="50%")).export()
     # Circle(d=20).cut(Square(Coordinate(x=10, y=10)).move(x="50%")).export()
     # Circle(d=20).cut(Circle(d=10).move(x="50%", y="50%")).cut(Circle(d=5)).export()
     # Circle(d=20).cut(Circle(d=10).move(x="50%")).add(
