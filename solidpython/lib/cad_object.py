@@ -1,7 +1,16 @@
 from abc import ABC, abstractmethod
 
 from .scad import save_scad
-from solid import circle, difference, square, translate, union, OpenSCADObject
+from solid import (
+    circle,
+    cube,
+    cylinder,
+    difference,
+    square,
+    translate,
+    union,
+    OpenSCADObject,
+)
 from typing import Union, List
 from dataclasses import dataclass
 
@@ -21,6 +30,9 @@ class Coordinate:
 
     def add(self, c: "Coordinate") -> "Coordinate":
         return Coordinate(self.x + c.x, self.y + c.y + self.z + c.z)
+
+    def to_list(self):
+        return [self.x, self.y, self.z]
 
 
 class DynamicCoordinate:
@@ -71,7 +83,7 @@ class CadObject(ABC):
     def add(self, object: "CadObject") -> "CadUnion":
         return CadUnion(self, object)
 
-    def remove(self, object: "CadObject") -> "CadDiff":
+    def cut(self, object: "CadObject") -> "CadDiff":
         return CadDiff(self, object)
 
     def move(
@@ -121,6 +133,58 @@ class Circle(CadObject):
         )
 
 
+class Cylinder(CadObject):
+    d1: numeric
+    d2: numeric
+    h: numeric
+    faces: int
+
+    def __init__(
+        self,
+        h: numeric,
+        d: numeric = 0,
+        d1: numeric = 0,
+        d2: numeric = 0,
+        faces: int = 64,
+    ):
+        assert d != 0 or d1 != 0 or d2 != 0, "Must provide either d, d1 or d2"
+
+        self.h = h
+        self.faces = faces
+        if d == 0:
+            self.d1 = d1
+            self.d2 = d2
+        else:
+            self.d1 = d
+            self.d2 = d
+
+    def render(self):
+        return cylinder(d1=self.d1, d2=self.d2, h=self.h, _fn=self.faces, center=True)
+
+    def bounding_box(self):
+        d = max(self.d1, self.d2)
+        return BoundingBox(
+            corner=Coordinate(-d / 2, -d / 2, self.h / 2),
+            size=(Coordinate(d, d, self.h)),
+        )
+
+
+class Cube(CadObject):
+    size: Coordinate
+
+    def __init__(self, size: Coordinate):
+        self.size = size
+
+    def render(self):
+        return cube(self.size.to_list(), center=True)
+
+    def bounding_box(self):
+        s = self.size
+        return BoundingBox(
+            corner=Coordinate(-s.x / 2, -s.y / 2, -s.z / 2), size=self.size
+        )
+
+
 class Square(CadObject):
     size: Coordinate
 
@@ -128,10 +192,11 @@ class Square(CadObject):
         self.size = size
 
     def render(self):
-        return square([self.size.x, self.size.y])
+        return square([self.size.x, self.size.y], center=True)
 
     def bounding_box(self):
-        return BoundingBox(corner=Coordinate(0, 0, 0), size=self.size)
+        s = self.size
+        return BoundingBox(corner=Coordinate(-s.x / 2, -s.y / 2, 0), size=self.size)
 
 
 class CadUnion(CadObject):
@@ -168,15 +233,15 @@ class CadDiff(CadObject):
     def bounding_box(self):
         pass
 
-    def remove(self, object: "CadObject") -> "CadObject":
+    def cut(self, object: "CadObject") -> "CadObject":
         self.children.append(object)
         return self
 
 
 if __name__ == "__main__":
-    Circle(d=20).remove(Circle(d=10).move(x="50%", y="50%")).remove(
-        Circle(d=5)
-    ).export()
-    # Circle(d=20).remove(Circle(d=10).move(x="50%")).add(
+    Cylinder(d1=5, d2=15, h=30).add(Cube(Coordinate(15, 15, 15))).export()
+    # Circle(d=20).cut(Square(Coordinate(x=10, y=10)).move(x="50%")).export()
+    # Circle(d=20).cut(Circle(d=10).move(x="50%", y="50%")).cut(Circle(d=5)).export()
+    # Circle(d=20).cut(Circle(d=10).move(x="50%")).add(
     #     Circle(d=2).move(x="50%", y="50%")
     # ).export()
