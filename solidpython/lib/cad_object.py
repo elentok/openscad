@@ -9,9 +9,10 @@ from solid import (
     square,
     translate,
     union,
+    hull,
     OpenSCADObject,
 )
-from typing import Union, List
+from typing import Union, List, cast, Optional
 from dataclasses import dataclass
 
 numeric = Union[int, float]
@@ -28,11 +29,35 @@ class Coordinate:
         self.y = y
         self.z = z
 
-    def add(self, c: "Coordinate") -> "Coordinate":
-        return Coordinate(self.x + c.x, self.y + c.y + self.z + c.z)
+    def add(
+        self,
+        c: Optional["Coordinate"] = None,
+        x: numeric = 0,
+        y: numeric = 0,
+        z: numeric = 0,
+    ) -> "Coordinate":
+        if c != None:
+            return Coordinate(self.x + c.x, self.y + c.y + self.z + c.z)
+        else:
+            return Coordinate(self.x + x, self.y + y, self.z + z)
 
     def to_list(self):
         return [self.x, self.y, self.z]
+
+
+coordinate = Union[
+    Coordinate, tuple[numeric, numeric], tuple[numeric, numeric, numeric]
+]
+
+
+def build_coordinate(c: coordinate) -> Coordinate:
+    if type(c) == Coordinate:
+        return cast(Coordinate, c)
+    else:
+        t = cast(tuple, c)
+        if len(t) == 2:
+            return Coordinate(t[0], t[1])
+        return Coordinate(t[0], t[1], t[2])
 
 
 ZERO = Coordinate(0, 0, 0)
@@ -73,6 +98,14 @@ class BoundingBox:
     center: Coordinate
     size: Coordinate
 
+    def half(self, which) -> "BoundingBox":
+        if which == "top":
+            center = self.center
+            size = self.size
+            return BoundingBox(
+                center=center.add(y=size.y / 4), size=size.add(y=-size.y / 2)
+            )
+
 
 class CadObject(ABC):
     @abstractmethod
@@ -99,6 +132,12 @@ class CadObject(ABC):
 
     def export(self):
         save_scad(self.render())
+
+    def linear_extrude(self, height: numeric):
+        return LinearExtrude(self, height)
+
+    # def crop(self, half: str) -> CadDiff:
+    #     return self.cut()
 
 
 class CadTranslate(CadObject):
@@ -183,14 +222,13 @@ class Cube(CadObject):
 class Square(CadObject):
     size: Coordinate
 
-    def __init__(self, size: Coordinate):
-        self.size = size
+    def __init__(self, size: coordinate):
+        self.size = build_coordinate(size)
 
     def render(self):
         return square([self.size.x, self.size.y], center=True)
 
     def bounding_box(self):
-        s = self.size
         return BoundingBox(center=ZERO, size=self.size)
 
 
@@ -222,9 +260,6 @@ class CadDiff(CadObject):
         openscad_objects = [child.render() for child in self.children]
         return difference()(openscad_objects)
 
-    def center(self):
-        pass
-
     def bounding_box(self):
         pass
 
@@ -233,8 +268,64 @@ class CadDiff(CadObject):
         return self
 
 
+class Hull(CadObject):
+    children: list[CadObject]
+
+    def __init__(self, children: list[CadObject]):
+        self.children = children
+
+    def render(self):
+        openscad_objects = [child.render() for child in self.children]
+        return hull()(openscad_objects)
+
+    def bounding_box(self):
+        pass
+
+
+class LinearExtrude(CadObject):
+    object: CadObject
+    height: numeric
+
+    def __init__(self, object: CadObject, height: numeric):
+        self.object = object
+        self.height = height
+
+    def render(self):
+        return self.object.render().linear_extrude(self.height)
+
+    def bounding_box(self):
+        pass
+
+
+class RoundedPolyline(CadObject):
+    thickness: numeric
+    points: list[tuple[numeric, numeric]]
+
+    def __init__(self, thickness: numeric, points: list[tuple[numeric, numeric]]):
+        self.thickness = thickness
+        self.points = points
+
+    def render(self):
+        lines = []
+        for i in range(len(self.points) - 1):
+            (x1, y1) = self.points[i]
+            (x2, y2) = self.points[i + 1]
+            line = hull()(
+                circle(d=self.thickness).right(x1).forward(y1),
+                circle(d=self.thickness).right(x2).forward(y2),
+            )
+            lines.append(line)
+        return union()(lines)
+
+    def bounding_box(self):
+        pass
+
+
 if __name__ == "__main__":
-    Cylinder(d1=5, d2=15, h=30).add(Cube(Coordinate(15, 15, 15)).move(y="50%")).export()
+    # Cylinder(d1=5, d2=15, h=30).add(Cube(Coordinate(15, 15, 15)).move(y="50%")).export()
+    RoundedPolyline(thickness=4, points=[(0, 0), (15, 0), (15, 15)]).linear_extrude(
+        5
+    ).export()
     # Circle(d=20).cut(Square(Coordinate(x=10, y=10)).move(x="50%")).export()
     # Circle(d=20).cut(Circle(d=10).move(x="50%", y="50%")).cut(Circle(d=5)).export()
     # Circle(d=20).cut(Circle(d=10).move(x="50%")).add(
