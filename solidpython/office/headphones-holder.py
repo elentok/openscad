@@ -1,8 +1,8 @@
 from lib.cad_object import RoundedPolyline, Circle, Coordinate, Square
 
-MONITOR_THICKNESS = 19.3
+MONITOR_THICKNESS = 18.6  # includes 0.4mm margin
 MONITOR_TOP_PADDING = 7.5
-HEADPHONE_THICKNESS = 50  # includes 10mm margin
+HEADPHONE_THICKNESS = 60  # includes 20mm margin
 HEADPHONE_DIAMETER = 120
 HOLDER_THICKNESS = 5
 HOLDER_WIDTH = 40
@@ -17,8 +17,8 @@ grip = RoundedPolyline(
         (-HEADPHONE_THICKNESS - t, 0),
         (0, 0),
         (0, HOLDER_HEIGHT),
-        (MONITOR_THICKNESS, HOLDER_HEIGHT),
-        (MONITOR_THICKNESS, HOLDER_HEIGHT - MONITOR_TOP_PADDING),
+        (MONITOR_THICKNESS + t, HOLDER_HEIGHT),
+        (MONITOR_THICKNESS + t, HOLDER_HEIGHT - MONITOR_TOP_PADDING),
     ],
 ).linear_extrude(HOLDER_WIDTH)
 
