@@ -133,8 +133,14 @@ class CadObject(ABC):
     def export(self):
         save_scad(self.render())
 
-    def linear_extrude(self, height: numeric):
+    def linear_extrude(self, height: numeric) -> "LinearExtrude":
         return LinearExtrude(self, height)
+
+    def debug(self) -> "CadDebug":
+        return CadDebug(self)
+
+    def round_corners(self, radius: numeric) -> "RoundCorners":
+        return RoundCorners(self, radius)
 
     # def crop(self, half: str) -> CadDiff:
     #     return self.cut()
@@ -319,6 +325,34 @@ class RoundedPolyline(CadObject):
 
     def bounding_box(self):
         pass
+
+
+class CadDebug(CadObject):
+    object: CadObject
+
+    def __init__(self, object: CadObject):
+        self.object = object
+
+    def render(self):
+        return self.object.render().debug()
+
+    def bounding_box(self):
+        return self.object.bounding_box()
+
+
+class RoundCorners(CadObject):
+    object: CadObject
+    radius: numeric
+
+    def __init__(self, object: CadObject, radius: numeric):
+        self.object = object
+        self.radius = radius
+
+    def render(self):
+        return self.object.render().offset(r=-self.radius).offset(r=self.radius)
+
+    def bounding_box(self):
+        return self.object.bounding_box()
 
 
 if __name__ == "__main__":

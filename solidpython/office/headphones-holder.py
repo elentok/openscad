@@ -8,6 +8,7 @@ HOLDER_THICKNESS = 5
 HOLDER_WIDTH = 40
 HOLDER_HEIGHT = 40
 HOLDER_BACK_HEIGHT = 30
+TOLERANCE = 0.2
 
 t = HOLDER_THICKNESS
 grip = RoundedPolyline(
@@ -35,11 +36,16 @@ grip_supports = RoundedPolyline(
 holder = grip.add(grip_supports)
 
 curved_stand = (
-    Circle(d=HEADPHONE_DIAMETER)
-    .cut(Circle(d=HEADPHONE_DIAMETER - HOLDER_THICKNESS))
-    .cut(Square((HEADPHONE_DIAMETER, HEADPHONE_DIAMETER / 2)).move(y="-50%"))
+    (
+        Circle(d=HEADPHONE_DIAMETER)
+        .cut(Square((HEADPHONE_DIAMETER, HEADPHONE_DIAMETER * 0.85)).move(y="-15%"))
+        .cut(Circle(d=HEADPHONE_DIAMETER - 15))
+    )
+    .round_corners(3)
+    .cut(Square((HOLDER_WIDTH, HEADPHONE_DIAMETER - 14)))
+    .linear_extrude(HEADPHONE_THICKNESS - TOLERANCE)
 )
 
-# curved_stand.export()
+curved_stand.export()
 
-holder.export()
+# holder.export()
