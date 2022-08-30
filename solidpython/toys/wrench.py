@@ -1,6 +1,6 @@
-# from solid import *
-from solid import hull, debug
-from solid.extensions.bosl2 import circle, square, difference
+# from solid2 import *
+from solid2 import hull, debug
+from solid2.extensions.bosl2 import circle, square, difference
 from lib.scad import save_scad
 from lib.hexagon_shell import calc_hexagon_height
 

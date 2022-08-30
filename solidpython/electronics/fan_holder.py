@@ -1,8 +1,7 @@
-from solid import *
-
-# from solid.extensions.bosl2 import *
+from solid2 import *
 
 from lib.chamfer import chamfered_hole
+from lib.scad import save_scad
 
 # Settings for a 92mm fan
 fan_hole_distance = 82.5
@@ -55,4 +54,4 @@ def grip():
     ) - circle(d=fan_screw_hole_diameter)
 
 
-scad_render_to_file(fan_holder(), file_header=f"$fn = 50;")
+save_scad(fan_holder())

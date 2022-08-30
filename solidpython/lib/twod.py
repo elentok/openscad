@@ -1,4 +1,4 @@
-from solid import circle, square, intersection
+from solid2 import circle, square, intersection
 from .types import Side
 
 

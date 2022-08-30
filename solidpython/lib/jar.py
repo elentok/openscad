@@ -1,7 +1,7 @@
-from solid import *
+from solid2 import *
 from lib.scad import save_scad
 
-from solid.extensions.bosl2 import threading
+from solid2.extensions.bosl2 import threading
 
 
 class Jar:

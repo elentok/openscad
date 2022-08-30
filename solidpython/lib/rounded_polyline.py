@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from solid import *
+from solid2 import *
 
 
 def rounded_polyline(thickness: float, points: List[Tuple[float, float]]):

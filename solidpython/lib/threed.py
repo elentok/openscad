@@ -1,4 +1,4 @@
-from solid import sphere, cube, difference
+from solid2 import sphere, cube, difference
 from .types import Side
 
 

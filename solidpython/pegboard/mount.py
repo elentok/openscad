@@ -1,4 +1,4 @@
-from solid import *
+from solid2 import *
 from .pegboard import Pegboard
 from dataclasses import dataclass
 from lib.rounded_square import RoundedSquare

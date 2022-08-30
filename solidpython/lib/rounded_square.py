@@ -1,4 +1,4 @@
-from solid import hull, circle, square
+from solid2 import hull, circle, square
 from typing import Tuple
 from .types import Radius, Size2D
 from dataclasses import dataclass

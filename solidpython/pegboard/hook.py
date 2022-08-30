@@ -1,4 +1,4 @@
-from solid import *
+from solid2 import *
 from lib.threed import half_sphere
 from lib.twod import half_circle, quarter_circle
 from lib.types import Size2D, Radius, Side

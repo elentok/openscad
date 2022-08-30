@@ -1,7 +1,7 @@
-from solid import *
+from solid2 import *
 from lib.scad import save_scad
 from dataclasses import dataclass
-from solid.extensions.bosl2 import back_half
+from solid2.extensions.bosl2 import back_half
 from typing import Optional
 
 

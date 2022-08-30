@@ -1,4 +1,4 @@
-from solid import *
+from solid2 import *
 
 
 def cable_hole_cover():

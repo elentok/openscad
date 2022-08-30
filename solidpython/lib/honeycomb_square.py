@@ -1,7 +1,7 @@
 from .hexagon_shell import HexagonShell
 from typing import Tuple
 from math import ceil
-from solid import square
+from solid2 import square
 
 
 def honeycomb_square(size: Tuple[float, float], hexagons: int):

@@ -1,4 +1,4 @@
-from solid import *
+from solid2 import *
 from lib.scad import save_scad
 from lib.rounded_polyline import rounded_polyline
 

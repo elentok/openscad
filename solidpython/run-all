@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# find . -name '*.py' | grep -v __init__ | while read -r file; do
+for file in */*.py; do
+  if [[ "$file" =~ __init__ ]]; then
+    continue
+  fi
+
+  no_ext="${file/.py/}"
+  module="${no_ext/\//.}"
+
+  echo "- ${module}"
+  poetry run python3 -m "${module}"
+done

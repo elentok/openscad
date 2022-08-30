@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from .scad import save_scad
-from solid import (
+from solid2 import (
     circle,
     cube,
     cylinder,

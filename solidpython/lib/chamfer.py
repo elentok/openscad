@@ -1,4 +1,4 @@
-from solid import *
+from solid2 import *
 
 
 def chamfered_hole(height, hole_diameter, chamfer_diameter):

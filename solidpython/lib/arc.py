@@ -1,4 +1,4 @@
-from solid import circle, hull, union, debug
+from solid2 import circle, hull, union, debug
 from lib.scad import save_scad
 from lib.degrees import cos, sin
 from enum import Enum

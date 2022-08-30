@@ -1,6 +1,6 @@
-from solid import *
+from solid2 import *
 from lib.scad import save_scad
-from solid.extensions.bosl2 import rounding
+from solid2.extensions.bosl2 import rounding
 
 border_radius = 1
 top_radius = 2
@@ -34,5 +34,14 @@ diamond = hull()(
     rounded_hectagon(d2, h2).up(h1),
     sphere(r=top_radius).up(h1 + h2 + h3),
 )
+
+# Example 1: Convenience methods
+obj1 = cube(10, 10, 10).up(20)
+obj2 = cube(10, 10, 10).rotateZ(20)
+
+# Example 2: Union/Diff
+obj1 = square(10, 20) + square(5, 30)
+obj2 = square(10, 20) - square(5, 30)
+
 
 save_scad(diamond)

@@ -1,7 +1,5 @@
 from pathlib import Path
-from solid import scad_render_to_file
-import os
-import tempfile
+from solid2 import scad_render
 import re
 
 LIBS_RE = re.compile("^(include <)[^>]+libs/(.*>;)")
@@ -13,17 +11,13 @@ def save_scad(scad_object, filename=None, segments=60):
 
     print(f"Saving to file '{filename}'")
 
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp_filename = os.path.join(tmp, "file.scad")
-        scad_render_to_file(
-            scad_object, tmp_filename, file_header=f"$fn = {segments};\n\n"
-        )
+    contents: str = scad_render(scad_object, file_header=f"$fn = {segments};\n\n")
 
-        with open(filename, "w") as out:
-            with open(tmp_filename, "r") as input:
-                for line in input.readlines():
-                    line = LIBS_RE.sub("\\1\\2", line)
-                    out.write(line)
+    with open(filename, "w") as out:
+        # with open(tmp_filename, "r") as input:
+        for line in contents.splitlines():
+            line = LIBS_RE.sub("\\1\\2", line)
+            out.write(line)
 
 
 def _output_filename():

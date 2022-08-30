@@ -1,5 +1,5 @@
 # from dataclasses import dataclass
-from solid import *
+from solid2 import *
 from lib.degrees import cos, sin
 from typing import Optional
 from math import sqrt
