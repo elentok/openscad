@@ -12,14 +12,22 @@ pb_border_radius = 10;
 pb_thickness = 2.5;
 pb_border_thickness = 2;
 pb_border_corner_percentage = 0.3;
+// The space between the peg and the peg hole
+pb_peg_tolerance = 1;
 
 // ============================================================
 // Calculated variables
 
-pb_peg_diameter = pb_hole_diameter - 1;
+pb_peg_diameter = pb_hole_diameter - pb_peg_tolerance;
+pb_peg_distance = pb_hole_spacing + pb_hole_diameter;
+pb_peg_radius = pb_peg_diameter / 2;
 
 // Allow joinig multiple boards together.
 pb_board_padding = pb_hole_spacing / 2;
 
 pb_board_width = (pb_holes_x - 1) * pb_hole_spacing + pb_hole_diameter + pb_board_padding * 2;
 pb_board_height = (pb_holes_y - 1) * pb_hole_spacing + pb_hole_diameter + pb_board_padding * 2;
+
+pb_mount_height = pb_hole_spacing + pb_hole_diameter * 2;
+pb_mount_rounding = pb_hole_diameter / 2;
+pb_mount_thickness = pb_thickness;
