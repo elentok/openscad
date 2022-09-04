@@ -30,9 +30,9 @@ module holes2d() {
 
 module wall_distance() {
   inner_size =
-      [ pb_board_width - 2 * pb_border_thickness, pb_board_height - 2 * pb_border_thickness ];
-  corner_width = pb_board_width * pb_border_corner_percentage;
-  corner_height = pb_board_height * pb_border_corner_percentage;
+      [ pb_board_width - 2 * pb_spacer_thickness, pb_board_height - 2 * pb_spacer_thickness ];
+  corner_width = pb_board_width * pb_spacer_percentage;
+  corner_height = pb_board_height * pb_spacer_percentage;
 
   linear_extrude(pb_wall_distance) difference() {
     board2d();

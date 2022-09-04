@@ -6,16 +6,19 @@ $fn = 60;
 pb_hole_diameter = 4;
 // The distance between the center of each pair of adjacent holes.
 pb_hole_spacing = 15;  // 25;
-pb_wall_distance = 5;  // 12.7;
 pb_holes_x = 10;
 pb_holes_y = 10;
 pb_border_radius = 10;
 pb_thickness = 2.5;
-pb_border_thickness = 2;
-pb_border_corner_percentage = 0.3;
 // The space between the peg and the peg hole (treated as a diameter).
 pb_peg_tolerance = 1;
 pb_hook_width = 4;
+
+// Spacers (distancing the pegboard from the wall).
+pb_wall_distance = 5;
+pb_spacer_thickness = 2;
+// The size of the spacer as percentage of the width and height.
+pb_spacer_percentage = 0.3;
 
 // ============================================================
 // Calculated variables
