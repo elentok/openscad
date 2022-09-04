@@ -9,7 +9,7 @@ pb_hole_spacing = 15;  // 25;
 pb_holes_x = 10;
 pb_holes_y = 10;
 pb_border_radius = 10;
-pb_thickness = 2.5;
+pb_thickness = 2;
 // The space between the peg and the peg hole (treated as a diameter).
 pb_peg_tolerance = 0.8;
 pb_hook_width = 4;
