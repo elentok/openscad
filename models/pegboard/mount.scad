@@ -31,7 +31,7 @@ module mount_bottom_peg() {
   y = -pb_hole_spacing / 2;
   x0 = pb_mount_thickness / 2;
   x1 = x0 + pb_thickness;
-  stroke([[x0, y, 0], [x1, y, 0], [x1 + 0.5, y - 0.5, 0]], width = pb_peg_diameter);
+  stroke([[x0, y, 0], [x1, y, 0], [x1 + 0.5, y - 0.7, 0]], width = pb_peg_diameter);
 }
 
 mount(bar_width = 5);

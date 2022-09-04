@@ -11,7 +11,7 @@ pb_holes_y = 10;
 pb_border_radius = 10;
 pb_thickness = 2.5;
 // The space between the peg and the peg hole (treated as a diameter).
-pb_peg_tolerance = 1;
+pb_peg_tolerance = 0.8;
 pb_hook_width = 4;
 
 // Spacers (distancing the pegboard from the wall).
