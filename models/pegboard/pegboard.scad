@@ -3,7 +3,10 @@ include <variables.scad>
 
 module pegboard() {
   board();
-  up(pb_thickness) wall_distance();
+  up(pb_thickness) {
+    edge_spacers();
+    mid_spacers();
+  }
 }
 
 module board() {
@@ -28,7 +31,7 @@ module holes2d() {
   }
 }
 
-module wall_distance() {
+module edge_spacers() {
   inner_size =
       [ pb_board_width - 2 * pb_spacer_thickness, pb_board_height - 2 * pb_spacer_thickness ];
   corner_width = pb_board_width * pb_spacer_percentage;
@@ -40,6 +43,23 @@ module wall_distance() {
     square([ pb_board_width, pb_board_height - corner_height ], center = true);
     square([ pb_board_width - corner_width, pb_board_height ], center = true);
   }
+}
+
+module mid_spacers() {
+  mid_spacer_row();
+  right(pb_hole_spacing * 3) mid_spacer_row();
+  left(pb_hole_spacing * 3) mid_spacer_row();
+}
+
+module mid_spacer_row() {
+  mid_spacer();
+  fwd(pb_hole_spacing * 3) mid_spacer();
+  back(pb_hole_spacing * 3) mid_spacer();
+}
+
+module mid_spacer() {
+  linear_extrude(pb_wall_distance) shell2d(thickness = -pb_mid_spacer_thickness)
+      circle(d = pb_mid_spacer_diameter);
 }
 
 pegboard();

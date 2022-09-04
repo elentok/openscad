@@ -19,6 +19,8 @@ pb_wall_distance = 5;
 pb_spacer_thickness = 2;
 // The size of the spacer as percentage of the width and height.
 pb_spacer_percentage = 0.3;
+pb_mid_spacer_thickness = 1;
+pb_mid_spacer_diameter = 5;
 
 // ============================================================
 // Calculated variables
