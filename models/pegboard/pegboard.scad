@@ -1,4 +1,4 @@
-include <BOSL2/std.scad>
+use <BOSL2/std.scad>
 include <variables.scad>
 
 module pegboard() {
