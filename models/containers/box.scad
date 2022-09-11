@@ -2,16 +2,24 @@ $fn = 50;
 
 use <../../lib/rounded_square.scad>
 use <../../lib/shelf.scad>
+include <BOSL2/std.scad>
 
 // ------------------------------------------------------------
 // Box
 // ------------------------------------------------------------
 
-module box(size, radius, wall_width) {
-  linear_extrude(size.z) { rounded_shell(size, wall_width, radius); }
+module box(size, rounding = 2, thickness = 2) {
+  linear_extrude(thickness) rect([ size.x, size.y ], rounding = rounding);
 
-  linear_extrude(wall_width) { rounded_square(size, radius); }
+  linear_extrude(size.z) shell2d(-thickness, ir = rounding)
+      rect([ size.x, size.y ], rounding = rounding);
 }
+
+// module box(size, radius, wall_width) {
+//   linear_extrude(size.z) { rounded_shell(size, wall_width, radius); }
+//
+//   linear_extrude(wall_width) { rounded_square(size, radius); }
+// }
 
 // ------------------------------------------------------------
 // Box with Label

@@ -1,17 +1,17 @@
 use <BOSL2/std.scad>
 include <variables.scad>
 
-module mount(bar_width) {
+module mount(bar_width, rounding, thickness) {
   assert(bar_width >= pb_peg_diameter);
 
-  mount_bar(bar_width);
+  mount_bar(bar_width, rounding, thickness);
   mount_top_peg();
   mount_bottom_peg();
 }
 
-module mount_bar(bar_width, rounding) {
+module mount_bar(bar_width, rounding, thickness = pb_mount_thickness) {
   rounding = is_def(rounding) ? rounding : bar_width / 4;
-  rotate([ 0, 90, 0 ]) linear_extrude(pb_mount_thickness, center = true)
+  rotate([ 0, 90, 0 ]) linear_extrude(thickness, center = true)
       rect([ bar_width, pb_mount_height ], rounding = rounding);
 }
 
