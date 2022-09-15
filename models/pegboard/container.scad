@@ -1,0 +1,82 @@
+use <../../lib/honeycomb.scad>
+use <../containers/box.scad>
+include <BOSL2/std.scad>
+use <mount.scad>
+include <variables.scad>
+
+container_width_in_pegs = 3;
+container_height_in_pegs = 4;
+container_depth = 24;
+container_thickness = 1.5;
+container_hook_tolerance = 0.2;
+container_hook_protrusion = 5;
+container_hook_opening_tolerance = 0.4;
+container_hook_opening_z_distance = 10;
+container_honeycomb_padding = 7;
+container_honeycomb_hexagons = 6;
+
+container_size = [
+  container_width_in_pegs * pb_hole_spacing,
+  container_depth,
+  container_height_in_pegs* pb_hole_spacing,
+];
+
+echo("Container size: ", container_size);
+
+container_mount_bar_width = pb_peg_diameter;
+container_mount_thickness = container_thickness + container_hook_tolerance;
+container_hook_size = [
+  container_thickness,
+  pb_mount_height * 0.7,
+  container_mount_bar_width,
+];
+
+container_hook_opening_size = [
+  container_hook_size.z + container_hook_opening_tolerance,
+  container_thickness + 0.2,
+  pb_mount_height + container_hook_protrusion + container_hook_opening_tolerance,
+];
+honeycomb_size = [
+  container_size.x - container_honeycomb_padding * 2,
+  container_thickness,
+  container_size.z - container_honeycomb_padding * 2,
+];
+
+module container_hook() {
+  mount(bar_width = container_mount_bar_width, rounding = 0, thickness = container_mount_thickness);
+
+  y = (pb_mount_height - container_hook_size.y) / 2;
+  back(y + container_hook_protrusion) left(container_hook_size.x / 2)
+      cube(container_hook_size, anchor = RIGHT);
+}
+
+module container() {
+  difference() {
+    box(container_size, thickness = container_thickness);
+    container_hook_openings();
+    up(container_honeycomb_padding) fwd(container_size.y / 2 - container_thickness / 2)
+        cube(honeycomb_size, anchor = BOTTOM);
+  }
+
+#container_honeycomb();
+}
+
+module container_hook_openings() {
+  left_opening_x = pb_hole_spacing * container_width_in_pegs / 4;
+
+  up(container_size.z - container_hook_opening_size.z / 2 - container_hook_opening_z_distance)
+      back(container_size.y / 2 - container_hook_opening_size.y / 2 + 0.1) {
+    right(pb_hole_spacing) cube(container_hook_opening_size, center = true);
+    left(pb_hole_spacing) cube(container_hook_opening_size, center = true);
+  }
+}
+
+module container_honeycomb() {
+  up(honeycomb_size.z / 2 + container_honeycomb_padding)
+      fwd(container_size.y / 2 - container_thickness) rotate([ 90, 0, 0 ])
+          linear_extrude(container_thickness) honeycomb_rectangle(
+              [ honeycomb_size.x, honeycomb_size.z ], hexagons = container_honeycomb_hexagons);
+}
+
+container_hook();
+// container();

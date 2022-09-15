@@ -19,7 +19,7 @@ module mount_top_peg() {
   y = pb_hole_spacing / 2;
   x0 = pb_mount_thickness / 2;
   x1 = x0 + pb_thickness;
-  stroke([[x0, y, 0], [x1, y, 0], [x1 + 2, y + 2, 0]], width = pb_peg_diameter, endcap1 = "butt");
+  stroke([[x0, y, 0], [x1, y, 0], [x1 + 2, y + 2, 0]], width = pb_peg_diameter);
 
   // for debugging:
   // color("#00ff00") translate([ pb_thickness / 2 + pb_mount_thickness / 2, y, 0 ])
