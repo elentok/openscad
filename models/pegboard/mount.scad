@@ -2,7 +2,6 @@ use <BOSL2/std.scad>
 include <variables.scad>
 
 module mount(bar_width) {
-  echo("MOUNT() BAR WIDTH", bar_width);
   assert(bar_width >= pb_peg_diameter);
 
   mount_bar(bar_width);
