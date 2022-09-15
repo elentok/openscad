@@ -9,8 +9,8 @@ rounding = 2;
 keychain_hole_diameter = 5;
 keychain_hole_margin = 3;
 thumb_diameter = 20;
-pen_diameter = 7;
-pen_holder_thickness = 1;
+pen_diameter = 7.3;
+pen_holder_thickness = 0.7;
 pen_holder_length = 30;
 
 container_size = [
