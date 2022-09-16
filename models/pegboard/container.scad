@@ -4,11 +4,16 @@ include <BOSL2/std.scad>
 use <mount.scad>
 include <variables.scad>
 
-container_width_in_pegs = 3;
-container_height_in_pegs = 4;
-container_depth = 24;
+// Size 1
+// container_width_in_pegs = 3;
+// container_height_in_pegs = 4;
+// container_depth = 24;
+
+container_width_in_pegs = 5;
+container_height_in_pegs = 5;
+container_depth = 30;
 container_thickness = 1.5;
-container_hook_tolerance = 0.2;
+container_hook_tolerance = 0.1;
 container_hook_protrusion = 5;
 container_hook_opening_tolerance = 0.4;
 container_hook_opening_z_distance = 10;
@@ -58,16 +63,16 @@ module container() {
         cube(honeycomb_size, anchor = BOTTOM);
   }
 
-#container_honeycomb();
+  container_honeycomb();
 }
 
 module container_hook_openings() {
-  left_opening_x = pb_hole_spacing * container_width_in_pegs / 4;
+  opening_x = pb_hole_spacing * ceil(container_width_in_pegs / 4);
 
   up(container_size.z - container_hook_opening_size.z / 2 - container_hook_opening_z_distance)
       back(container_size.y / 2 - container_hook_opening_size.y / 2 + 0.1) {
-    right(pb_hole_spacing) cube(container_hook_opening_size, center = true);
-    left(pb_hole_spacing) cube(container_hook_opening_size, center = true);
+    right(opening_x) cube(container_hook_opening_size, center = true);
+    left(opening_x) cube(container_hook_opening_size, center = true);
   }
 }
 
@@ -79,4 +84,6 @@ module container_honeycomb() {
 }
 
 container_hook();
+// back(container_size.y * 2) rotate([ 0, 0, 90 ]) container_hook();
+// fwd(container_size.y * 2) rotate([ 0, 0, 90 ]) container_hook();
 // container();
