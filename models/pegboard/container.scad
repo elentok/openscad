@@ -59,11 +59,11 @@ module container() {
   difference() {
     box(container_size, thickness = container_thickness);
     container_hook_openings();
-    up(container_honeycomb_padding) fwd(container_size.y / 2 - container_thickness / 2)
-        cube(honeycomb_size, anchor = BOTTOM);
+    // up(container_honeycomb_padding) fwd(container_size.y / 2 - container_thickness / 2)
+    //     cube(honeycomb_size, anchor = BOTTOM);
   }
 
-  container_honeycomb();
+  // container_honeycomb();
 }
 
 module container_hook_openings() {
@@ -83,7 +83,7 @@ module container_honeycomb() {
               [ honeycomb_size.x, honeycomb_size.z ], hexagons = container_honeycomb_hexagons);
 }
 
-container_hook();
+// container_hook();
 // back(container_size.y * 2) rotate([ 0, 0, 90 ]) container_hook();
 // fwd(container_size.y * 2) rotate([ 0, 0, 90 ]) container_hook();
-// container();
+container();
