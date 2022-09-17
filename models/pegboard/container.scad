@@ -4,14 +4,21 @@ include <BOSL2/std.scad>
 use <mount.scad>
 include <variables.scad>
 
-// Size 1
+// Size 1 (medium)
 // container_width_in_pegs = 3;
 // container_height_in_pegs = 4;
 // container_depth = 24;
 
-container_width_in_pegs = 5;
-container_height_in_pegs = 5;
-container_depth = 30;
+// Size 2 (large)
+// container_width_in_pegs = 5;
+// container_height_in_pegs = 5;
+// container_depth = 30;
+
+// Size 3 (small)
+container_width_in_pegs = 3;
+container_height_in_pegs = 3;
+container_depth = 24;
+
 container_thickness = 1.5;
 container_hook_tolerance = 0.1;
 container_hook_protrusion = 5;
