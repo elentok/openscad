@@ -1,7 +1,7 @@
 use <BOSL2/std.scad>
 include <variables.scad>
 
-module mount(bar_width, rounding, thickness) {
+module mount(bar_width, rounding, thickness = pb_mount_thickness) {
   assert(bar_width >= pb_peg_diameter);
 
   mount_bar(bar_width, rounding, thickness);
