@@ -8,8 +8,10 @@ include <BOSL2/std.scad>
 // Box
 // ------------------------------------------------------------
 
-module box(size, rounding = 2, thickness = 2) {
-  linear_extrude(thickness) rect([ size.x, size.y ], rounding = rounding);
+module box(size, rounding = 2, thickness = 2, has_bottom = true) {
+  if (has_bottom) {
+    linear_extrude(thickness) rect([ size.x, size.y ], rounding = rounding);
+  }
 
   linear_extrude(size.z) shell2d(-thickness, ir = rounding)
       rect([ size.x, size.y ], rounding = rounding);

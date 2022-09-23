@@ -54,9 +54,9 @@ module container_hook() {
       cube(container_hook_size, anchor = RIGHT);
 }
 
-module container() {
+module container(has_bottom = true) {
   difference() {
-    box(container_size, thickness = container_thickness);
+    box(container_size, thickness = container_thickness, has_bottom = has_bottom);
     container_hook_openings();
   }
 }
@@ -74,4 +74,5 @@ module container_hook_openings() {
 // container_hook();
 // back(container_size.y * 2) rotate([ 0, 0, 90 ]) container_hook();
 // fwd(container_size.y * 2) rotate([ 0, 0, 90 ]) container_hook();
-container();
+// container();
+container(has_bottom = false);
