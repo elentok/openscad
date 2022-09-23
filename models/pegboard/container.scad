@@ -45,11 +45,6 @@ container_hook_opening_size = [
   container_thickness + 0.2,
   pb_mount_height + container_hook_protrusion + container_hook_opening_tolerance,
 ];
-honeycomb_size = [
-  container_size.x - container_honeycomb_padding * 2,
-  container_thickness,
-  container_size.z - container_honeycomb_padding * 2,
-];
 
 module container_hook() {
   mount(bar_width = container_mount_bar_width, rounding = 0, thickness = container_mount_thickness);

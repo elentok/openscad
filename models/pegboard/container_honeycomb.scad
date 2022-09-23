@@ -3,6 +3,11 @@ include <container.scad>
 
 container_honeycomb_padding = 7;
 container_honeycomb_hexagons = 6;
+honeycomb_size = [
+  container_size.x - container_honeycomb_padding * 2,
+  container_thickness,
+  container_size.z - container_honeycomb_padding * 2,
+];
 
 module container_with_honeycomb() {
   difference() {
