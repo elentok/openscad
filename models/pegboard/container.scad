@@ -3,20 +3,26 @@ include <BOSL2/std.scad>
 use <mount.scad>
 include <variables.scad>
 
-// Size 1 (medium)
+// Variation 1 (large)
+// container_width_in_pegs = 5;
+// container_height_in_pegs = 5;
+// container_depth = 30;
+//
+// Variation 2 (medium)
 // container_width_in_pegs = 3;
 // container_height_in_pegs = 4;
 // container_depth = 24;
 
-// Size 2 (large)
-// container_width_in_pegs = 5;
-// container_height_in_pegs = 5;
-// container_depth = 30;
+// Variation 3 (small)
+// container_width_in_pegs = 3;
+// container_height_in_pegs = 3;
+// container_depth = 15;
 
-// Size 3 (small)
-container_width_in_pegs = 3;
-container_height_in_pegs = 3;
-container_depth = 24;
+// Variation 4 (small without bottom)
+container_width_in_pegs = 2;
+container_height_in_pegs = 2;
+container_depth = 15;
+container_has_bottom = false;
 
 container_thickness = 1.5;
 container_hook_tolerance = 0.1;
@@ -54,15 +60,16 @@ module container_hook() {
       cube(container_hook_size, anchor = RIGHT);
 }
 
-module container(has_bottom = true) {
+module container() {
   difference() {
-    box(container_size, thickness = container_thickness, has_bottom = has_bottom);
+    box(container_size, thickness = container_thickness, has_bottom = container_has_bottom);
     container_hook_openings();
   }
 }
 
 module container_hook_openings() {
-  opening_x = pb_hole_spacing * ceil(container_width_in_pegs / 4);
+  opening_x = container_width_in_pegs == 2 ? pb_hole_spacing / 2
+                                           : pb_hole_spacing * ceil(container_width_in_pegs / 4);
 
   up(container_size.z - container_hook_opening_size.z / 2 - container_hook_opening_z_distance)
       back(container_size.y / 2 - container_hook_opening_size.y / 2 + 0.1) {
@@ -71,8 +78,7 @@ module container_hook_openings() {
   }
 }
 
-// container_hook();
+container_hook();
 // back(container_size.y * 2) rotate([ 0, 0, 90 ]) container_hook();
 // fwd(container_size.y * 2) rotate([ 0, 0, 90 ]) container_hook();
 // container();
-container(has_bottom = false);
