@@ -1,4 +1,3 @@
-use <../../lib/honeycomb.scad>
 use <../containers/box.scad>
 include <BOSL2/std.scad>
 use <mount.scad>
@@ -24,8 +23,6 @@ container_hook_tolerance = 0.1;
 container_hook_protrusion = 5;
 container_hook_opening_tolerance = 0.4;
 container_hook_opening_z_distance = 10;
-container_honeycomb_padding = 7;
-container_honeycomb_hexagons = 6;
 
 container_size = [
   container_width_in_pegs * pb_hole_spacing,
@@ -66,11 +63,7 @@ module container() {
   difference() {
     box(container_size, thickness = container_thickness);
     container_hook_openings();
-    // up(container_honeycomb_padding) fwd(container_size.y / 2 - container_thickness / 2)
-    //     cube(honeycomb_size, anchor = BOTTOM);
   }
-
-  // container_honeycomb();
 }
 
 module container_hook_openings() {
@@ -81,13 +74,6 @@ module container_hook_openings() {
     right(opening_x) cube(container_hook_opening_size, center = true);
     left(opening_x) cube(container_hook_opening_size, center = true);
   }
-}
-
-module container_honeycomb() {
-  up(honeycomb_size.z / 2 + container_honeycomb_padding)
-      fwd(container_size.y / 2 - container_thickness) rotate([ 90, 0, 0 ])
-          linear_extrude(container_thickness) honeycomb_rectangle(
-              [ honeycomb_size.x, honeycomb_size.z ], hexagons = container_honeycomb_hexagons);
 }
 
 // container_hook();
