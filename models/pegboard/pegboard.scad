@@ -16,17 +16,17 @@ module board() {
   }
 }
 
-module board2d() { rect([ pb_board_width, pb_board_height ], rounding = pb_border_radius); }
+module board2d(size = pb_board_size) { rect(size, rounding = pb_border_radius); }
 
-module holes2d() {
-  x0 = pb_board_width / 2 - pb_board_padding - pb_hole_diameter / 2;
-  y0 = pb_board_width / 2 - pb_board_padding - pb_hole_diameter / 2;
+module holes2d(board_size = pb_board_size, holes = pb_holes, hole_diameter = pb_hole_diameter) {
+  x0 = board_size.x / 2 - pb_board_padding - pb_hole_diameter / 2;
+  y0 = board_size.y / 2 - pb_board_padding - pb_hole_diameter / 2;
 
-  for (ix = [0:pb_holes_x - 1]) {
-    for (iy = [0:pb_holes_y - 1]) {
+  for (ix = [0:holes.x - 1]) {
+    for (iy = [0:holes.y - 1]) {
       x = ix * pb_hole_spacing - x0;
       y = iy * pb_hole_spacing - y0;
-      translate([ x, y ]) circle(d = pb_hole_diameter);
+      translate([ x, y ]) circle(d = hole_diameter);
     }
   }
 }

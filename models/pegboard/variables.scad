@@ -8,6 +8,7 @@ pb_hole_diameter = 4;
 pb_hole_spacing = 15;  // 25;
 pb_holes_x = 10;
 pb_holes_y = 10;
+pb_holes = [ pb_holes_x, pb_holes_y ];
 pb_border_radius = 10;
 pb_thickness = 2;
 // The space between the peg and the peg hole (treated as a diameter).
@@ -32,8 +33,14 @@ pb_peg_radius = pb_peg_diameter / 2;
 // Allow joinig multiple boards together.
 pb_board_padding = pb_hole_spacing / 2;
 
-pb_board_width = (pb_holes_x - 1) * pb_hole_spacing + pb_hole_diameter + pb_board_padding * 2;
-pb_board_height = (pb_holes_y - 1) * pb_hole_spacing + pb_hole_diameter + pb_board_padding * 2;
+function pb_calc_board_size(holes) = [
+  (holes.x - 1) * pb_hole_spacing + pb_hole_diameter + pb_board_padding * 2,
+  (holes.y - 1) * pb_hole_spacing + pb_hole_diameter + pb_board_padding * 2,
+];
+
+pb_board_size = pb_calc_board_size([ pb_holes_x, pb_holes_y ]);
+pb_board_width = pb_board_size.x;
+pb_board_height = pb_board_size.y;
 
 pb_mount_height = pb_hole_spacing + pb_hole_diameter;
 pb_mount_thickness = pb_thickness;
