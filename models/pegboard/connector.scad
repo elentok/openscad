@@ -6,10 +6,12 @@ include <variables.scad>
 
 connector_pins = [ 2, 2 ];
 connector_size = pb_calc_board_size(connector_pins);
+connector_pin_tolerance = 0.3;
 
 module connector() {
   linear_extrude(pb_thickness) board2d(connector_size);
-  linear_extrude(pb_thickness * 3) holes2d(connector_size, connector_pins, pb_hole_diameter - 0.1);
+  linear_extrude(pb_thickness * 3)
+      holes2d(connector_size, connector_pins, pb_hole_diameter - connector_pin_tolerance);
 }
 
 connector();
