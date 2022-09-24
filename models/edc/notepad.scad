@@ -2,9 +2,20 @@ $fn = 60;
 include <BOSL2/std.scad>
 
 // ------------------------------------------------------------
-// Variables:
-notepad_size = [ 62.7, 102, 4 ];
-notepad_top_length = 13;
+// Notepads:
+notepad_type = "KohinorNo1-Large";
+// notepad_type = "KohinorNo1-Small"; (a slightly smaller variation)
+
+notepad_size = notepad_type == "KohinorNo1-Small"   ? [ 62.7, 102, 4 ]
+               : notepad_type == "KohinorNo1-Large" ? [ 62.7, 103, 4 ]
+                                                    : assert(false, "Invalid notepad_type");
+
+notepad_top_length = notepad_type == "KohinorNo1-Small"   ? 13
+                     : notepad_type == "KohinorNo1-Large" ? 11
+                                                          : assert(false, "Invalid notepad_type");
+
+// ------------------------------------------------------------
+// Misc Variables:
 notepad_tolerance = 0.3;
 thickness = 1;
 bottom_thickness = 2;
@@ -20,18 +31,18 @@ container_size = [
 ];
 
 // ------------------------------------------------------------
-// Pen Holder Variables
-
-pen_diameter = 7.3;
-pen_holder_thickness = 0.7;
+// Pen Holder Variables:
 pen_holder_type = "round";
 // pen_holder_type = "zebra";
+
+pen_holder_thickness = 0.7;
 
 // ------------------------------------------------------------
 // Round pen variables.
 // Narwhalco 3.35" pen (https://www.amazon.com/dp/B0776LK634)
 round_pen_holder_length = 30;
 round_pen_holder_dist_from_top = 10;
+round_pen_diameter = 7.3;
 
 // ------------------------------------------------------------
 // Zebra Telescopic Ballpoint Pen variables.
@@ -49,10 +60,9 @@ zebra_pen_holder_osize = [
 
 // ------------------------------------------------------------
 module container() {
-  rounding = pen_holder_type == "zebra" ? [ 2, 2, 2, 0 ] : 2;
+  r = pen_holder_type == "zebra" ? [ rounding, rounding, rounding, 0 ] : rounding;
   // outer box
-  linear_extrude(container_size.z)
-      rect([ container_size.x, container_size.y ], rounding = rounding);
+  linear_extrude(container_size.z) rect([ container_size.x, container_size.y ], rounding = r);
 }
 
 module notepad_mask() {
@@ -98,13 +108,13 @@ module pen_holder() {
 }
 
 module round_pen_holder() {
-  od = pen_diameter + pen_holder_thickness * 2;
+  od = round_pen_diameter + pen_holder_thickness * 2;
 
   x = container_size.x / 2 + od / 2;
   y = container_size.y / 2 - round_pen_holder_dist_from_top;
   z = od / 2;
   translate([ x, y, z ]) rotate([ 90, 0, 0 ]) linear_extrude(round_pen_holder_length) union() {
-    shell2d(pen_holder_thickness) circle(d = pen_diameter);
+    shell2d(pen_holder_thickness) circle(d = round_pen_diameter);
     difference() {
       left(od / 2) fwd(od / 2) square([ od / 2, od / 2 ]);
       circle(d = od);
