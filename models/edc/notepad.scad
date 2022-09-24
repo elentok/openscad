@@ -14,7 +14,7 @@ pen_holder_type = "round";
 // Notepads:
 
 notepad_size = notepad_type == "KohinorNo1-Small"   ? [ 62.7, 102, 4 ]
-               : notepad_type == "KohinorNo1-Large" ? [ 62.4, 103, 4 ]
+               : notepad_type == "KohinorNo1-Large" ? [ 62.7, 104.7, 4 ]
                                                     : assert(false, "Invalid notepad_type");
 
 notepad_top_length = notepad_type == "KohinorNo1-Small"   ? 13
