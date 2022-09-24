@@ -7,8 +7,8 @@ include <BOSL2/std.scad>
 notepad_type = "KohinorNo1-Large";
 // notepad_type = "KohinorNo1-Small"; (a slightly smaller variation)
 
-// pen_holder_type = "round";
-pen_holder_type = "zebra";
+pen_holder_type = "round";
+// pen_holder_type = "zebra";
 
 // ------------------------------------------------------------
 // Notepads:
@@ -31,6 +31,13 @@ keychain_hole_diameter = 5;
 keychain_hole_margin = 1;
 thumb_diameter = 20;
 
+text_on_the_back = "";
+text_on_the_back_font = "Arial:style=Bold";
+text_on_the_back_size = 20;
+
+subtext_on_the_back = "";
+subtext_on_the_back_size = 14;
+
 container_size = [
   notepad_size.x + notepad_tolerance + thickness * 2,
   notepad_size.y + notepad_tolerance + thickness * 2,
@@ -46,7 +53,7 @@ pen_holder_thickness = 0.7;
 // Narwhalco 3.35" pen (https://www.amazon.com/dp/B0776LK634)
 round_pen_holder_length = 30;
 round_pen_holder_dist_from_top = 10;
-round_pen_diameter = 7.3;
+round_pen_diameter = 7.4;
 
 // ------------------------------------------------------------
 // Zebra Telescopic Ballpoint Pen variables.
@@ -207,9 +214,28 @@ module notepad_case() {
     notepad_mask();
     keychain_hole();
     thumb_mask();
+    if (text_on_the_back != "") {
+      text_on_the_back_mask();
+    }
   }
 
   pen_holder();
+}
+
+module text_on_the_back_mask() {
+  y = subtext_on_the_back != "" ? (text_on_the_back_size - subtext_on_the_back_size) : 0;
+
+  back(y) down(0.1) linear_extrude(bottom_thickness + 0.2) offset(r = 1)
+      mirror([ 1, 0, 0 ]) union() {
+    text(text_on_the_back, halign = "center", valign = "center", size = text_on_the_back_size,
+         font = text_on_the_back_font);
+
+    if (subtext_on_the_back != "") {
+      offset(r = -1) fwd(subtext_on_the_back_size * 1.4)
+          text(subtext_on_the_back, halign = "center", valign = "center",
+               font = text_on_the_back_font, size = subtext_on_the_back_size);
+    }
+  }
 }
 
 notepad_case();
