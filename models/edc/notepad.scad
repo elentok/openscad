@@ -1,6 +1,8 @@
 $fn = 60;
 include <BOSL2/std.scad>
 
+// ------------------------------------------------------------
+// Variables:
 notepad_size = [ 62.7, 102, 4 ];
 notepad_top_length = 13;
 notepad_tolerance = 0.3;
@@ -10,12 +12,30 @@ rounding = 2;
 keychain_hole_diameter = 5;
 keychain_hole_margin = 1;
 thumb_diameter = 20;
+
+container_size = [
+  notepad_size.x + notepad_tolerance + thickness * 2,
+  notepad_size.y + notepad_tolerance + thickness * 2,
+  notepad_size.z + bottom_thickness,
+];
+
+// ------------------------------------------------------------
+// Pen Holder Variables
+
 pen_diameter = 7.3;
 pen_holder_thickness = 0.7;
-pen_holder_length = 30;
+pen_holder_type = "round";
+// pen_holder_type = "zebra";
 
-// pen_holder_type = "round";  // "zebra"
-pen_holder_type = "zebra";  // "zebra"
+// ------------------------------------------------------------
+// Round pen variables.
+// Narwhalco 3.35" pen (https://www.amazon.com/dp/B0776LK634)
+round_pen_holder_length = 30;
+round_pen_holder_dist_from_top = 10;
+
+// ------------------------------------------------------------
+// Zebra Telescopic Ballpoint Pen variables.
+// https://www.amazon.com/dp/B00NACZB1S
 zebra_pen_cap_diameter = 5;
 zebra_pen_cap_height = 9;
 zebra_pen_cap_distance = 5;
@@ -27,12 +47,7 @@ zebra_pen_holder_osize = [
   zebra_pen_holder_isize.y + pen_holder_thickness * 2, zebra_pen_holder_isize.z
 ];
 
-container_size = [
-  notepad_size.x + notepad_tolerance + thickness * 2,
-  notepad_size.y + notepad_tolerance + thickness * 2,
-  notepad_size.z + bottom_thickness,
-];
-
+// ------------------------------------------------------------
 module container() {
   rounding = pen_holder_type == "zebra" ? [ 2, 2, 2, 0 ] : 2;
   // outer box
@@ -83,16 +98,16 @@ module pen_holder() {
 }
 
 module round_pen_holder() {
-  outer_diameter = pen_diameter + pen_holder_thickness * 2;
+  od = pen_diameter + pen_holder_thickness * 2;
 
-  x = -container_size.x / 2 - outer_diameter / 2;
-  y = -pen_holder_length / 2;
-  z = outer_diameter / 2;
-  translate([ x, y, z ]) rotate([ -90, 0, 0 ]) linear_extrude(pen_holder_length) union() {
+  x = container_size.x / 2 + od / 2;
+  y = container_size.y / 2 - round_pen_holder_dist_from_top;
+  z = od / 2;
+  translate([ x, y, z ]) rotate([ 90, 0, 0 ]) linear_extrude(round_pen_holder_length) union() {
     shell2d(pen_holder_thickness) circle(d = pen_diameter);
     difference() {
-      square([ outer_diameter / 2, outer_diameter / 2 ]);
-      circle(d = outer_diameter);
+      left(od / 2) fwd(od / 2) square([ od / 2, od / 2 ]);
+      circle(d = od);
     }
   }
 }
