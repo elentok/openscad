@@ -4,24 +4,40 @@ include <BOSL2/std.scad>
 notepad_size = [ 62.7, 102, 4 ];
 notepad_top_length = 13;
 notepad_tolerance = 0.3;
-thickness = 2;
+thickness = 1;
+bottom_thickness = 2;
 rounding = 2;
 keychain_hole_diameter = 5;
-keychain_hole_margin = 3;
+keychain_hole_margin = 1;
 thumb_diameter = 20;
 pen_diameter = 7.3;
 pen_holder_thickness = 0.7;
 pen_holder_length = 30;
 
+// pen_holder_type = "round";  // "zebra"
+pen_holder_type = "zebra";  // "zebra"
+zebra_pen_cap_diameter = 5;
+zebra_pen_cap_height = 9;
+zebra_pen_cap_distance = 5;
+zebra_pen_holder_length = 22;
+zebra_pen_holder_dist_from_top = 10;
+zebra_pen_holder_isize = [ 3, 6, 30 ];
+zebra_pen_holder_osize = [
+  zebra_pen_holder_isize.x + pen_holder_thickness * 2,
+  zebra_pen_holder_isize.y + pen_holder_thickness * 2, zebra_pen_holder_isize.z
+];
+
 container_size = [
-  notepad_size.x + thickness,
-  notepad_size.y + thickness,
-  notepad_size.z + thickness,
+  notepad_size.x + notepad_tolerance + thickness * 2,
+  notepad_size.y + notepad_tolerance + thickness * 2,
+  notepad_size.z + bottom_thickness,
 ];
 
 module container() {
+  rounding = pen_holder_type == "zebra" ? [ 2, 2, 2, 0 ] : 2;
   // outer box
-  linear_extrude(container_size.z) rect([ container_size.x, container_size.y ], rounding = 2);
+  linear_extrude(container_size.z)
+      rect([ container_size.x, container_size.y ], rounding = rounding);
 }
 
 module notepad_mask() {
@@ -38,26 +54,35 @@ module notepad_mask() {
   ];
 
   y = -top_size.y + (bottom_size.y + top_size.y) / 2;
-  up(thickness) fwd(y) union() {
-    cube(top_size, anchor = BOTTOM + BACK);
-    cube(bottom_size, anchor = BOTTOM + FWD);
+  up(bottom_thickness) back(y) union() {
+    cube(top_size, anchor = BOTTOM + FWD);
+    cube(bottom_size, anchor = BOTTOM + BACK);
   }
 }
 
 module keychain_hole() {
   x = (notepad_size.x - keychain_hole_diameter) / 2 - keychain_hole_margin;
   y = (notepad_size.y - keychain_hole_diameter) / 2 - keychain_hole_margin;
-  translate([ -x, -y, -0.1 ]) cylinder(d = keychain_hole_diameter, h = thickness + 0.2);
+  translate([ -x, y, -0.1 ]) cylinder(d = keychain_hole_diameter, h = bottom_thickness + 0.2);
 }
 
 module notepad_top() { up(thickness) cube(notepad_size, anchor = BOTTOM); }
 
 module thumb_mask() {
   y = (notepad_size.y) / 2;
-  translate([ 0, y, -0.1 ]) linear_extrude(container_size.z + 0.2) circle(d = thumb_diameter);
+  translate([ 0, -y, -0.1 ]) linear_extrude(container_size.z + 0.2) circle(d = thumb_diameter);
 }
 
 module pen_holder() {
+  if (pen_holder_type == "round") {
+    round_pen_holder();
+  } else if (pen_holder_type == "zebra") {
+    zebra_pen_holder();
+    zebra_pen_cap();
+  }
+}
+
+module round_pen_holder() {
   outer_diameter = pen_diameter + pen_holder_thickness * 2;
 
   x = -container_size.x / 2 - outer_diameter / 2;
@@ -70,6 +95,81 @@ module pen_holder() {
       circle(d = outer_diameter);
     }
   }
+}
+
+// Holder for the telescopic zebra pen
+module zebra_pen_holder() {
+  rounding = zebra_pen_holder_isize.x / 2;
+  x = (container_size.x / 2 + zebra_pen_holder_osize.x / 2 - thickness);
+  y = container_size.y / 2 - zebra_pen_holder_osize.z / 2 - zebra_pen_holder_dist_from_top;
+  z = zebra_pen_holder_osize.y / 2;
+  translate([ x, y, z ]) rotate([ 90, 0, 0 ]) union() {
+    linear_extrude(zebra_pen_holder_isize.z, center = true) union() {
+      shell2d(thickness = pen_holder_thickness) rect(zebra_pen_holder_isize, rounding = rounding);
+
+      r = zebra_pen_holder_osize.x / 2;
+
+      // quarter circle in the corner
+      back(r - zebra_pen_holder_osize.y / 2) rotate([ 0, 0, 180 ]) difference() {
+        square([ r, r ]);
+        circle(r = r);
+      }
+    }
+
+    // zebra_pen_holder_notch(rounding);
+  }
+}
+
+module zebra_pen_cap() {
+  t = pen_holder_thickness;
+  h = zebra_pen_cap_height;
+  id = zebra_pen_cap_diameter;
+  od = zebra_pen_cap_diameter + t * 2;
+
+  x = (container_size.x / 2 + od / 2 + zebra_pen_cap_distance);
+  y = -container_size.y / 2 + h / 2;
+  z = od / 2;
+
+  translate([ x, y, z ]) rotate([ -90, 0, 0 ]) difference() {
+    hull() {
+      left(od / 2 + zebra_pen_cap_distance) back((od - container_size.z) / 2)
+          cube([ thickness, container_size.z, h ], center = true);
+      cylinder(h = h, d = od, center = true);
+    }
+
+    up(t / 2) cylinder(h = h - t + 0.1, d = id, center = true);
+  }
+
+  // !union() {
+  //   down(h / 2) cylinder(h = pen_holder_thickness, d = od);
+  //   tube(h = h, od = od, id = id);
+  //
+  //   // quarter circle in the top corner
+  //   linear_extrude(h, center = true) difference() {
+  //     left(od / 2) square([ od / 2, od / 2 ]);
+  //     circle(d = od);
+  //   }
+  //
+  //   // quarter circle in the bottom corner
+  //   linear_extrude(h, center = true) difference() {
+  //     fwd(od / 2) left(od / 2) square([ od / 2, od / 2 ]);
+  //     circle(d = od);
+  //   }
+
+  // back(od / 4) right(od / 2 + zebra_pen_cap_diameter / 2)
+  //     cube([ zebra_pen_cap_distance, od / 2, zebra_pen_cap_height ], center = true);
+  //     }
+}
+
+// notch to prevent from shaking (not working well)
+module zebra_pen_holder_notch(rounding) {
+  notch_size_x = 1;
+  notch_size_z = 2;
+  size = [ pen_holder_thickness + notch_size_x, zebra_pen_holder_isize.y ];
+
+  down(zebra_pen_holder_osize.z / 2 - notch_size_z / 2) linear_extrude(notch_size_z, center = true)
+      left(zebra_pen_holder_osize.x / 2 - size.x / 2) #rect(
+          size, rounding = [ 0, rounding, rounding, 0 ]);
 }
 
 module notepad_case() {
