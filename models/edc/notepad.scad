@@ -2,12 +2,19 @@ $fn = 60;
 include <BOSL2/std.scad>
 
 // ------------------------------------------------------------
-// Notepads:
+// Selectors:
+
 notepad_type = "KohinorNo1-Large";
 // notepad_type = "KohinorNo1-Small"; (a slightly smaller variation)
 
+// pen_holder_type = "round";
+pen_holder_type = "zebra";
+
+// ------------------------------------------------------------
+// Notepads:
+
 notepad_size = notepad_type == "KohinorNo1-Small"   ? [ 62.7, 102, 4 ]
-               : notepad_type == "KohinorNo1-Large" ? [ 62.7, 103, 4 ]
+               : notepad_type == "KohinorNo1-Large" ? [ 62.4, 103, 4 ]
                                                     : assert(false, "Invalid notepad_type");
 
 notepad_top_length = notepad_type == "KohinorNo1-Small"   ? 13
@@ -32,9 +39,6 @@ container_size = [
 
 // ------------------------------------------------------------
 // Pen Holder Variables:
-pen_holder_type = "round";
-// pen_holder_type = "zebra";
-
 pen_holder_thickness = 0.7;
 
 // ------------------------------------------------------------
@@ -49,7 +53,7 @@ round_pen_diameter = 7.3;
 // https://www.amazon.com/dp/B00NACZB1S
 zebra_pen_cap_diameter = 5;
 zebra_pen_cap_height = 9;
-zebra_pen_cap_distance = 5;
+zebra_pen_cap_distance = 2.5;
 zebra_pen_holder_length = 22;
 zebra_pen_holder_dist_from_top = 10;
 zebra_pen_holder_isize = [ 3, 6, 30 ];
