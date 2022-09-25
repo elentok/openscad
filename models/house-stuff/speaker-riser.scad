@@ -1,7 +1,7 @@
 use <../../lib/honeycomb.scad>
 include <BOSL2/std.scad>
 
-riser_size = [ 160, 130, 10 ];
+riser_size = [ 175, 160, 8 ];
 
 feet_thickness = 2;
 feet_id = 27;
