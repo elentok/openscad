@@ -2,8 +2,8 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 hole_diameter = 35;
-hole_height = 20;  // actually 15.4, but I want to cover the rough edges below.
-hole_tolerance = 0.4;
+hole_height = 10;
+hole_tolerance = 0.2;
 thickness = 1.4;
 rounding = thickness / 2;
 
