@@ -1,6 +1,6 @@
 kb_left_size = [ 194, 111 ];
-kb_right_size = [ 188, 111 ];
-kb_height = 12.9;
+kb_right_size = [ 190, 111 ];
+kb_height = 3;  // 12.9; (reset after test prints)
 kb_row_height = 19.5;
 kb_padding = 7.6;
 kb_half_connector_width = 10;
@@ -9,29 +9,30 @@ kb_half_connector_tolerance = 0.1;
 kb_right_padding_row1 = 9;
 kb_right_padding_row3 = 4.5;
 kb_right_padding_row4and5 = 13.5;
+kb_screw_distance_from_edge = 4.4;
 
 // Distances of the forward screws from the right
 kb_right_fwd_screws = [
-  4.7,
-  4.7 + 83,
-  4.7 + 83 * 2,
+  kb_screw_distance_from_edge,
+  kb_screw_distance_from_edge + 83,
+  kb_screw_distance_from_edge + 83 * 2,
 ];
 
 // Distances of the back screws from the right
 kb_right_back_screws = [
-  4.7,
-  4.7 + 49,
-  4.7 + 49 + 22,
-  4.7 + 49 + 22 + 75,
-  4.7 + 49 + 22 + 75 + 24,
+  kb_screw_distance_from_edge,
+  kb_screw_distance_from_edge + 49.4,
+  kb_screw_distance_from_edge + 49.4 + 22,
+  kb_screw_distance_from_edge + 49.4 + 22 + 75,
+  kb_screw_distance_from_edge + 49.4 + 22 + 75 + 24,
 ];
 
-kb_screw_diameter = 2.3;
+kb_screw_diameter = 2.5;
 
 case_border_radius = 2;
-case_border_thickness = 2;
-case_border_tolerance = 0.4;
-case_top_thickness = 7;
+case_border_thickness = 1.5;
+case_border_tolerance = 0.6;
+case_top_thickness = 1.5;  // 7; (reset after test prints)
 case_bottom_thickness = 2;
 case_vertical_tolerance = 0.2;
 
