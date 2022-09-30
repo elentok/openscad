@@ -3,10 +3,40 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 module case_top_right_right() {
-  diff(remove = "remove2", keep = "keep2") { case_top_right(); }
+  diff(remove = "remove2", keep = "keep2") {
+    case_top_right();
+
+    tag("remove2") case_top_right_right_half_mask();
+  }
 }
 
-module case_top_right() { linear_extrude(case_top_thickness) case_top_right_2d(); }
+module case_top_right_right_half_mask() {
+  size_back = [
+    case_right_fwd_connector - kb_half_connector_width / 2 - kb_half_connector_tolerance,
+    case_right_size.y / 2, case_top_height + 0.2
+  ];
+
+  size_fwd = [
+    case_right_back_connector - kb_half_connector_width / 2 - kb_half_connector_tolerance,
+    case_right_size.y / 2, case_top_height + 0.2
+  ];
+
+  right(case_right_size.x - size_back.x) down(case_top_border_height + 0.1) back(size_back.y)
+      cube(size_back, anchor = BOTTOM + FWD + LEFT);
+
+  right(case_right_size.x - size_fwd.x) down(case_top_border_height + 0.1)
+      cube(size_fwd, anchor = BOTTOM + FWD + LEFT);
+}
+
+module case_top_right() {
+  // Top
+  linear_extrude(case_top_thickness) case_top_right_2d();
+
+  // Border
+  h = case_top_border_height;
+  down(h) linear_extrude(h) shell2d(-case_border_thickness)
+      rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT);
+}
 
 module case_top_right_2d() {
   diff() {
@@ -39,24 +69,24 @@ module case_top_right_2d() {
 
       // Screws
       screws_x0 = case_border_thickness + case_border_tolerance / 2;
-      for (i = [0:len(kb_right_bottom_screws) - 1]) {
-        left(screws_x0 + kb_right_bottom_screws[i]) bottom_screw_mask();
+      for (i = [0:len(kb_right_back_screws) - 1]) {
+        left(screws_x0 + kb_right_back_screws[i]) back_screw_mask();
       }
-      for (i = [0:len(kb_right_top_screws) - 1]) {
-        left(screws_x0 + kb_right_top_screws[i]) top_screw_mask();
+      for (i = [0:len(kb_right_fwd_screws) - 1]) {
+        left(screws_x0 + kb_right_fwd_screws[i]) fwd_screw_mask();
       }
     }
   }
 }
 
-module bottom_screw_mask() {
+module back_screw_mask() {
   screws_y0 = case_border_thickness + case_border_tolerance / 2;
-  tag("remove") back(screws_y0 + 4.7) position(BOTTOM + RIGHT) circle(d = kb_screw_diameter);
+  tag("remove") fwd(screws_y0 + 4.7) position(BACK + RIGHT) circle(d = kb_screw_diameter);
 }
 
-module top_screw_mask() {
+module fwd_screw_mask() {
   screws_y0 = case_border_thickness + case_border_tolerance / 2;
-  tag("remove") fwd(screws_y0 + 4.7) position(TOP + RIGHT) circle(d = kb_screw_diameter);
+  tag("remove") back(screws_y0 + 4.7) position(FWD + RIGHT) circle(d = kb_screw_diameter);
 }
 
 case_top_right_right();
