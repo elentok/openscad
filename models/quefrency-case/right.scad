@@ -3,10 +3,10 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 module case_top_right_right() {
-  diff(remove = "remove2", keep = "keep2") { case_top_right_2d(); }
+  diff(remove = "remove2", keep = "keep2") { case_top_right(); }
 }
 
-module case_top_right() { linear_extrude(1.5) case_top_right_2d(); }
+module case_top_right() { linear_extrude(case_top_thickness) case_top_right_2d(); }
 
 module case_top_right_2d() {
   diff() {
@@ -38,22 +38,25 @@ module case_top_right_2d() {
           rect(row4and5_padding_size, anchor = TOP + LEFT, rounding = [ 1, 0, 0, 1 ]);
 
       // Screws
+      screws_x0 = case_border_thickness + case_border_tolerance / 2;
       for (i = [0:len(kb_right_bottom_screws) - 1]) {
-        left(kb_right_bottom_screws[i]) bottom_screw_mask();
+        left(screws_x0 + kb_right_bottom_screws[i]) bottom_screw_mask();
       }
       for (i = [0:len(kb_right_top_screws) - 1]) {
-        left(kb_right_top_screws[i]) top_screw_mask();
+        left(screws_x0 + kb_right_top_screws[i]) top_screw_mask();
       }
     }
   }
 }
 
 module bottom_screw_mask() {
-  tag("remove") back(4.7) position(BOTTOM + RIGHT) circle(d = kb_screw_diameter);
+  screws_y0 = case_border_thickness + case_border_tolerance / 2;
+  tag("remove") back(screws_y0 + 4.7) position(BOTTOM + RIGHT) circle(d = kb_screw_diameter);
 }
 
 module top_screw_mask() {
-  tag("remove") fwd(4.7) position(TOP + RIGHT) circle(d = kb_screw_diameter);
+  screws_y0 = case_border_thickness + case_border_tolerance / 2;
+  tag("remove") fwd(screws_y0 + 4.7) position(TOP + RIGHT) circle(d = kb_screw_diameter);
 }
 
 case_top_right_right();

@@ -2,8 +2,8 @@ kb_left_size = [ 194, 111 ];
 kb_right_size = [ 188, 111 ];
 kb_height = 12.9;
 kb_row_height = 19.5;
-
 kb_padding = 7.6;
+kb_half_connector_width = 10;
 
 kb_right_padding_row1 = 9;
 kb_right_padding_row3 = 4.5;
@@ -25,10 +25,13 @@ kb_right_bottom_screws = [
   4.7 + 49 + 22 + 75 + 24,
 ];
 
+// kb_right_top_connector
+
 kb_screw_diameter = 2.3;
 
 case_border_radius = 2;
 case_border_thickness = 2;
+case_border_tolerance = 0.4;
 case_top_thickness = 7;
 case_bottom_thickness = 2;
 
@@ -38,8 +41,8 @@ case_x_angle = 8;  // degrees
 case_y_angle = 2;  // degrees
 
 case_left_size = [
-  kb_left_size.x + case_border_thickness * 2,
-  kb_left_size.y + case_border_thickness * 2,
+  kb_left_size.x + case_border_thickness * 2 + case_border_tolerance,
+  kb_left_size.y + case_border_thickness * 2 + case_border_tolerance,
 ];
 
 case_right_size = [
