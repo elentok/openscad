@@ -117,25 +117,28 @@ module case_top_right_2d() {
           rect(keys_size, rounding = 1, anchor = BOTTOM + RIGHT);
 
       // extra padding for row 1
-      row1_padding_size = [ kb_right_padding_row1, kb_row_height ];
-      row1_padding_offset = [ case_border_thickness, -case_border_thickness - kb_padding ];
-      tag("keep") translate(row1_padding_offset) position(TOP + LEFT)
-          rect(row1_padding_size, anchor = TOP + LEFT, rounding = [ 0, 0, 0, 1 ]);
+      for (i = [0:kb_right_row_count - 1]) {
+        padding = kb_right_padding_by_row[i];
+        if (padding > 0) {
+          padding_size = [ padding, kb_row_height ];
+          padding_offset = [
+            case_border_thickness,
+            -case_border_thickness - kb_padding - kb_row_height * i,
+          ];
 
-      // extra padding for row 3
-      row3_padding_size = [ kb_right_padding_row3, kb_row_height ];
-      row3_padding_offset =
-          [ case_border_thickness, -case_border_thickness - kb_padding - kb_row_height * 2 ];
-      tag("keep") translate(row3_padding_offset) position(TOP + LEFT)
-          rect(row3_padding_size, anchor = TOP + LEFT, rounding = [ 1, 0, 0, 0 ]);
+          round_top = i > 0 && kb_right_padding_by_row[i - 1] < padding;
+          round_bottom = i < kb_right_row_count - 1 && kb_right_padding_by_row[i + 1] < padding;
+          rounding = [
+            round_top ? 1 : 0,
+            0,
+            0,
+            round_bottom ? 1 : 0,
+          ];
 
-      // extra padding for row 4 + 5
-      row4and5_padding_size = [ kb_right_padding_row4and5, kb_row_height * 2 ];
-      row4and5_padding_offset =
-          [ case_border_thickness, -case_border_thickness - kb_padding - kb_row_height * 3 ];
-      tag("keep") translate(row4and5_padding_offset) position(TOP + LEFT)
-          rect(row4and5_padding_size, anchor = TOP + LEFT, rounding = [ 1, 0, 0, 1 ]);
-
+          tag("keep") translate(padding_offset) position(TOP + LEFT)
+              rect(padding_size, anchor = TOP + LEFT, rounding = rounding);
+        }
+      }
       // Screws
       for (i = [0:len(kb_right_back_screws) - 1]) {
         screw_offset = kb_right_back_screws[i];

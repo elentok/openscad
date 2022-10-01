@@ -12,10 +12,11 @@ kb_padding = 7.2;  // the board area that isn't covered by keys
 kb_half_connector_width = 10;
 kb_half_connector_tolerance = 0.1;
 
+kb_right_padding_by_row = [ 9, 0, 4.5, 13.5, 13.5 ];
+kb_right_row_count = len(kb_right_padding_by_row);
 kb_right_padding_row1 = 9;
 kb_right_padding_row3 = 4.5;
 kb_right_padding_row4and5 = 13.5;
-kb_screw_distance_from_edge = 4.4;
 
 // Distances of the forward screws from the right
 kb_right_fwd_screws = [
