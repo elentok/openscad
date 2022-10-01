@@ -14,9 +14,6 @@ kb_half_connector_tolerance = 0.1;
 
 kb_right_padding_by_row = [ 9, 0, 4.5, 13.5, 13.5 ];
 kb_right_row_count = len(kb_right_padding_by_row);
-kb_right_padding_row1 = 9;
-kb_right_padding_row3 = 4.5;
-kb_right_padding_row4and5 = 13.5;
 
 // Distances of the forward screws from the right
 kb_right_fwd_screws = [
