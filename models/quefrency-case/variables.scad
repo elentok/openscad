@@ -1,6 +1,6 @@
 include <BOSL2/std.scad>
 // When set to true it makes some of the parts thinner so they print faster
-test_mode = true;
+test_mode = false;
 
 nothing = 0.1;
 
@@ -12,8 +12,11 @@ kb_padding = 7.2;  // the board area that isn't covered by keys
 kb_half_connector_width = 10;
 kb_half_connector_tolerance = 0.1;
 
-kb_right_padding_by_row = [ 9, 0, 4.5, 13.5, 13.5 ];
+kb_right_padding_by_row = [ 11, 0, 4.5, 14.5, 19.5 ];
 kb_right_row_count = len(kb_right_padding_by_row);
+// [ [x, width], [x,width], ...]
+kb_right_bottom_row_spaces = [ [ 66, 6 ], [ 120, 6 ] ];
+kb_right_bottom_row_spaces_height = 18;
 
 // Distances of the forward screws from the right
 kb_right_fwd_screws = [
@@ -66,6 +69,17 @@ case_top_height = kb_height / 2 + case_top_thickness + case_vertical_tolerance;
 case_bottom_height = kb_height / 2 + case_bottom_thickness;
 case_top_border_height = case_top_height - case_top_thickness;
 
+// ------------------------------------------------------------
+// USB Holes
+// The bottom of the USB holes is the bottom of the bottom plate.
+
+case_usb_hole_width = 15;
+case_usb_hole_height = 9;
+case_usb_hole_start_from_left = [ 24, 119 ];
+
+// ------------------------------------------------------------
+// Notch
+
 notch_tolerance = 0.2;
 notch_socket_size = [
   kb_half_connector_width,
@@ -73,9 +87,3 @@ notch_socket_size = [
   case_top_thickness / 2,
 ];
 notch_size = add_scalar(notch_socket_size, -notch_tolerance);
-
-// notch_size_offset = 0.2;
-// notch_size = add_scalar(notch_socket_size, -notch_size_offset);
-
-// Make masks slightly larger so the diff works well.
-// mask_offset = 0.2;

@@ -63,18 +63,38 @@ module case_top_right_right_mask(is_notch_socket) {
 }
 
 module case_top_right() {
-  // Top
-  linear_extrude(case_top_thickness) case_top_right_2d();
+  difference() {
+    union() {
+      // Top
+      linear_extrude(case_top_thickness) case_top_right_2d();
 
-  // Border
-  h = case_top_border_height;
-  down(h) linear_extrude(h) shell2d(-case_border_thickness)
-      rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT);
+      // Border
+      h = case_top_border_height;
+      down(h) linear_extrude(h) shell2d(-case_border_thickness)
+          rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT) {}
 
-  // Debug: borders
-  // #cube([ 20, case_to_keys, case_top_height * 2 ], anchor = FWD + LEFT);
-  //   back(case_right_size.y - case_to_keys)
-  // #cube([ 20, case_to_keys, case_top_height * 2 ], anchor = FWD + LEFT);
+      case_top_right_bottom_row_spaces();
+
+      // debug_borders();
+    }
+    case_top_right_usb_holes();
+  }
+}
+
+module case_top_right_usb_holes() {
+  y = case_right_size.y - case_border_thickness - nothing / 2;
+  z = -kb_height;
+  size = [ case_usb_hole_width, case_border_thickness + nothing, case_usb_hole_height ];
+  for (i = [0:len(case_usb_hole_start_from_left) - 1]) {
+    x = case_usb_hole_start_from_left[i];
+    tag("remove3d") translate([ x, y, z ]) cube(size);
+  }
+}
+
+module debug_borders() {
+#cube([ 20, case_to_keys, case_top_height * 2 ], anchor = FWD + LEFT);
+  back(case_right_size.y - case_to_keys)
+#cube([ 20, case_to_keys, case_top_height * 2 ], anchor = FWD + LEFT);
 }
 
 module case_top_right_2d() {
@@ -118,6 +138,19 @@ module case_top_right_extra_row_padding() {
   }
 }
 
+module case_top_right_bottom_row_spaces() {
+  y = case_to_keys;
+  for (i = [0:len(kb_right_bottom_row_spaces) - 1]) {
+    spaces = kb_right_bottom_row_spaces[i];
+    x = spaces[0];
+    width = spaces[1];
+
+    translate([ x, y, 0 ]) linear_extrude(case_top_thickness)
+        rect([ width, kb_right_bottom_row_spaces_height ], anchor = BOTTOM + LEFT,
+             rounding = [ 1, 1, 0, 0 ]);
+  }
+}
+
 module case_top_right_screw_holes() {
   for (i = [0:len(kb_right_back_screws) - 1]) {
     screw_offset = kb_right_back_screws[i];
@@ -140,7 +173,7 @@ module fwd_screw_mask(screw_offset) {
 }
 
 // case_top_right();
-case_top_right_left();
-// case_top_right_right();
+// case_top_right_left();
+case_top_right_right();
 // case_top_right_2d();
 // #case_top_right_right_mask();
