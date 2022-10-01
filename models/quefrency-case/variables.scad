@@ -40,7 +40,7 @@ case_border_radius = 2;
 case_border_thickness = 1.5;
 case_border_tolerance = 0.6;
 case_top_thickness = test_mode ? 1.5 : 7;
-case_bottom_thickness = 2;
+case_bottom_thickness = 1.5;
 case_vertical_tolerance = 0.2;
 
 // The height of the inner part of the keyboard
@@ -66,8 +66,9 @@ case_right_fwd_connector = case_kb_padding + kb_right_fwd_screws[1].x;
 case_right_back_connector = case_kb_padding + kb_right_back_screws[2].x;
 
 case_top_height = kb_height / 2 + case_top_thickness + case_vertical_tolerance;
-case_bottom_height = kb_height / 2 + case_bottom_thickness;
+case_bottom_height = kb_height / 2 + case_bottom_thickness + case_vertical_tolerance;
 case_top_border_height = case_top_height - case_top_thickness;
+case_bottom_border_height = case_bottom_height - case_bottom_thickness;
 
 // ------------------------------------------------------------
 // USB Holes

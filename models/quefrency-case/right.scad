@@ -81,6 +81,20 @@ module case_top_right() {
   }
 }
 
+module case_bottom_right() {
+  z = case_bottom_height + case_top_border_height;
+  difference() {
+    down(z) union() {
+      linear_extrude(case_bottom_thickness) case_bottom_right_2d();
+      up(case_bottom_thickness) linear_extrude(case_bottom_border_height)
+          shell2d(-case_border_thickness)
+              rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT) {}
+    }
+
+    case_top_right_usb_holes();
+  }
+}
+
 module case_top_right_usb_holes() {
   y = case_right_size.y - case_border_thickness - nothing / 2;
   z = -kb_height;
@@ -97,20 +111,31 @@ module debug_borders() {
 #cube([ 20, case_to_keys, case_top_height * 2 ], anchor = FWD + LEFT);
 }
 
+module case_bottom_right_2d() {
+  diff() {
+    rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT) {
+      case_top_right_screw_holes();
+    }
+  }
+}
+
 module case_top_right_2d() {
   diff() {
     rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT) {
-      // keys mask
-      keys_size = [ kb_right_size.x - kb_padding, kb_right_size.y - kb_padding * 2 ];
-      keys_offset = [ -kb_padding - case_border_thickness, (case_right_size.y - keys_size.y) / 2 ];
-      // kb_padding + case_border_thickness
-      tag("remove") translate(keys_offset) position(BOTTOM + RIGHT)
-          rect(keys_size, rounding = 1, anchor = BOTTOM + RIGHT);
-
+      case_top_right_keys_mask();
       case_top_right_extra_row_padding();
       case_top_right_screw_holes();
     }
   }
+}
+
+module case_top_right_keys_mask() {
+  // keys mask
+  keys_size = [ kb_right_size.x - kb_padding, kb_right_size.y - kb_padding * 2 ];
+  keys_offset = [ -kb_padding - case_border_thickness, (case_right_size.y - keys_size.y) / 2 ];
+  // kb_padding + case_border_thickness
+  tag("remove") translate(keys_offset) position(BOTTOM + RIGHT)
+      rect(keys_size, rounding = 1, anchor = BOTTOM + RIGHT);
 }
 
 module case_top_right_extra_row_padding() {
@@ -172,8 +197,9 @@ module fwd_screw_mask(screw_offset) {
       position(FWD + RIGHT) circle(d = kb_screw_diameter);
 }
 
-// case_top_right();
+case_bottom_right();
+case_top_right();
 // case_top_right_left();
-case_top_right_right();
+// case_top_right_right();
 // case_top_right_2d();
 // #case_top_right_right_mask();
