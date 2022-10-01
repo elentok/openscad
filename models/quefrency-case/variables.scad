@@ -1,6 +1,9 @@
+// When set to true it makes some of the parts thinner so they print faster
+test_mode = false;
+
 kb_left_size = [ 194, 111 ];
 kb_right_size = [ 190, 111 ];
-kb_height = 3;  // 12.9; (reset after test prints)
+kb_height = test_mode ? 3 : 12.9;
 kb_row_height = 19.5;
 kb_padding = 7.2;  // the board area that isn't covered by keys
 kb_half_connector_width = 10;
@@ -32,7 +35,7 @@ kb_screw_diameter = 2.5;
 case_border_radius = 2;
 case_border_thickness = 1.5;
 case_border_tolerance = 0.6;
-case_top_thickness = 1.5;  // 7; (reset after test prints)
+case_top_thickness = test_mode ? 1.5 : 7;
 case_bottom_thickness = 2;
 case_vertical_tolerance = 0.2;
 
@@ -56,6 +59,6 @@ case_right_size = [
 case_right_fwd_connector = case_kb_padding + kb_right_fwd_screws[1].x;
 case_right_back_connector = case_kb_padding + kb_right_back_screws[2].x;
 
-case_top_height = kb_height / 2 + case_top_thickness;
+case_top_height = kb_height / 2 + case_top_thickness + case_vertical_tolerance;
 case_bottom_height = kb_height / 2 + case_bottom_thickness;
-case_top_border_height = case_top_height - case_top_thickness - case_vertical_tolerance;
+case_top_border_height = case_top_height - case_top_thickness;

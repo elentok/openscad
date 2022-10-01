@@ -5,7 +5,7 @@ $fn = 64;
 module case_top_right_right() {
   intersection() {
     case_top_right();
-    case_top_right_right_half_mask(with_connector = true);
+    case_top_right_right_mask(with_connector = true);
   }
 }
 
@@ -13,28 +13,40 @@ module case_top_right_left() {
   diff(remove = "remove2", keep = "keep2") {
     case_top_right();
 
-    tag("remove2") case_top_right_right_half_mask();
+    tag("remove2") case_top_right_right_mask();
   }
 }
 
-module case_top_right_right_half_mask(with_connector = false) {
-  connector_offset = with_connector ? kb_half_connector_width / 2 : -kb_half_connector_width / 2;
+module case_top_right_right_mask(with_connector = false) {
+  // connector_offset = with_connector ? kb_half_connector_width / 2 : -kb_half_connector_width / 2;
+  size_x_offset = -kb_half_connector_width / 2 - kb_half_connector_tolerance + 0.2;
 
   size_back = [
-    case_right_back_connector + connector_offset - kb_half_connector_tolerance,
-    case_right_size.y / 2, case_top_height + 0.2
+    case_right_back_connector + size_x_offset, case_right_size.y / 2 + 0.2, case_top_height + 0.2
   ];
 
   size_fwd = [
-    case_right_fwd_connector + connector_offset - kb_half_connector_tolerance,
-    case_right_size.y / 2, case_top_height + 0.2
+    case_right_fwd_connector + size_x_offset, case_right_size.y / 2 + 0.2, case_top_height + 0.2
   ];
 
-  right(case_right_size.x - size_back.x) down(case_top_border_height + 0.1) back(size_back.y)
-      cube(size_back, anchor = BOTTOM + FWD + LEFT);
+  offset_back = [
+    case_right_size.x - size_back.x + 0.1,
+    size_back.y - 0.1,
+    -case_top_border_height - 0.1,
+  ];
+  translate(offset_back) cube(size_back, anchor = BOTTOM + FWD + LEFT);
 
-  right(case_right_size.x - size_fwd.x) down(case_top_border_height + 0.1)
-      cube(size_fwd, anchor = BOTTOM + FWD + LEFT);
+  offset_fwd = [
+    case_right_size.x - size_fwd.x + 0.1,
+    -0.1,
+    -case_top_border_height - 0.1,
+  ];
+  translate(offset_fwd) cube(size_fwd, anchor = BOTTOM + FWD + LEFT) {
+    // notch
+    notch_size = [ kb_half_connector_width + 0.1, kb_padding + 0.1, case_top_thickness / 2 + 0.1 ];
+    right(0.1) back(case_border_thickness + 0.1) down(case_top_thickness / 2 + 0.1)
+        position(TOP + FWD + LEFT) cube(notch_size, anchor = TOP + FWD + RIGHT);
+  };
 }
 
 module case_top_right() {
@@ -99,5 +111,8 @@ module fwd_screw_mask(screw_offset) {
       position(FWD + RIGHT) circle(d = kb_screw_diameter);
 }
 
+// case_top_right_left();
 case_top_right_right();
 // case_top_right_2d();
+// #case_top_right_right_mask();
+// case_top_right();
