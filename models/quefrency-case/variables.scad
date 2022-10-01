@@ -2,7 +2,7 @@ kb_left_size = [ 194, 111 ];
 kb_right_size = [ 190, 111 ];
 kb_height = 3;  // 12.9; (reset after test prints)
 kb_row_height = 19.5;
-kb_padding = 7.6;
+kb_padding = 7.2;  // the board area that isn't covered by keys
 kb_half_connector_width = 10;
 kb_half_connector_tolerance = 0.1;
 
@@ -13,18 +13,18 @@ kb_screw_distance_from_edge = 4.4;
 
 // Distances of the forward screws from the right
 kb_right_fwd_screws = [
-  kb_screw_distance_from_edge,
-  kb_screw_distance_from_edge + 83,
-  kb_screw_distance_from_edge + 83 * 2,
+  [ 4.4, 4.4 ],
+  [ 4.4 + 83, 3.8 ],
+  [ 4.4 + 83 + 83, 3.8 ],
 ];
 
-// Distances of the back screws from the right
+// Distances of the back screws from the back right
 kb_right_back_screws = [
-  kb_screw_distance_from_edge,
-  kb_screw_distance_from_edge + 49.4,
-  kb_screw_distance_from_edge + 49.4 + 22,
-  kb_screw_distance_from_edge + 49.4 + 22 + 75,
-  kb_screw_distance_from_edge + 49.4 + 22 + 75 + 24,
+  [ 4.4, 4.4 ],
+  [ 4.4 + 49.4, 3.8 ],
+  [ 4.4 + 49.4 + 22, 3.8 ],
+  [ 4.4 + 49.4 + 22 + 75, 3.8 ],
+  [ 4.4 + 49.4 + 22 + 75 + 24, 3.8 ],
 ];
 
 kb_screw_diameter = 2.5;
@@ -53,8 +53,8 @@ case_right_size = [
   kb_right_size.y + case_kb_padding * 2,
 ];
 
-case_right_fwd_connector = case_kb_padding + kb_right_fwd_screws[1];
-case_right_back_connector = case_kb_padding + kb_right_back_screws[2];
+case_right_fwd_connector = case_kb_padding + kb_right_fwd_screws[1].x;
+case_right_back_connector = case_kb_padding + kb_right_back_screws[2].x;
 
 case_top_height = kb_height / 2 + case_top_thickness;
 case_bottom_height = kb_height / 2 + case_bottom_thickness;
