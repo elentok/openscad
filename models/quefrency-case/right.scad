@@ -19,11 +19,6 @@ module case_top_right_left() {
 }
 
 module case_top_right_right_mask(is_notch_socket) {
-  // The notch itself must be a little smaller than the socket so it'll fit
-  // properly.
-  notch_size_offset = is_notch_socket ? 0 : -0.2;
-  notch_mask_offset = is_notch_socket ? 0.1 : 0;
-
   size_x_offset = -kb_half_connector_width / 2 - kb_half_connector_tolerance + nothing;
 
   size_back = [
@@ -49,8 +44,6 @@ module case_top_right_right_mask(is_notch_socket) {
     -nothing / 2,
     -case_top_border_height - nothing / 2,
   ];
-
-  notch_mask_size = is_notch_socket ? notch_socket_size : notch_size;
 
   translate(offset_back) cube(size_back, anchor = BOTTOM + FWD + LEFT) {
     if (is_notch_socket) {
@@ -94,39 +87,45 @@ module case_top_right_2d() {
       tag("remove") translate(keys_offset) position(BOTTOM + RIGHT)
           rect(keys_size, rounding = 1, anchor = BOTTOM + RIGHT);
 
-      // extra padding for row 1
-      for (i = [0:kb_right_row_count - 1]) {
-        padding = kb_right_padding_by_row[i];
-        if (padding > 0) {
-          padding_size = [ padding, kb_row_height ];
-          padding_offset = [
-            case_border_thickness,
-            -case_border_thickness - kb_padding - kb_row_height * i,
-          ];
-
-          round_top = i > 0 && kb_right_padding_by_row[i - 1] < padding;
-          round_bottom = i < kb_right_row_count - 1 && kb_right_padding_by_row[i + 1] < padding;
-          rounding = [
-            round_top ? 1 : 0,
-            0,
-            0,
-            round_bottom ? 1 : 0,
-          ];
-
-          tag("keep") translate(padding_offset) position(TOP + LEFT)
-              rect(padding_size, anchor = TOP + LEFT, rounding = rounding);
-        }
-      }
-      // Screws
-      for (i = [0:len(kb_right_back_screws) - 1]) {
-        screw_offset = kb_right_back_screws[i];
-        back_screw_mask(screw_offset);
-      }
-      for (i = [0:len(kb_right_fwd_screws) - 1]) {
-        screw_offset = kb_right_fwd_screws[i];
-        fwd_screw_mask(screw_offset);
-      }
+      case_top_right_extra_row_padding();
+      case_top_right_screw_holes();
     }
+  }
+}
+
+module case_top_right_extra_row_padding() {
+  for (i = [0:kb_right_row_count - 1]) {
+    padding = kb_right_padding_by_row[i];
+    if (padding > 0) {
+      padding_size = [ padding, kb_row_height ];
+      padding_offset = [
+        case_border_thickness,
+        -case_border_thickness - kb_padding - kb_row_height * i,
+      ];
+
+      round_top = i > 0 && kb_right_padding_by_row[i - 1] < padding;
+      round_bottom = i < kb_right_row_count - 1 && kb_right_padding_by_row[i + 1] < padding;
+      rounding = [
+        round_top ? 1 : 0,
+        0,
+        0,
+        round_bottom ? 1 : 0,
+      ];
+
+      tag("keep") translate(padding_offset) position(TOP + LEFT)
+          rect(padding_size, anchor = TOP + LEFT, rounding = rounding);
+    }
+  }
+}
+
+module case_top_right_screw_holes() {
+  for (i = [0:len(kb_right_back_screws) - 1]) {
+    screw_offset = kb_right_back_screws[i];
+    back_screw_mask(screw_offset);
+  }
+  for (i = [0:len(kb_right_fwd_screws) - 1]) {
+    screw_offset = kb_right_fwd_screws[i];
+    fwd_screw_mask(screw_offset);
   }
 }
 
