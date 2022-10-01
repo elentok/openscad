@@ -49,66 +49,42 @@ module case_top_right_right_mask(is_notch_socket) {
     -case_top_border_height - nothing / 2,
   ];
 
-  // [
-  //   notch_size.x + 0.2, notch_size.y + 0.2, notch_size.z + 0.2,
-  //   // kb_half_connector_width + notch_size_offset,
-  //   // kb_padding + notch_size_offset,
-  //   // case_top_thickness / 2 + notch_size_offset,
-  //
-  // ]
-
   notch_mask_size = is_notch_socket ? notch_socket_size : notch_size;
 
   translate(offset_back) cube(size_back, anchor = BOTTOM + FWD + LEFT) {
-    // back notch
-    // notch_offset = [
-    //   -nothing, -nothing, -nothing / 2 - (case_top_thickness - notch_mask_size.z),
-    //   // notch_mask_offset,
-    //   // -mo - (case_to_keys - notch_mask_size.y),
-    //   // -mo / 2 - (case_top_thickness - notch_mask_size.z),
-    // ];
-    //-case_border_thickness - 0.1 + notch_size_offset,
-    //  //-(case_top_thickness - notch_size.z) - 0.1,
     if (is_notch_socket) {
       notch_socket(BACK);
     } else {
       notch(BACK);
     }
-    //     translate(notch_offset) position(TOP + BACK + LEFT)
-    // #cube(notch_mask_size, anchor = TOP + BACK + RIGHT);
   };
 
-  translate(offset_fwd) % cube(size_fwd, anchor = BOTTOM + FWD + LEFT) {
-    // forward notch
-    // notch_offset = [
-    // notch_mask_offset,
-    // case_border_thickness + notch_mask_offset - notch_size_offset,
-    // -case_top_thickness / 2 - notch_mask_offset + notch_size_offset,
-    // ];
+  translate(offset_fwd) cube(size_fwd, anchor = BOTTOM + FWD + LEFT) {
     if (is_notch_socket) {
       notch_socket(FWD);
     } else {
       notch(FWD);
     }
-    // translate(notch_offset) position(TOP + FWD + LEFT) cube(notch_size, anchor = TOP + FWD +
-    // RIGHT);
   };
 }
 
 // pos = BACK or FWD
 module notch(pos) {
+  y_offset = pos == FWD ? nothing + (case_to_keys - notch_size.y)
+                        : -nothing - (case_to_keys - notch_size.y);
   notch_offset = [
     nothing,
-    -nothing - (case_to_keys - notch_size.y),
+    y_offset,
     -nothing / 2 - (case_top_thickness - notch_size.z),
   ];
   translate(notch_offset) position(TOP + LEFT + pos) cube(notch_size, anchor = TOP + RIGHT + pos);
 }
 
 module notch_socket(pos) {
+  y_offset = pos == FWD ? nothing + case_border_thickness : -nothing - case_border_thickness;
   notch_socket_offset = [
     nothing,
-    -nothing - case_border_thickness,
+    y_offset,
     -nothing / 2 - case_top_thickness / 2,
   ];
   size = add_scalar(notch_socket_size, nothing);
@@ -184,7 +160,7 @@ module fwd_screw_mask(screw_offset) {
 }
 
 // case_top_right();
-// case_top_right_left();
-case_top_right_right();
+case_top_right_left();
+// case_top_right_right();
 // case_top_right_2d();
 // #case_top_right_right_mask();

@@ -1,6 +1,6 @@
 include <BOSL2/std.scad>
 // When set to true it makes some of the parts thinner so they print faster
-test_mode = false;
+test_mode = true;
 
 nothing = 0.1;
 
