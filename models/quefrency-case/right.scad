@@ -70,14 +70,12 @@ module case_top_right() {
 
       // Border
       h = case_top_border_height;
-      down(h) linear_extrude(h) shell2d(-case_border_thickness)
-          rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT) {}
-
+      down(h) linear_extrude(h) case_right_border();
       case_top_right_bottom_row_spaces();
 
       // debug_borders();
     }
-    case_top_right_usb_holes();
+    case_right_usb_holes();
   }
 }
 
@@ -85,17 +83,23 @@ module case_bottom_right() {
   z = case_bottom_height + case_top_border_height;
   difference() {
     down(z) union() {
+      // Bottom plate
       linear_extrude(case_bottom_thickness) case_bottom_right_2d();
-      up(case_bottom_thickness) linear_extrude(case_bottom_border_height)
-          shell2d(-case_border_thickness)
-              rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT) {}
+
+      // Border
+      up(case_bottom_thickness) linear_extrude(case_bottom_border_height) case_right_border();
     }
 
-    case_top_right_usb_holes();
+    case_right_usb_holes();
   }
 }
 
-module case_top_right_usb_holes() {
+module case_right_border() {
+  shell2d(-case_border_thickness)
+      rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT) {}
+}
+
+module case_right_usb_holes() {
   y = case_right_size.y - case_border_thickness - nothing / 2;
   z = -kb_height;
   size = [ case_usb_hole_width, case_border_thickness + nothing, case_usb_hole_height ];
