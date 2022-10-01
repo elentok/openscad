@@ -21,64 +21,99 @@ module case_top_right_right_mask(is_notch_socket) {
   // The notch itself must be a little smaller than the socket so it'll fit
   // properly.
   notch_size_offset = is_notch_socket ? 0 : -0.2;
+  notch_mask_offset = is_notch_socket ? 0.1 : 0;
 
-  size_x_offset = -kb_half_connector_width / 2 - kb_half_connector_tolerance + 0.2;
+  size_x_offset = -kb_half_connector_width / 2 - kb_half_connector_tolerance + nothing;
 
   size_back = [
-    case_right_back_connector + size_x_offset, case_right_size.y / 2 + 0.2, case_top_height + 0.2
-  ];
-
-  size_fwd = [
-    case_right_fwd_connector + size_x_offset, case_right_size.y / 2 + 0.2, case_top_height + 0.2
+    case_right_back_connector + size_x_offset,
+    case_right_size.y / 2 + nothing,
+    case_top_height + nothing,
   ];
 
   offset_back = [
-    case_right_size.x - size_back.x + 0.1,
-    size_back.y - 0.1,
-    -case_top_border_height - 0.1,
+    case_right_size.x - size_back.x + nothing / 2,
+    case_right_size.y / 2,  //- nothing / 2,
+    -case_top_border_height - nothing / 2,
   ];
 
-  notch_size = [
-    kb_half_connector_width + 0.1 + notch_size_offset,
-    kb_padding + 0.1 + notch_size_offset,
-    case_top_thickness / 2 + 0.1 + notch_size_offset,
+  size_fwd = [
+    case_right_fwd_connector + size_x_offset,
+    case_right_size.y / 2 + nothing,
+    case_top_height + nothing,
   ];
-
-  echo("NOTCH SIZE OFFSET", notch_size_offset);
-  echo("CASE TOP THICKNESS", case_top_thickness);
-  echo("NOTCH SIZE", notch_size);
-  translate(offset_back) cube(size_back, anchor = BOTTOM + FWD + LEFT) {
-    // back notch
-    notch_offset = [
-      0,                                                 // 0.1,
-      -case_border_thickness - 0.1 + notch_size_offset,  //-case_border_thickness,
-      // -case_border_thickness -case_border_tolerance - 0.1 + notch_size_offset,
-
-      // -case_top_thickness / 2 - 0.1 + notch_size_offset,
-      // 0,
-      -(case_top_thickness - notch_size.z) - 0.1,
-    ];
-    translate(notch_offset) position(TOP + BACK + LEFT)
-#cube(notch_size, anchor = TOP + BACK + RIGHT);
-  };
 
   offset_fwd = [
-    case_right_size.x - size_fwd.x + 0.1,
-    -0.1,
-    -case_top_border_height - 0.1,
+    case_right_size.x - size_fwd.x + nothing / 2,
+    -nothing / 2,
+    -case_top_border_height - nothing / 2,
   ];
-  translate(offset_fwd) cube(size_fwd, anchor = BOTTOM + FWD + LEFT) {
+
+  // [
+  //   notch_size.x + 0.2, notch_size.y + 0.2, notch_size.z + 0.2,
+  //   // kb_half_connector_width + notch_size_offset,
+  //   // kb_padding + notch_size_offset,
+  //   // case_top_thickness / 2 + notch_size_offset,
+  //
+  // ]
+
+  notch_mask_size = is_notch_socket ? notch_socket_size : notch_size;
+
+  translate(offset_back) cube(size_back, anchor = BOTTOM + FWD + LEFT) {
+    // back notch
+    // notch_offset = [
+    //   -nothing, -nothing, -nothing / 2 - (case_top_thickness - notch_mask_size.z),
+    //   // notch_mask_offset,
+    //   // -mo - (case_to_keys - notch_mask_size.y),
+    //   // -mo / 2 - (case_top_thickness - notch_mask_size.z),
+    // ];
+    //-case_border_thickness - 0.1 + notch_size_offset,
+    //  //-(case_top_thickness - notch_size.z) - 0.1,
+    if (is_notch_socket) {
+      notch_socket(BACK);
+    } else {
+      notch(BACK);
+    }
+    //     translate(notch_offset) position(TOP + BACK + LEFT)
+    // #cube(notch_mask_size, anchor = TOP + BACK + RIGHT);
+  };
+
+  translate(offset_fwd) % cube(size_fwd, anchor = BOTTOM + FWD + LEFT) {
     // forward notch
-    notch_offset = [
-      0.1,
-      case_border_thickness + 0.1 - notch_size_offset,
-      -case_top_thickness / 2 - 0.1 + notch_size_offset,
-    ];
-    translate(notch_offset) position(TOP + FWD + LEFT) cube(notch_size, anchor = TOP + FWD + RIGHT);
+    // notch_offset = [
+    // notch_mask_offset,
+    // case_border_thickness + notch_mask_offset - notch_size_offset,
+    // -case_top_thickness / 2 - notch_mask_offset + notch_size_offset,
+    // ];
+    if (is_notch_socket) {
+      notch_socket(FWD);
+    } else {
+      notch(FWD);
+    }
+    // translate(notch_offset) position(TOP + FWD + LEFT) cube(notch_size, anchor = TOP + FWD +
+    // RIGHT);
   };
 }
 
-module notch(notch_size_offset) {}
+// pos = BACK or FWD
+module notch(pos) {
+  notch_offset = [
+    nothing,
+    -nothing - (case_to_keys - notch_size.y),
+    -nothing / 2 - (case_top_thickness - notch_size.z),
+  ];
+  translate(notch_offset) position(TOP + LEFT + pos) cube(notch_size, anchor = TOP + RIGHT + pos);
+}
+
+module notch_socket(pos) {
+  notch_socket_offset = [
+    nothing,
+    -nothing - case_border_thickness,
+    -nothing / 2 - case_top_thickness / 2,
+  ];
+  size = add_scalar(notch_socket_size, nothing);
+  translate(notch_socket_offset) position(TOP + LEFT + pos) cube(size, anchor = TOP + RIGHT + pos);
+}
 
 module case_top_right() {
   // Top
@@ -88,6 +123,11 @@ module case_top_right() {
   h = case_top_border_height;
   down(h) linear_extrude(h) shell2d(-case_border_thickness)
       rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT);
+
+  // Debug: borders
+  // #cube([ 20, case_to_keys, case_top_height * 2 ], anchor = FWD + LEFT);
+  //   back(case_right_size.y - case_to_keys)
+  // #cube([ 20, case_to_keys, case_top_height * 2 ], anchor = FWD + LEFT);
 }
 
 module case_top_right_2d() {
@@ -95,7 +135,8 @@ module case_top_right_2d() {
     rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT) {
       // keys mask
       keys_size = [ kb_right_size.x - kb_padding, kb_right_size.y - kb_padding * 2 ];
-      keys_offset = [ -kb_padding - case_border_thickness, kb_padding + case_border_thickness ];
+      keys_offset = [ -kb_padding - case_border_thickness, (case_right_size.y - keys_size.y) / 2 ];
+      // kb_padding + case_border_thickness
       tag("remove") translate(keys_offset) position(BOTTOM + RIGHT)
           rect(keys_size, rounding = 1, anchor = BOTTOM + RIGHT);
 
@@ -142,8 +183,8 @@ module fwd_screw_mask(screw_offset) {
       position(FWD + RIGHT) circle(d = kb_screw_diameter);
 }
 
+// case_top_right();
 // case_top_right_left();
 case_top_right_right();
 // case_top_right_2d();
 // #case_top_right_right_mask();
-// case_top_right();

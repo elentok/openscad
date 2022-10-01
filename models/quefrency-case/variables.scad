@@ -1,5 +1,8 @@
+include <BOSL2/std.scad>
 // When set to true it makes some of the parts thinner so they print faster
 test_mode = false;
+
+nothing = 0.1;
 
 kb_left_size = [ 194, 111 ];
 kb_right_size = [ 190, 111 ];
@@ -46,6 +49,8 @@ case_y_angle = 2;  // degrees
 
 case_kb_padding = case_border_thickness + case_border_tolerance / 2;
 
+case_to_keys = case_kb_padding + kb_padding;
+
 case_left_size = [
   kb_left_size.x + case_kb_padding * 2,
   kb_left_size.y + case_kb_padding * 2,
@@ -62,3 +67,17 @@ case_right_back_connector = case_kb_padding + kb_right_back_screws[2].x;
 case_top_height = kb_height / 2 + case_top_thickness + case_vertical_tolerance;
 case_bottom_height = kb_height / 2 + case_bottom_thickness;
 case_top_border_height = case_top_height - case_top_thickness;
+
+notch_tolerance = 0.2;
+notch_socket_size = [
+  kb_half_connector_width,
+  kb_padding + case_border_tolerance / 2,
+  case_top_thickness / 2,
+];
+notch_size = add_scalar(notch_socket_size, -notch_tolerance);
+
+// notch_size_offset = 0.2;
+// notch_size = add_scalar(notch_socket_size, -notch_size_offset);
+
+// Make masks slightly larger so the diff works well.
+// mask_offset = 0.2;
