@@ -4,16 +4,6 @@ include <./variables.scad>
 include <BOSL2/std.scad>
 $fn = 64;
 
-module case_back_screw_mask(screw_offset) {
-  tag("remove") left(case_kb_padding + screw_offset.x) fwd(case_kb_padding + screw_offset.y)
-      position(BACK + RIGHT) circle(d = kb_screw_diameter);
-}
-
-module case_fwd_screw_mask(screw_offset) {
-  tag("remove") left(case_kb_padding + screw_offset.x) back(case_kb_padding + screw_offset.y)
-      position(FWD + RIGHT) circle(d = kb_screw_diameter);
-}
-
 module wrist_rest() {
   difference() {
     union() {
