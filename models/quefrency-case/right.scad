@@ -21,8 +21,14 @@ module case_bottom_right_right() {
 module case_top_right_left() {
   diff(remove = "remove2", keep = "keep2") {
     case_top_right();
-
     tag("remove2") case_right_mask(is_socket = true, connector_z_pos = TOP);
+  }
+}
+
+module case_bottom_right_left() {
+  diff(remove = "remove2", keep = "keep2") {
+    case_bottom_right();
+    tag("remove2") case_right_mask(is_socket = true, connector_z_pos = BOTTOM);
   }
 }
 
@@ -205,3 +211,4 @@ module case_top_right_screw_holes() {
 // case_top_right_2d();
 // #case_right_mask();
 case_bottom_right_right();
+// case_bottom_right_left();
