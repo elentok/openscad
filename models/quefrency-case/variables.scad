@@ -124,3 +124,12 @@ function get_connector_socket_size(z_pos) = z_pos == TOP ? top_connector_socket_
 
 function get_connector_notch_size(z_pos) = z_pos == TOP ? top_connector_notch_size
                                                         : bottom_connector_notch_size;
+
+// ------------------------------------------------------------
+// Tent
+
+tent_height_kb_back = 35 - case_height;
+tent_height_kb_front = 42 - case_height;
+tent_height_wrist_rest_back = 30;
+tent_height_wrist_rest_front = 25;
+tent_thickness = 16;
