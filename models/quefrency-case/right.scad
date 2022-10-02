@@ -1,4 +1,5 @@
 include <./notch.scad>
+include <./screws.scad>
 include <./variables.scad>
 include <BOSL2/std.scad>
 $fn = 64;
@@ -182,27 +183,17 @@ module case_top_right_bottom_row_spaces() {
 module case_top_right_screw_holes() {
   for (i = [0:len(kb_right_back_screws) - 1]) {
     screw_offset = kb_right_back_screws[i];
-    back_screw_mask(screw_offset);
+    case_back_screw_mask(screw_offset);
   }
   for (i = [0:len(kb_right_fwd_screws) - 1]) {
     screw_offset = kb_right_fwd_screws[i];
-    fwd_screw_mask(screw_offset);
+    case_fwd_screw_mask(screw_offset);
   }
 }
 
-module back_screw_mask(screw_offset) {
-  tag("remove") left(case_kb_padding + screw_offset.x) fwd(case_kb_padding + screw_offset.y)
-      position(BACK + RIGHT) circle(d = kb_screw_diameter);
-}
-
-module fwd_screw_mask(screw_offset) {
-  tag("remove") left(case_kb_padding + screw_offset.x) back(case_kb_padding + screw_offset.y)
-      position(FWD + RIGHT) circle(d = kb_screw_diameter);
-}
-
-// case_bottom_right();
-// case_top_right();
+case_top_right();
+color("#205430") case_bottom_right();
 // case_top_right_left();
-case_top_right_right();
+// case_top_right_right();
 // case_top_right_2d();
 // #case_top_right_right_mask();
