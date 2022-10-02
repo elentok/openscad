@@ -34,7 +34,7 @@ kb_right_back_screws = [
   [ 4.4 + 49.4 + 22 + 75 + 24, 3.8 ],
 ];
 
-kb_screw_diameter = 2.5;
+kb_screw_diameter = 2.6;
 
 case_border_radius = 2;
 case_border_thickness = 1.5;
@@ -69,6 +69,7 @@ case_top_height = kb_height / 2 + case_top_thickness + case_vertical_tolerance;
 case_bottom_height = kb_height / 2 + case_bottom_thickness + case_vertical_tolerance;
 case_top_border_height = case_top_height - case_top_thickness;
 case_bottom_border_height = case_bottom_height - case_bottom_thickness;
+case_height = case_top_height + case_bottom_height;
 
 // ------------------------------------------------------------
 // USB Holes
