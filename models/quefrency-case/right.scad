@@ -27,7 +27,7 @@ module case_top_right_left() {
 }
 
 module case_right_mask(is_socket, connector_z_pos) {
-  size_x_offset = -kb_half_connector_width / 2 - kb_half_connector_tolerance + nothing;
+  size_x_offset = -connector_width / 2 - connector_tolerance + nothing;
 
   size_back = [
     case_right_back_connector + size_x_offset,
@@ -201,7 +201,7 @@ module case_top_right_screw_holes() {
 // case_top_right();
 // color("yellow") case_bottom_right();
 // case_top_right_left();
-case_top_right_right();
+// case_top_right_right();
 // case_top_right_2d();
 // #case_right_mask();
-// case_bottom_right_right();
+case_bottom_right_right();

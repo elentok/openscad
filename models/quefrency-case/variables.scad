@@ -11,8 +11,6 @@ kb_right_size = [ 190, 111 ];
 kb_height = test_mode ? 3 : 12.9;
 kb_row_height = 19.5;
 kb_padding = 7.2;  // the board area that isn't covered by keys
-kb_half_connector_width = 10;
-kb_half_connector_tolerance = 0.1;
 
 kb_right_padding_by_row = [ 11, 0, 4.5, 14.5, 19.5 ];
 kb_right_row_count = len(kb_right_padding_by_row);
@@ -105,10 +103,24 @@ wrist_rest_size = add_scalar(wrist_pillow_size, wrist_rest_border_thickness);
 // ------------------------------------------------------------
 // Connector
 
+connector_width = 10;
 connector_tolerance = 0.2;
-connector_socket_size = [
-  kb_half_connector_width,
+top_connector_socket_size = [
+  connector_width,
   kb_padding + case_border_tolerance / 2,
   case_top_thickness / 2,
 ];
-connector_notch_size = add_scalar(connector_socket_size, -connector_tolerance);
+bottom_connector_socket_size = [
+  connector_width,
+  kb_padding + case_border_tolerance / 2,
+  case_bottom_thickness / 2,
+];
+
+top_connector_notch_size = add_scalar(top_connector_socket_size, -connector_tolerance);
+bottom_connector_notch_size = add_scalar(bottom_connector_socket_size, -connector_tolerance);
+
+function get_connector_socket_size(z_pos) = z_pos == TOP ? top_connector_socket_size
+                                                         : bottom_connector_socket_size;
+
+function get_connector_notch_size(z_pos) = z_pos == TOP ? top_connector_notch_size
+                                                        : bottom_connector_notch_size;
