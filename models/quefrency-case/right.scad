@@ -7,7 +7,14 @@ $fn = 64;
 module case_top_right_right() {
   intersection() {
     case_top_right();
-    case_top_right_right_mask(is_notch_socket = false);
+    case_right_mask(is_notch_socket = false);
+  }
+}
+
+module case_bottom_right_right() {
+  intersection() {
+    case_bottom_right();
+    case_right_mask(is_notch_socket = false);
   }
 }
 
@@ -15,35 +22,35 @@ module case_top_right_left() {
   diff(remove = "remove2", keep = "keep2") {
     case_top_right();
 
-    tag("remove2") case_top_right_right_mask(is_notch_socket = true);
+    tag("remove2") case_right_mask(is_notch_socket = true);
   }
 }
 
-module case_top_right_right_mask(is_notch_socket) {
+module case_right_mask(is_notch_socket) {
   size_x_offset = -kb_half_connector_width / 2 - kb_half_connector_tolerance + nothing;
 
   size_back = [
     case_right_back_connector + size_x_offset,
     case_right_size.y / 2 + nothing,
-    case_top_height + nothing,
+    case_height + nothing,
   ];
 
   offset_back = [
     case_right_size.x - size_back.x + nothing / 2,
     case_right_size.y / 2,  //- nothing / 2,
-    -case_top_border_height - nothing / 2,
+    -case_bottom_height - case_top_border_height - nothing / 2,
   ];
 
   size_fwd = [
     case_right_fwd_connector + size_x_offset,
     case_right_size.y / 2 + nothing,
-    case_top_height + nothing,
+    case_height + nothing,
   ];
 
   offset_fwd = [
     case_right_size.x - size_fwd.x + nothing / 2,
     -nothing / 2,
-    -case_top_border_height - nothing / 2,
+    -case_bottom_height - case_top_border_height - nothing / 2,
   ];
 
   translate(offset_back) cube(size_back, anchor = BOTTOM + FWD + LEFT) {
@@ -199,9 +206,10 @@ module case_top_right_screw_holes() {
   }
 }
 
-case_top_right();
-color("#205430") case_bottom_right();
+// case_top_right();
+// color("yellow") case_bottom_right();
 // case_top_right_left();
 // case_top_right_right();
 // case_top_right_2d();
-// #case_top_right_right_mask();
+// #case_right_mask();
+case_bottom_right_right();
