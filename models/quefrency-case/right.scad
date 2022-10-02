@@ -1,4 +1,4 @@
-include <./notch.scad>
+include <./connector.scad>
 include <./screws.scad>
 include <./variables.scad>
 include <BOSL2/std.scad>
@@ -7,14 +7,14 @@ $fn = 64;
 module case_top_right_right() {
   intersection() {
     case_top_right();
-    case_right_mask(is_notch_socket = false);
+    case_right_mask(is_socket = false, connector_z_pos = TOP);
   }
 }
 
 module case_bottom_right_right() {
   intersection() {
     case_bottom_right();
-    case_right_mask(is_notch_socket = false);
+    case_right_mask(is_socket = false, connector_z_pos = BOTTOM);
   }
 }
 
@@ -22,11 +22,11 @@ module case_top_right_left() {
   diff(remove = "remove2", keep = "keep2") {
     case_top_right();
 
-    tag("remove2") case_right_mask(is_notch_socket = true);
+    tag("remove2") case_right_mask(is_socket = true, connector_z_pos = TOP);
   }
 }
 
-module case_right_mask(is_notch_socket) {
+module case_right_mask(is_socket, connector_z_pos) {
   size_x_offset = -kb_half_connector_width / 2 - kb_half_connector_tolerance + nothing;
 
   size_back = [
@@ -54,19 +54,11 @@ module case_right_mask(is_notch_socket) {
   ];
 
   translate(offset_back) cube(size_back, anchor = BOTTOM + FWD + LEFT) {
-    if (is_notch_socket) {
-      notch_socket(BACK);
-    } else {
-      notch(BACK);
-    }
+    connector(is_socket, BACK, connector_z_pos);
   };
 
   translate(offset_fwd) cube(size_fwd, anchor = BOTTOM + FWD + LEFT) {
-    if (is_notch_socket) {
-      notch_socket(FWD);
-    } else {
-      notch(FWD);
-    }
+    connector(is_socket, FRONT, connector_z_pos);
   };
 }
 
@@ -209,7 +201,7 @@ module case_top_right_screw_holes() {
 // case_top_right();
 // color("yellow") case_bottom_right();
 // case_top_right_left();
-// case_top_right_right();
+case_top_right_right();
 // case_top_right_2d();
 // #case_right_mask();
-case_bottom_right_right();
+// case_bottom_right_right();

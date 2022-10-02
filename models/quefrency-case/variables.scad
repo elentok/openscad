@@ -1,4 +1,6 @@
 include <BOSL2/std.scad>
+$fn = 64;
+
 // When set to true it makes some of the parts thinner so they print faster
 test_mode = false;
 
@@ -101,12 +103,12 @@ wrist_rest_bottom_thickness = 2;
 wrist_rest_size = add_scalar(wrist_pillow_size, wrist_rest_border_thickness);
 
 // ------------------------------------------------------------
-// Notch
+// Connector
 
-notch_tolerance = 0.2;
-notch_socket_size = [
+connector_tolerance = 0.2;
+connector_socket_size = [
   kb_half_connector_width,
   kb_padding + case_border_tolerance / 2,
   case_top_thickness / 2,
 ];
-notch_size = add_scalar(notch_socket_size, -notch_tolerance);
+connector_notch_size = add_scalar(connector_socket_size, -connector_tolerance);
