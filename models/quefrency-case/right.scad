@@ -91,6 +91,7 @@ module case_bottom_right() {
     }
 
     case_right_usb_holes();
+    case_right_bottom_leg_screw_holes();
   }
 }
 
@@ -107,6 +108,13 @@ module case_right_usb_holes() {
     x = case_usb_hole_start_from_left[i];
     tag("remove3d") translate([ x, y, z ]) cube(size);
   }
+}
+
+module case_right_bottom_leg_screw_holes() {
+  x = case_right_size.x / 2;
+  y = case_right_size.y / 2;
+  z = -(case_height - case_top_thickness);
+  translate([ x, y, z ]) leg_screw_holes(case_right_size, case_bottom_thickness);
 }
 
 module debug_borders() {

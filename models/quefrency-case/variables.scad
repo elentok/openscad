@@ -40,7 +40,7 @@ case_border_radius = 2;
 case_border_thickness = 1.5;
 case_border_tolerance = 0.6;
 case_top_thickness = test_mode ? 1.5 : 7;
-case_bottom_thickness = 1.5;
+case_bottom_thickness = 3;
 case_vertical_tolerance = 0.2;
 
 // The height of the inner part of the keyboard
@@ -86,6 +86,7 @@ leg_hole_diameter = 10;
 // Distance between the edge of the case and the edge of the leg hole.
 leg_hole_margin = 10;
 
+leg_screw_hole_margin = 20;
 leg_screw_hole_diameter = 3.8;
 leg_screw_head_height = 2;
 leg_screw_head_diameter = 6.8;
