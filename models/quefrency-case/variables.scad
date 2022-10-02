@@ -80,6 +80,26 @@ case_usb_hole_height = 9;
 case_usb_hole_start_from_left = [ 24, 119 ];
 
 // ------------------------------------------------------------
+// Legs
+
+leg_hole_diameter = 10;
+// Distance between the edge of the case and the edge of the leg hole.
+leg_hole_margin = 10;
+
+leg_screw_hole_diameter = 3.8;
+leg_screw_head_height = 2;
+leg_screw_head_diameter = 6.8;
+
+// ------------------------------------------------------------
+// Wrist Rest
+wrist_pillow_size = [ 130, 82 ];
+wrist_pillow_rounding = 11;
+wrist_rest_border_height = 4;
+wrist_rest_border_thickness = 1.5;
+wrist_rest_bottom_thickness = 2;
+wrist_rest_size = add_scalar(wrist_pillow_size, wrist_rest_border_thickness);
+
+// ------------------------------------------------------------
 // Notch
 
 notch_tolerance = 0.2;

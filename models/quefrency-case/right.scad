@@ -85,7 +85,6 @@ module case_bottom_right() {
     down(z) union() {
       // Bottom plate
       linear_extrude(case_bottom_thickness) case_bottom_right_2d();
-
       // Border
       up(case_bottom_thickness) linear_extrude(case_bottom_border_height) case_right_border();
     }
@@ -201,9 +200,9 @@ module fwd_screw_mask(screw_offset) {
       position(FWD + RIGHT) circle(d = kb_screw_diameter);
 }
 
-case_bottom_right();
-case_top_right();
+// case_bottom_right();
+// case_top_right();
 // case_top_right_left();
-// case_top_right_right();
+case_top_right_right();
 // case_top_right_2d();
 // #case_top_right_right_mask();
