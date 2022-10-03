@@ -1,3 +1,5 @@
 backups/
 solidpython/**/*.scad
 __pycache__
+
+**/*.gcode
