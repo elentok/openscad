@@ -136,9 +136,9 @@ tent_height_kb_back = 35 - case_height;
 tent_height_kb_front = 42 - case_height;
 tent_height_wrist_rest_back = 38;
 tent_height_wrist_rest_front = 33;
-tent_thickness = 16;
+tent_thickness = 12;
 
 tent_screw_hole_thickness = 2;
 tent_screw_nut_diameter = 6.2;
 tent_screw_nut_thickness = 2.5;
-tent_screw_nut_hole_diameter = 10;
+tent_screw_nut_hole_diameter = 8;

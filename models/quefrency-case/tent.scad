@@ -62,8 +62,13 @@ module tent_positioned_wrist_rest_mask() {
 }
 
 module tent_kb_mask() {
-  cube([ tent_thickness + nothing, case_size_y, case_height * 2 ], anchor = BACK + BOTTOM);
-  y_offset = leg_screw_hole_diameter / 2 + case_leg_screw_hole_margins.y;
+  cube([ tent_thickness + nothing, case_size_y, case_height * 2 ], anchor = BACK + BOTTOM) {
+    // cut a small part to make space for the screw
+    position(FWD + BOTTOM) cube([ tent_thickness + nothing, 12, 4 ], anchor = FWD + TOP);
+    position(BACK + BOTTOM)
+        cube([ tent_thickness + nothing, 12, tent_max_height ], anchor = BACK + TOP);
+  };
+  y_offset = case_leg_screw_hole_margins.y;
   up(nothing) union() {
     fwd(y_offset) tent_screw_hole();
     fwd(case_size_y - y_offset) tent_screw_hole();
@@ -72,7 +77,7 @@ module tent_kb_mask() {
 
 module tent_wrist_rest_mask() {
   cube([ tent_thickness + nothing, wrist_rest_size.y, case_height * 2 ], anchor = BACK + BOTTOM);
-  y_offset = leg_screw_hole_diameter / 2 + wrist_rest_leg_screw_hole_margins.y;
+  y_offset = wrist_rest_leg_screw_hole_margins.y;
   up(nothing) union() {
     fwd(y_offset) tent_screw_hole();
     fwd(wrist_rest_size.y - y_offset) tent_screw_hole();
@@ -110,4 +115,5 @@ tent();
 // tent_screw_hole();
 // tent_screw_hole_test();
 
-// #cube([ 5, 20, 5 ], anchor = BACK);
+// #cube([ 5, case_leg_screw_hole_margins.y, 5 ], anchor = BACK);
+// #fwd(case_size_y) cube([ 5, case_leg_screw_hole_margins.y, 5 ], anchor = FWD);
