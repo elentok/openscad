@@ -119,7 +119,8 @@ module case_right_bottom_leg_screw_holes() {
   x = case_right_size.x / 2;
   y = case_right_size.y / 2;
   z = -(case_height - case_top_thickness);
-  translate([ x, y, z ]) leg_screw_holes(case_right_size, case_bottom_thickness);
+  translate([ x, y, z ]) leg_screw_holes(case_right_size, case_bottom_thickness,
+                                         margins = case_leg_screw_hole_margins);
 }
 
 module debug_borders() {

@@ -84,19 +84,21 @@ case_usb_hole_start_from_left = [ 24, 119 ];
 // ------------------------------------------------------------
 // Legs
 
-leg_hole_diameter = 10;
-// Distance between the edge of the case and the edge of the leg hole.
-leg_hole_margin = 10;
-
-leg_screw_hole_margin = 20;
+case_right_screw5_dist_from_left = case_right_size.x - kb_right_back_screws[4].x -
+                                   case_border_thickness - case_border_tolerance / 2;
+case_leg_screw_hole_margins = [
+  case_right_screw5_dist_from_left + (kb_right_back_screws[4].x - kb_right_back_screws[3].x) / 2,
+  20,
+];
+wrist_rest_leg_screw_hole_margins = [ 15, 15 ];
 leg_screw_hole_diameter = 3.8;
 leg_screw_head_height = 2;
 leg_screw_head_diameter = 6.8;
 
 // ------------------------------------------------------------
 // Wrist Rest
-wrist_pillow_size = [ 130, 82 ];
-wrist_pillow_rounding = 11;
+wrist_pillow_size = [ 132, 84 ];
+wrist_pillow_rounding = 14;
 wrist_rest_border_height = 4;
 wrist_rest_border_thickness = 1.5;
 wrist_rest_bottom_thickness = 2;
@@ -132,12 +134,11 @@ function get_connector_notch_size(z_pos) = z_pos == TOP ? top_connector_notch_si
 
 tent_height_kb_back = 35 - case_height;
 tent_height_kb_front = 42 - case_height;
-tent_height_wrist_rest_back = 30;
-tent_height_wrist_rest_front = 25;
+tent_height_wrist_rest_back = 38;
+tent_height_wrist_rest_front = 33;
 tent_thickness = 16;
 
 tent_screw_hole_thickness = 2;
-tent_screw_nut_diameter = 6.1;
-tent_screw_nut_width = 5.5;
-tent_screw_nut_thickness = 2.3;
+tent_screw_nut_diameter = 6.2;
+tent_screw_nut_thickness = 2.5;
 tent_screw_nut_hole_diameter = 10;

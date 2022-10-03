@@ -63,7 +63,7 @@ module tent_positioned_wrist_rest_mask() {
 
 module tent_kb_mask() {
   cube([ tent_thickness + nothing, case_size_y, case_height * 2 ], anchor = BACK + BOTTOM);
-  y_offset = leg_screw_hole_diameter / 2 + leg_hole_margin;
+  y_offset = leg_screw_hole_diameter / 2 + case_leg_screw_hole_margins.y;
   up(nothing) union() {
     fwd(y_offset) tent_screw_hole();
     fwd(case_size_y - y_offset) tent_screw_hole();
@@ -72,7 +72,7 @@ module tent_kb_mask() {
 
 module tent_wrist_rest_mask() {
   cube([ tent_thickness + nothing, wrist_rest_size.y, case_height * 2 ], anchor = BACK + BOTTOM);
-  y_offset = leg_screw_hole_diameter / 2 + leg_hole_margin;
+  y_offset = leg_screw_hole_diameter / 2 + wrist_rest_leg_screw_hole_margins.y;
   up(nothing) union() {
     fwd(y_offset) tent_screw_hole();
     fwd(wrist_rest_size.y - y_offset) tent_screw_hole();
@@ -105,7 +105,9 @@ module tent_screw_hole_test() {
 }
 
 // tent2d();
-// tent();
+tent();
 // tent_kb_mask();
 // tent_screw_hole();
-tent_screw_hole_test();
+// tent_screw_hole_test();
+
+// #cube([ 5, 20, 5 ], anchor = BACK);

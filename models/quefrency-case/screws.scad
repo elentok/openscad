@@ -13,9 +13,10 @@ module case_fwd_screw_mask(screw_offset) {
       position(FWD + RIGHT) circle(d = kb_screw_diameter);
 }
 
-module leg_screw_holes(panel_size, panel_thickness, screw_head_height = leg_screw_head_height) {
-  x_diff = panel_size.x / 2 - leg_hole_diameter / 2 - leg_screw_hole_margin;
-  y_diff = panel_size.y / 2 - leg_hole_diameter / 2 - leg_screw_hole_margin;
+module leg_screw_holes(panel_size, panel_thickness, margins,
+                       screw_head_height = leg_screw_head_height) {
+  x_diff = panel_size.x / 2 - margins.x;  //- leg_screw_hole_diameter / 2 - margins.x;
+  y_diff = panel_size.y / 2 - margins.y;  //- leg_screw_hole_diameter / 2 - margins.y;
   back(y_diff) {
     left(x_diff) leg_screw_hole(panel_thickness, screw_head_height);
     right(x_diff) leg_screw_hole(panel_thickness, screw_head_height);
