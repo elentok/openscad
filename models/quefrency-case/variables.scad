@@ -6,8 +6,9 @@ test_mode = false;
 
 nothing = 0.1;
 
-kb_left_size = [ 194, 111 ];
-kb_right_size = [ 190, 111 ];
+kb_size_y = 111;
+kb_left_size = [ 194, kb_size_y ];
+kb_right_size = [ 190, kb_size_y ];
 kb_height = test_mode ? 3 : 12.9;
 kb_row_height = 19.5;
 kb_padding = 7.2;  // the board area that isn't covered by keys
@@ -52,6 +53,7 @@ case_kb_padding = case_border_thickness + case_border_tolerance / 2;
 
 case_to_keys = case_kb_padding + kb_padding;
 
+case_size_y = kb_size_y + case_kb_padding * 2;
 case_left_size = [
   kb_left_size.x + case_kb_padding * 2,
   kb_left_size.y + case_kb_padding * 2,
@@ -133,3 +135,9 @@ tent_height_kb_front = 42 - case_height;
 tent_height_wrist_rest_back = 30;
 tent_height_wrist_rest_front = 25;
 tent_thickness = 16;
+
+tent_screw_hole_thickness = 2;
+tent_screw_nut_diameter = 6.1;
+tent_screw_nut_width = 5.5;
+tent_screw_nut_thickness = 2.3;
+tent_screw_nut_hole_diameter = 10;
