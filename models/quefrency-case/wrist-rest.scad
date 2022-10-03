@@ -17,7 +17,8 @@ module wrist_rest() {
               rect(wrist_rest_size, rounding = wrist_pillow_rounding);
     }
 
-    leg_screw_holes(wrist_rest_size, wrist_rest_bottom_thickness, screw_head_height = 0.5);
+    leg_screw_holes(wrist_rest_size, wrist_rest_bottom_thickness, screw_head_height = 0.5,
+                    margins = wrist_rest_leg_screw_hole_margins);
   }
 }
 
