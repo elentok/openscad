@@ -2,7 +2,7 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 // When set to true it makes some of the parts thinner so they print faster
-test_mode = false;
+test_mode = true;
 
 nothing = 0.1;
 
@@ -10,7 +10,6 @@ kb_size_y = 111;
 kb_left_size = [ 194, kb_size_y ];
 kb_right_size = [ 190, kb_size_y ];
 kb_height = test_mode ? 3 : 12.9;
-kb_row_height = 19.5;
 kb_padding = 7.2;  // the board area that isn't covered by keys
 
 kb_screw_diameter = 2.6;

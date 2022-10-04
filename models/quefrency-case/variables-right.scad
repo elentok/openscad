@@ -5,6 +5,7 @@ include <./variables.scad>
 kb_size_x = 190;
 case_size_x = kb_size_x + case_kb_padding * 2;
 
+kb_row_heights = [ 19.5, 19.5, 19.5, 19.5, 19.5 ];
 kb_padding_by_row = [ 11, 0, 4.5, 14.5, 19.5 ];
 
 // [ [x, width], [x,width], ...]

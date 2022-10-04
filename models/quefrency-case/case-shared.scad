@@ -137,11 +137,14 @@ module case_keys_padding_mask() {
 
   for (i = [0:row_count - 1]) {
     padding = kb_padding_by_row[i];
+    row_height = kb_row_heights[i];
+    // echo("ROW", i, "heights", slice(kb_row_heights, 0, i - 1));
+    row_y = i == 0 ? 0 : sum(slice(kb_row_heights, 0, i - 1));
     if (padding > 0) {
-      padding_size = [ padding, kb_row_height ];
+      padding_size = [ padding, row_height + nothing ];
       padding_offset = [
         case_border_thickness,
-        -case_border_thickness - kb_padding - kb_row_height * i,
+        -case_border_thickness - kb_padding - row_y,
       ];
 
       round_top = i > 0 && kb_padding_by_row[i - 1] < padding;
