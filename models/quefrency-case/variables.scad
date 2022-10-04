@@ -13,28 +13,6 @@ kb_height = test_mode ? 3 : 12.9;
 kb_row_height = 19.5;
 kb_padding = 7.2;  // the board area that isn't covered by keys
 
-kb_right_padding_by_row = [ 11, 0, 4.5, 14.5, 19.5 ];
-kb_right_row_count = len(kb_right_padding_by_row);
-// [ [x, width], [x,width], ...]
-kb_right_bottom_row_spaces = [ [ 66, 6 ], [ 120, 6 ] ];
-kb_right_bottom_row_spaces_height = 18;
-
-// Distances of the forward screws from the right
-kb_right_fwd_screws = [
-  [ 4.4, 4.4 ],
-  [ 4.4 + 83, 3.8 ],
-  [ 4.4 + 83 + 83, 3.8 ],
-];
-
-// Distances of the back screws from the back right
-kb_right_back_screws = [
-  [ 4.4, 4.4 ],
-  [ 4.4 + 49.4, 3.8 ],
-  [ 4.4 + 49.4 + 22, 3.8 ],
-  [ 4.4 + 49.4 + 22 + 75, 3.8 ],
-  [ 4.4 + 49.4 + 22 + 75 + 24, 3.8 ],
-];
-
 kb_screw_diameter = 2.6;
 
 case_border_radius = 2;
@@ -54,18 +32,15 @@ case_kb_padding = case_border_thickness + case_border_tolerance / 2;
 case_to_keys = case_kb_padding + kb_padding;
 
 case_size_y = kb_size_y + case_kb_padding * 2;
-case_left_size = [
-  kb_left_size.x + case_kb_padding * 2,
-  kb_left_size.y + case_kb_padding * 2,
-];
-
-case_right_size = [
-  kb_right_size.x + case_kb_padding * 2,
-  kb_right_size.y + case_kb_padding * 2,
-];
-
-case_right_fwd_connector = case_kb_padding + kb_right_fwd_screws[1].x;
-case_right_back_connector = case_kb_padding + kb_right_back_screws[2].x;
+// case_left_size = [
+//   kb_left_size.x + case_kb_padding * 2,
+//   kb_left_size.y + case_kb_padding * 2,
+// ];
+//
+// case_right_size = [
+//   kb_right_size.x + case_kb_padding * 2,
+//   kb_right_size.y + case_kb_padding * 2,
+// ];
 
 case_top_height = kb_height / 2 + case_top_thickness + case_vertical_tolerance;
 case_bottom_height = kb_height / 2 + case_bottom_thickness + case_vertical_tolerance;
@@ -79,19 +54,10 @@ case_height = case_top_height + case_bottom_height;
 
 case_usb_hole_width = 15;
 case_usb_hole_height = 9;
-case_usb_hole_start_from_left = [ 24, 119 ];
 
 // ------------------------------------------------------------
 // Legs
 
-case_right_screw5_dist_from_left = case_right_size.x - kb_right_back_screws[4].x -
-                                   case_border_thickness - case_border_tolerance / 2;
-
-// Distance of the center of the tent holes from the corners.
-case_tent_holes_dist_from_corner = [
-  case_right_screw5_dist_from_left + (kb_right_back_screws[4].x - kb_right_back_screws[3].x) / 2,
-  20,
-];
 wrist_rest_tent_holes_dist_from_corner = [ 15, 15 ];
 
 leg_screw_hole_diameter = 3.8;
