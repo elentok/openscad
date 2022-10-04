@@ -5,12 +5,18 @@ $fn = 64;
 
 module case_back_screw_mask(screw_offset) {
   tag("remove") left(case_kb_padding + screw_offset.x) fwd(case_kb_padding + screw_offset.y)
-      position(BACK + RIGHT) circle(d = kb_screw_diameter);
+      position(BACK + RIGHT) case_top_screw();
 }
 
 module case_fwd_screw_mask(screw_offset) {
   tag("remove") left(case_kb_padding + screw_offset.x) back(case_kb_padding + screw_offset.y)
-      position(FWD + RIGHT) circle(d = kb_screw_diameter);
+      position(FWD + RIGHT) case_top_screw();
+}
+
+module case_top_screw() {
+  d = kb_screw_diameter;
+  size = [ d + 2 * kb_screw_flexibility, d ];
+  rect(size, rounding = d / 2);
 }
 
 module leg_screw_holes(panel_size, panel_thickness, x_offset_from_edge, y_offset_from_edge,

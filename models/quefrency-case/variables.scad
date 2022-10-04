@@ -13,6 +13,11 @@ kb_height = test_mode ? 3 : 12.9;
 kb_padding = 7.2;  // the board area that isn't covered by keys
 
 kb_screw_diameter = 2.6;
+// Instead of circular screw holes they're wider to be more flexible
+// This value is added to the sides.
+// For example: 2.6mm screw diameter with 2mm flexibility means the hole will be
+// 2.6mm + 2*2mm = 6.6mm wide).
+kb_screw_flexibility = 1;
 
 case_border_radius = 2;
 case_border_thickness = 1.5;
@@ -114,3 +119,12 @@ tent_screw_hole_thickness = 2;
 tent_screw_nut_diameter = 6.2;
 tent_screw_nut_thickness = 2.5;
 tent_screw_nut_hole_diameter = 8;
+
+// Reset Button
+
+// Distance of the center of the reset button from the bottom-left edge of the
+// left keyboard (and hopefully also the bottom-right edge of the right keyboard).
+// (edge = edge of the keyboard panel, not the case, add the border to the
+// calculation).
+reset_button_pos = [ -89, 46.2 ];
+reset_button_hole_diameter = 7.5;

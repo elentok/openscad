@@ -85,8 +85,14 @@ module case_bottom_2d() {
   diff() {
     rect([ case_size_x, case_size_y ], rounding = case_border_radius, anchor = BOTTOM + LEFT) {
       case_screw_holes();
+      case_reset_button_hole();
     }
   }
+}
+
+module case_reset_button_hole() {
+  tag("remove") translate(reset_button_pos) position(BOTTOM + RIGHT)
+      circle(d = reset_button_hole_diameter);
 }
 
 module case_screw_holes() {
