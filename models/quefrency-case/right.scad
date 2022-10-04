@@ -132,7 +132,7 @@ module debug_borders() {
 module case_bottom_right_2d() {
   diff() {
     rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT) {
-      case_top_right_screw_holes();
+      case_right_screw_holes();
     }
   }
 }
@@ -140,23 +140,24 @@ module case_bottom_right_2d() {
 module case_top_right_2d() {
   diff() {
     rect(case_right_size, rounding = case_border_radius, anchor = BOTTOM + LEFT) {
-      case_top_right_keys_mask();
-      case_top_right_extra_row_padding();
-      case_top_right_screw_holes();
+      case_right_keys_mask();
+      case_right_keys_padding_mask();
+      case_right_screw_holes();
     }
   }
 }
 
-module case_top_right_keys_mask() {
-  // keys mask
+module case_right_keys_mask() {
   keys_size = [ kb_right_size.x - kb_padding, kb_right_size.y - kb_padding * 2 ];
   keys_offset = [ -kb_padding - case_border_thickness, (case_right_size.y - keys_size.y) / 2 ];
-  // kb_padding + case_border_thickness
   tag("remove") translate(keys_offset) position(BOTTOM + RIGHT)
       rect(keys_size, rounding = 1, anchor = BOTTOM + RIGHT);
 }
 
-module case_top_right_extra_row_padding() {
+module case_right_keys_padding_mask() {
+  // row_count = len(kb_right_padding_by_row);
+  // echo("ROW COUNT", row_count);
+
   for (i = [0:kb_right_row_count - 1]) {
     padding = kb_right_padding_by_row[i];
     if (padding > 0) {
@@ -194,7 +195,7 @@ module case_top_right_bottom_row_spaces() {
   }
 }
 
-module case_top_right_screw_holes() {
+module case_right_screw_holes() {
   for (i = [0:len(kb_right_back_screws) - 1]) {
     screw_offset = kb_right_back_screws[i];
     case_back_screw_mask(screw_offset);
@@ -205,11 +206,12 @@ module case_top_right_screw_holes() {
   }
 }
 
-// case_top_right();
+case_top_right();
+case_bottom_right();
 // color("yellow") case_bottom_right();
 // case_top_right_left();
 // case_top_right_right();
 // case_top_right_2d();
 // #case_right_mask();
 // case_bottom_right_right();
-case_bottom_right_left();
+// case_bottom_right_left();
