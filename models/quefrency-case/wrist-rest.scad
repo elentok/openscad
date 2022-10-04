@@ -18,7 +18,7 @@ module wrist_rest() {
     }
 
     leg_screw_holes(wrist_rest_size, wrist_rest_bottom_thickness, screw_head_height = 0.5,
-                    margins = wrist_rest_leg_screw_hole_margins);
+                    dist_from_corner = wrist_rest_tent_holes_dist_from_corner);
   }
 }
 

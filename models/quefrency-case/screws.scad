@@ -13,17 +13,17 @@ module case_fwd_screw_mask(screw_offset) {
       position(FWD + RIGHT) circle(d = kb_screw_diameter);
 }
 
-module leg_screw_holes(panel_size, panel_thickness, margins,
+module leg_screw_holes(panel_size, panel_thickness, dist_from_corner,
                        screw_head_height = leg_screw_head_height) {
-  x_diff = panel_size.x / 2 - margins.x;  //- leg_screw_hole_diameter / 2 - margins.x;
-  y_diff = panel_size.y / 2 - margins.y;  //- leg_screw_hole_diameter / 2 - margins.y;
-  back(y_diff) {
-    left(x_diff) leg_screw_hole(panel_thickness, screw_head_height);
-    right(x_diff) leg_screw_hole(panel_thickness, screw_head_height);
+  x_offset = panel_size.x / 2 - dist_from_corner.x;
+  y_offset = panel_size.y / 2 - dist_from_corner.y;
+  back(y_offset) {
+    left(x_offset) leg_screw_hole(panel_thickness, screw_head_height);
+    right(x_offset) leg_screw_hole(panel_thickness, screw_head_height);
   }
-  fwd(y_diff) {
-    left(x_diff) leg_screw_hole(panel_thickness, screw_head_height);
-    right(x_diff) leg_screw_hole(panel_thickness, screw_head_height);
+  fwd(y_offset) {
+    left(x_offset) leg_screw_hole(panel_thickness, screw_head_height);
+    right(x_offset) leg_screw_hole(panel_thickness, screw_head_height);
   }
 }
 

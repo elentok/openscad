@@ -86,11 +86,14 @@ case_usb_hole_start_from_left = [ 24, 119 ];
 
 case_right_screw5_dist_from_left = case_right_size.x - kb_right_back_screws[4].x -
                                    case_border_thickness - case_border_tolerance / 2;
-case_leg_screw_hole_margins = [
+
+// Distance of the center of the tent holes from the corners.
+case_tent_holes_dist_from_corner = [
   case_right_screw5_dist_from_left + (kb_right_back_screws[4].x - kb_right_back_screws[3].x) / 2,
   20,
 ];
-wrist_rest_leg_screw_hole_margins = [ 15, 15 ];
+wrist_rest_tent_holes_dist_from_corner = [ 15, 15 ];
+
 leg_screw_hole_diameter = 3.8;
 leg_screw_head_height = 2;
 leg_screw_head_diameter = 6.8;
