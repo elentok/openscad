@@ -58,7 +58,9 @@ case_usb_hole_height = 9;
 // ------------------------------------------------------------
 // Legs
 
-wrist_rest_tent_holes_dist_from_corner = [ 15, 15 ];
+case_tent_hole_center_y_offset_from_edge = 20;
+wrist_rest_tent_hole_center_x_offset_from_edge = 15;
+wrist_rest_tent_hole_center_y_offset_from_edge = 15;
 
 leg_screw_hole_diameter = 3.8;
 leg_screw_head_height = 2;

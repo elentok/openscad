@@ -70,8 +70,10 @@ module case_right_bottom_leg_screw_holes() {
   x = case_size_x / 2;
   y = case_size_y / 2;
   z = -(case_height - case_top_thickness);
-  translate([ x, y, z ]) leg_screw_holes([ case_size_x, case_size_y ], case_bottom_thickness,
-                                         dist_from_corner = case_tent_holes_dist_from_corner);
+  translate([ x, y, z ])
+      leg_screw_holes([ case_size_x, case_size_y ], case_bottom_thickness,
+                      x_offset_from_edge = case_tent_hole_center_x_offset_from_edge,
+                      y_offset_from_edge = case_tent_hole_center_y_offset_from_edge);
 }
 
 module debug_borders() {

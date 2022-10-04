@@ -6,7 +6,7 @@ tent_side = RIGHT;
 
 // Calculate tent kb y length (Pythagorean theorem)
 a1 = tent_height_kb_front - tent_height_kb_back;
-c1 = case_right_size.y;
+c1 = case_size_y;
 b1 = sqrt(c1 * c1 - a1 * a1);
 tent_kb_y = b1;
 tent_kb_z_diff = tent_height_kb_front - tent_height_kb_back;
@@ -65,7 +65,7 @@ module tent_kb_mask() {
     up(nothing) position(BACK + BOTTOM)
         cube([ tent_thickness + nothing, 12, tent_max_height ], anchor = BACK + TOP);
   };
-  y_offset = case_tent_holes_dist_from_corner.y;
+  y_offset = case_tent_hole_center_y_offset_from_edge;
   up(nothing) union() {
     fwd(y_offset) tent_screw_hole();
     fwd(case_size_y - y_offset) tent_screw_hole();
@@ -74,7 +74,7 @@ module tent_kb_mask() {
 
 module tent_wrist_rest_mask() {
   cube([ tent_thickness + nothing, wrist_rest_size.y, case_height * 2 ], anchor = BACK + BOTTOM);
-  y_offset = case_tent_holes_dist_from_corner.y;
+  y_offset = case_tent_hole_center_y_offset_from_edge;
   up(nothing) union() {
     fwd(y_offset) tent_screw_hole();
     fwd(wrist_rest_size.y - y_offset) tent_screw_hole();
@@ -112,5 +112,5 @@ tent();
 // tent_screw_hole();
 // tent_screw_hole_test();
 
-// #cube([ 5, case_tent_holes_dist_from_corner.y, 5 ], anchor = BACK);
-// #fwd(case_size_y) cube([ 5, case_tent_holes_dist_from_corner.y, 5 ], anchor = FWD);
+// #cube([ 5, case_tent_hole_center_y_offset_from_edge, 5 ], anchor = BACK);
+// #fwd(case_size_y) cube([ 5, case_tent_hole_center_y_offset_from_edge, 5 ], anchor = FWD);

@@ -33,10 +33,7 @@ case_back_connector = case_kb_padding + kb_back_screws[2].x;
 case_right_screw5_dist_from_left =
     case_size_x - kb_back_screws[4].x - case_border_thickness - case_border_tolerance / 2;
 
-// Distance of the center of the tent holes from the corners.
-case_tent_holes_dist_from_corner = [
-  case_right_screw5_dist_from_left + (kb_back_screws[4].x - kb_back_screws[3].x) / 2,
-  20,
-];
+case_tent_hole_center_x_offset_from_edge =
+    case_right_screw5_dist_from_left + (kb_back_screws[4].x - kb_back_screws[3].x) / 2;
 
 case_usb_hole_start_from_left = [ 24, 119 ];
