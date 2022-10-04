@@ -1,3 +1,7 @@
+include <./connector.scad>
+include <./screws.scad>
+include <BOSL2/std.scad>
+$fn = 64;
 
 module case_mask(is_socket, connector_z_pos) {
   size_x_offset = -connector_width / 2 - connector_tolerance + nothing;
@@ -35,6 +39,23 @@ module case_mask(is_socket, connector_z_pos) {
   };
 }
 
+module case_top() {
+  difference() {
+    union() {
+      // Top
+      linear_extrude(case_top_thickness) case_top_2d();
+
+      // Border
+      h = case_top_border_height;
+      down(h) linear_extrude(h) case_border();
+      case_top_front_row_spaces();
+
+      // case_top_debug_borders();
+    }
+    case_usb_holes();
+  }
+}
+
 module case_bottom() {
   z = case_bottom_height + case_top_border_height;
   difference() {
@@ -50,19 +71,19 @@ module case_bottom() {
   }
 }
 
-module case_bottom_2d() {
-  diff() {
-    rect([ case_size_x, case_size_y ], rounding = case_border_radius, anchor = BOTTOM + LEFT) {
-      case_screw_holes();
-    }
-  }
-}
-
 module case_top_2d() {
   diff() {
     rect([ case_size_x, case_size_y ], rounding = case_border_radius, anchor = BOTTOM + LEFT) {
       case_keys_mask();
       case_keys_padding_mask();
+      case_screw_holes();
+    }
+  }
+}
+
+module case_bottom_2d() {
+  diff() {
+    rect([ case_size_x, case_size_y ], rounding = case_border_radius, anchor = BOTTOM + LEFT) {
       case_screw_holes();
     }
   }
@@ -135,5 +156,50 @@ module case_keys_padding_mask() {
       tag("keep") translate(padding_offset) position(TOP + LEFT)
           rect(padding_size, anchor = TOP + LEFT, rounding = rounding);
     }
+  }
+}
+module case_top_front_row_spaces() {
+  y = case_to_keys;
+  for (i = [0:len(kb_bottom_row_spaces) - 1]) {
+    spaces = kb_bottom_row_spaces[i];
+    x = spaces[0];
+    width = spaces[1];
+
+    translate([ x, y, 0 ]) linear_extrude(case_top_thickness) rect(
+        [ width, kb_bottom_row_spaces_height ], anchor = BOTTOM + LEFT, rounding = [ 1, 1, 0, 0 ]);
+  }
+}
+
+module case_top_debug_borders() {
+#cube([ 20, case_to_keys, case_top_height * 2 ], anchor = FWD + LEFT);
+  back(case_size_y - case_to_keys)
+#cube([ 20, case_to_keys, case_top_height * 2 ], anchor = FWD + LEFT);
+}
+
+module case_top_right() {
+  intersection() {
+    case_top();
+    case_mask(is_socket = false, connector_z_pos = TOP);
+  }
+}
+
+module case_bottom_right() {
+  intersection() {
+    case_bottom();
+    case_mask(is_socket = false, connector_z_pos = BOTTOM);
+  }
+}
+
+module case_top_left() {
+  diff(remove = "remove2", keep = "keep2") {
+    case_top();
+    tag("remove2") case_mask(is_socket = true, connector_z_pos = TOP);
+  }
+}
+
+module case_bottom_left() {
+  diff(remove = "remove2", keep = "keep2") {
+    case_bottom();
+    tag("remove2") case_mask(is_socket = true, connector_z_pos = BOTTOM);
   }
 }
