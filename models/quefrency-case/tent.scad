@@ -44,12 +44,6 @@ module tent2d() {
   rounding = tent_side == RIGHT ? [ r, r, r, t / 2 ] : [ r, r, t / 2, r ];
 
   rect([ t, tent_max_height ], anchor = FWD, rounding = rounding);
-
-  // t = tent_thickness;
-  // back(t / 2) union() {
-  //   circle(d = t);
-  //   rect([ t, tent_max_height - t / 2 ], anchor = FWD, rounding = [ 2, 2, 0, 0 ]);
-  // }
 }
 
 module tent_positioned_kb_mask() {
@@ -63,10 +57,11 @@ module tent_positioned_wrist_rest_mask() {
 
 module tent_kb_mask() {
   cube([ tent_thickness + nothing, case_size_y, case_height * 2 ], anchor = BACK + BOTTOM) {
+    // cut a small part to make space for the front screw
     up(nothing) back(5.3) left(tent_thickness / 2) position(FWD + BOTTOM)
-        cylinder(d = 8, h = tent_max_height, anchor = FWD + TOP);
-    // cut a small part to make space for the screw
-    // position(FWD + BOTTOM) cube([ tent_thickness + nothing, 12, 4 ], anchor = FWD + TOP);
+        cylinder(d = 7, h = tent_max_height, anchor = TOP);
+
+    // cut the end to make place for the back screws
     up(nothing) position(BACK + BOTTOM)
         cube([ tent_thickness + nothing, 12, tent_max_height ], anchor = BACK + TOP);
   };
