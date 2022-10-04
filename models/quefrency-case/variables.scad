@@ -53,7 +53,7 @@ case_height = case_top_height + case_bottom_height;
 // The bottom of the USB holes is the bottom of the bottom plate.
 
 case_usb_hole_width = 15;
-case_usb_hole_height = 9;
+case_usb_hole_height = test_mode ? 3 : 9;
 
 // ------------------------------------------------------------
 // Legs
