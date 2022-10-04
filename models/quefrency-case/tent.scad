@@ -63,9 +63,11 @@ module tent_positioned_wrist_rest_mask() {
 
 module tent_kb_mask() {
   cube([ tent_thickness + nothing, case_size_y, case_height * 2 ], anchor = BACK + BOTTOM) {
+    up(nothing) back(5.3) left(tent_thickness / 2) position(FWD + BOTTOM)
+        cylinder(d = 8, h = tent_max_height, anchor = FWD + TOP);
     // cut a small part to make space for the screw
-    position(FWD + BOTTOM) cube([ tent_thickness + nothing, 12, 4 ], anchor = FWD + TOP);
-    position(BACK + BOTTOM)
+    // position(FWD + BOTTOM) cube([ tent_thickness + nothing, 12, 4 ], anchor = FWD + TOP);
+    up(nothing) position(BACK + BOTTOM)
         cube([ tent_thickness + nothing, 12, tent_max_height ], anchor = BACK + TOP);
   };
   y_offset = case_leg_screw_hole_margins.y;
