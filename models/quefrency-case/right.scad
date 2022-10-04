@@ -1,7 +1,5 @@
 include <./case-shared.scad>
 include <./variables-right.scad>
-include <BOSL2/std.scad>
-$fn = 64;
 
 case_top();
 case_bottom();
