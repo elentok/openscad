@@ -18,12 +18,12 @@ module leg_screw_holes(panel_size, panel_thickness, dist_from_corner,
   x_offset = panel_size.x / 2 - dist_from_corner.x;
   y_offset = panel_size.y / 2 - dist_from_corner.y;
   back(y_offset) {
-    left(x_offset) leg_screw_hole(panel_thickness, screw_head_height);
-    right(x_offset) leg_screw_hole(panel_thickness, screw_head_height);
+    left(x_offset) flexible_leg_screw_hole(panel_thickness, screw_head_height);
+    right(x_offset) flexible_leg_screw_hole(panel_thickness, screw_head_height);
   }
   fwd(y_offset) {
-    left(x_offset) leg_screw_hole(panel_thickness, screw_head_height);
-    right(x_offset) leg_screw_hole(panel_thickness, screw_head_height);
+    left(x_offset) flexible_leg_screw_hole(panel_thickness, screw_head_height);
+    right(x_offset) flexible_leg_screw_hole(panel_thickness, screw_head_height);
   }
 }
 
@@ -36,5 +36,31 @@ module leg_screw_hole(panel_thickness, screw_head_height) {
     cylinder(d = leg_screw_hole_diameter, h = screw_body_height + nothing);
     // screw head
     up(screw_body_height) cylinder(d = leg_screw_head_diameter, h = screw_head_height + nothing);
+  }
+}
+
+// A larger screw hole so it's flexible to inaccuracies in screw positions.
+module flexible_leg_screw_hole(panel_thickness, screw_head_height) {
+  // hull() {
+  //   fwd(leg_screw_head_flexibility) leg_screw_hole(panel_thickness, screw_head_height);
+  //   back(leg_screw_head_flexibility) leg_screw_hole(panel_thickness, screw_head_height);
+  // }
+
+  // In the wrist rest I don't need the screw head to go all the way in.
+  screw_body_height = panel_thickness - screw_head_height;
+
+  y = leg_screw_head_flexibility;
+
+  down(nothing / 2) union() {
+    // screw body
+    hull() {
+      back(y) cylinder(d = leg_screw_hole_diameter, h = screw_body_height + nothing);
+      fwd(y) cylinder(d = leg_screw_hole_diameter, h = screw_body_height + nothing);
+    }
+    // screw head
+    up(screw_body_height) hull() {
+      back(y) cylinder(d = leg_screw_head_diameter, h = screw_head_height + nothing);
+      fwd(y) cylinder(d = leg_screw_head_diameter, h = screw_head_height + nothing);
+    }
   }
 }

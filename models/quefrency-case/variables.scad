@@ -97,6 +97,8 @@ wrist_rest_tent_holes_dist_from_corner = [ 15, 15 ];
 leg_screw_hole_diameter = 3.8;
 leg_screw_head_height = 2;
 leg_screw_head_diameter = 6.8;
+// The flexibility to each side
+leg_screw_head_flexibility = 6;
 
 // ------------------------------------------------------------
 // Wrist Rest
