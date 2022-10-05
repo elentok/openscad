@@ -6,13 +6,15 @@ nothing = 0.1;
 
 // Wheel {{{1
 wheel_od = 60;
-wheel_id = 40;
+wheel_id = 38;
 wheel_width = 30;
-wheel_rounding = "auto";
+wheel_rounding = 4;
+wheel_thickness = (wheel_od - wheel_id) / 2;
 
+wheel_bump_rounding = 2;
 wheel_bump_angle = 10;
 wheel_bumps = 20;
-wheel_bump_height = 2;
+wheel_bump_height = 1;
 
 wheel_bumps_angle_sum = wheel_bumps * wheel_bump_angle;
 wheel_slits_angle_sum = 360 - wheel_bumps_angle_sum;
