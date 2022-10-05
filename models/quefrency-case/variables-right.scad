@@ -31,10 +31,4 @@ kb_back_screws = [
 case_fwd_connector = case_kb_padding + kb_fwd_screws[1].x;
 case_back_connector = case_kb_padding + kb_back_screws[2].x;
 
-case_screw5_dist_from_left =
-    case_size_x - kb_back_screws[4].x - case_border_thickness - case_border_tolerance / 2;
-
-case_tent_hole_center_x_offset_from_edge =
-    case_screw5_dist_from_left + (kb_back_screws[4].x - kb_back_screws[3].x) / 2;
-
 case_usb_hole_start_from_left = [ 24, 119 ];

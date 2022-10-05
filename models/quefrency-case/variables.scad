@@ -2,7 +2,7 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 // When set to true it makes some of the parts thinner so they print faster
-test_mode = true;
+test_mode = false;
 
 nothing = 0.1;
 
@@ -62,6 +62,15 @@ case_usb_hole_height = test_mode ? 3 : 9;
 // ------------------------------------------------------------
 // Legs
 
+// This X offset value was calculated for the right half of the keyboard (so it
+// doesn't interfere with the back screws, but it wasn't necessary):
+//
+//   case_screw5_dist_from_left =
+//     case_size_x - kb_back_screws[4].x - case_border_thickness - case_border_tolerance / 2;
+//
+//   case_tent_hole_center_x_offset_from_edge =
+//     case_screw5_dist_from_left + (kb_back_screws[4].x - kb_back_screws[3].x) / 2;
+case_tent_hole_center_x_offset_from_edge = 29;
 case_tent_hole_center_y_offset_from_edge = 20;
 wrist_rest_tent_hole_center_x_offset_from_edge = 15;
 wrist_rest_tent_hole_center_y_offset_from_edge = 15;

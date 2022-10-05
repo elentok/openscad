@@ -41,7 +41,7 @@ module tent2d() {
   t = tent_thickness;
   r = 2;
 
-  rounding = tent_side == RIGHT ? [ r, r, r, t / 2 ] : [ r, r, t / 2, r ];
+  rounding = [ r, r, r, t / 2 ];
 
   rect([ t, tent_max_height ], anchor = FWD, rounding = rounding);
 }
@@ -106,8 +106,13 @@ module tent_screw_hole_test() {
   }
 }
 
+// For the right keyboard half
+// tent();
+
+// For the left keyboard half
+mirror([ 1, 0, 0 ]) tent();
+
 // tent2d();
-tent();
 // tent_kb_mask();
 // tent_screw_hole();
 // tent_screw_hole_test();
