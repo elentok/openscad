@@ -2,7 +2,10 @@ include <./variables.scad>
 include <BOSL2/std.scad>
 
 // module wheel() { tube(h = wheel_width, od = wheel_od, id = wheel_id); }
-module wheel() { rotate_extrude() wheel_cut(); }
+module wheel() {
+  rotate_extrude() wheel_cut();
+  wheel_bumps();
+}
 
 module wheel_cut() {
   rounded_tube(h = wheel_width, od = wheel_od - wheel_bump_height * 2, id = wheel_id,
@@ -42,9 +45,27 @@ module rounded_tube(h, od, id, rounding) {
   right(id / 2) rect(size, rounding = rounding_value, anchor = LEFT);
 }
 
+module printable_wheel() {
+  difference() {
+    bottom_half() wheel();
+    wheel_alignment_pin_socket();
+    rotate(360 / 3) wheel_alignment_pin_socket();
+    rotate(360 * 2 / 3) wheel_alignment_pin_socket();
+  }
+
+  back(wheel_od / 2 * 1.2) rotate([ 90, 90, 0 ]) alignment_pin(anchor = TOP + LEFT);
+}
+
+module wheel_alignment_pin_socket() {
+  right(wheel_id / 2 + (wheel_thickness - alignment_pin_socket_size.x) / 2)
+      alignment_pin_socket(anchor = LEFT);
+}
+
+module alignment_pin_socket(anchor) { cube(alignment_pin_socket_size, anchor = anchor); }
+module alignment_pin(anchor) { cube(alignment_pin_size, anchor = anchor); }
+
 wheel();
-// wheel_bump();
-wheel_bumps();
+// printable_wheel();
 
 // debug
 // #cylinder(d = wheel_od, h = wheel_width, center = true);
