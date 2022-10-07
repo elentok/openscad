@@ -1,30 +1,56 @@
 include <./variables.scad>
 include <BOSL2/std.scad>
 
-// module wheel() { tube(h = wheel_width, od = wheel_od, id = wheel_id); }
-module wheel() {
-  rotate_extrude() wheel_cut();
-  wheel_bumps();
+// ============================================================
+// Wheel Variables
+wheel_bump_rounding = 2;
+wheel_bump_angle = 10;
+wheel_bumps = 20;
+wheel_bump_height = 1;
+
+wheel_bumps_angle_sum = wheel_bumps * wheel_bump_angle;
+wheel_slits_angle_sum = 360 - wheel_bumps_angle_sum;
+wheel_slit_angle = wheel_slits_angle_sum / wheel_bumps;
+
+// ============================================================
+// Wheel Functions
+
+function get_wheel_width(od) = od / 3;
+function get_wheel_thickness(od) = od / 4;
+function get_wheel_id(od) = od - get_wheel_thickness(od) * 2;
+function get_wheel_rounding(od) = od / 10;
+
+// a = wheel_bump_angle
+// w = wheel_bump_width
+// r = wheel_od / 2
+// sin(a/2) = (w/2) / (wheel_od/2)
+//   => w/2 = (wheel_od/2) * sin(a/2)
+//   => w = wheel_od * sin(a/2)
+function get_wheel_bump_width(od) = od * sin(wheel_bump_angle / 2);
+
+module wheel(od) {
+  rotate_extrude() wheel_cut(od);
+  wheel_bumps(od);
 }
 
-module wheel_cut() {
-  rounded_tube(h = wheel_width, od = wheel_od - wheel_bump_height * 2, id = wheel_id,
-               rounding = wheel_rounding);
+module wheel_cut(od) {
+  rounded_tube(h = get_wheel_width(od), od = od - wheel_bump_height * 2, id = get_wheel_id(od),
+               rounding = get_wheel_rounding(od));
 }
 
-module wheel_bumps() {
+module wheel_bumps(od) {
   for (i = [0:wheel_bumps - 1]) {
-    rotate([ 0, 0, i * (wheel_bump_angle + wheel_slit_angle) ]) wheel_bump();
+    rotate([ 0, 0, i * (wheel_bump_angle + wheel_slit_angle) ]) wheel_bump(od);
   }
 }
 
-module wheel_bump() {
-  od = wheel_od - wheel_bump_height * 2;
-  h = wheel_bump_height + wheel_thickness / 2;
-  x = od / 2 - h + wheel_bump_height;
+module wheel_bump(od) {
+  d_minus_bump = od - wheel_bump_height * 2;
+  h = wheel_bump_height + get_wheel_thickness(od) / 2;
+  x = d_minus_bump / 2 - h + wheel_bump_height;
   rounding = [ wheel_bump_rounding, 0, 0, wheel_bump_rounding ];
-  right(x) rotate([ 90, 0, 0 ]) linear_extrude(wheel_bump_width, center = true)
-      rect([ h, wheel_width ], rounding = rounding, anchor = LEFT);
+  right(x) rotate([ 90, 0, 0 ]) linear_extrude(get_wheel_bump_width(od), center = true)
+      rect([ h, get_wheel_width(od) ], rounding = rounding, anchor = LEFT);
 }
 
 module wheel_bumps_2d() {
@@ -34,8 +60,8 @@ module wheel_bumps_2d() {
   }
 }
 
-module wheel_slit_2d() {
-  slit_size = [ wheel_bump_height * 2, wheel_bump_width ];
+module wheel_slit_2d(od) {
+  slit_size = [ wheel_bump_height * 2, get_wheel_bump_width(od) ];
   right(wheel_od / 2 - wheel_bump_height) rect(slit_size, anchor = LEFT);
 }
 
@@ -64,7 +90,8 @@ module wheel_alignment_pin_socket() {
 module alignment_pin_socket(anchor) { cube(alignment_pin_socket_size, anchor = anchor); }
 module alignment_pin(anchor) { cube(alignment_pin_size, anchor = anchor); }
 
-wheel();
+wheel(od = 40);
+up(20) wheel(od = 20);
 // printable_wheel();
 
 // debug
