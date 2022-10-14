@@ -32,7 +32,7 @@ nodemcu_radius = sqrt((nodemcu_size.x / 2) ^ 2 + (nodemcu_size.y / 2) ^ 2);
 lamp_shade_diameter = 70;
 lamp_shade_thickness = 2;
 
-sphere_od = base_od + 10;
+sphere_od = base_od * 1.2;
 sphere_thickness = 1.3;
 sphere_id = sphere_od - sphere_thickness;
 sphere_opening = connector_od + base_thickness * 2;  // TODO
@@ -56,7 +56,7 @@ module diffuser() {
   h_keep = sqrt(r ^ 2 - o ^ 2);
   h_cut = r - h_keep;
 
-  % down(h_cut) difference() {
+  down(h_cut) difference() {
     sphere(d = sphere_od, anchor = BOTTOM);
     sphere(d = sphere_id, anchor = BOTTOM);
     cube([ sphere_od, sphere_od, h_cut + nothing ], anchor = BOTTOM);
@@ -160,14 +160,14 @@ module connector_led_ring_right_holder() {
 
 module all() {
   space = 0;
-  up(space) % diffuser();
+  up(space) diffuser();
   color("#ff6600aa") base();
   color("#0066ffaa") down(base_thickness * 2 + space) connector();
   color("#00ff99aa") down(base_height + base_thickness + space * 2) bottom_lid();
 }
 
-all();
+// all();
 // base();
 // bottom_lid();
 // connector();
-// diffuser();
+diffuser();
