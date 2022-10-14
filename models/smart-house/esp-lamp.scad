@@ -32,18 +32,49 @@ nodemcu_radius = sqrt((nodemcu_size.x / 2) ^ 2 + (nodemcu_size.y / 2) ^ 2);
 lamp_shade_diameter = 70;
 lamp_shade_thickness = 2;
 
+sphere_od = base_od + 10;
+sphere_thickness = 1.3;
+sphere_id = sphere_od - sphere_thickness;
+sphere_opening = connector_od + base_thickness * 2;  // TODO
+
 // lamp_base_thickness = 2;
 // lamp_base_id = round(nodemcu_radius * 2.4);
 // lamp_base_od = lamp_base_id + lamp_shade_thickness * 2;
 
 // echo("Lamp base outer diameter: ", lamp_base_od);
 
-module lamp_shade() {
-  top_half() difference() {
-    sphere(d = lamp_shade_diameter);
-    sphere(d = lamp_shade_diameter - lamp_shade_thickness * 2);
+module diffuser() {
+  // o = sphere_opening / 2;
+  // r = h_keep + h_cut
+  // r^2 = h_keep^2 + o^2
+  //
+  // => h_keep = sqrt(r^2 - o^2);
+  // => h_cut = r - h_keep
+  //          = r - sqrt(r^2 - o^2)
+  o = sphere_opening / 2;
+  r = sphere_od / 2;
+  h_keep = sqrt(r ^ 2 - o ^ 2);
+  h_cut = r - h_keep;
+
+  % down(h_cut) difference() {
+    sphere(d = sphere_od, anchor = BOTTOM);
+    sphere(d = sphere_id, anchor = BOTTOM);
+    cube([ sphere_od, sphere_od, h_cut + nothing ], anchor = BOTTOM);
+  }
+
+  // nut
+  difference() {
+    cylinder(h = connector_thread_height - nothing, d = sphere_opening);
+    down(nothing / 2) connector_threaded_rod(internal = true);
   }
 }
+
+// module lamp_shade() {
+//   top_half() difference() {
+//     sphere(d = lamp_shade_diameter);
+//     sphere(d = lamp_shade_diameter - lamp_shade_thickness * 2);
+//   }
+// }
 
 module base() { rotate_extrude() base_cut_2d(); }
 
@@ -84,8 +115,7 @@ module connector() {
 
   // thread
   up(base_thickness * 2 - nothing * 2) difference() {
-    threaded_rod(d = connector_od, l = connector_thread_height, pitch = connector_thread_pitch,
-                 anchor = BOTTOM);
+    connector_threaded_rod();
     down(nothing / 2)
         cylinder(d = connector_id, h = connector_thread_height + nothing, anchor = BOTTOM);
   }
@@ -93,6 +123,12 @@ module connector() {
   // led ring screw nuts
   connector_led_ring_right_holder();
   mirror([ 1, 0, 0 ]) connector_led_ring_right_holder();
+}
+
+module connector_threaded_rod(internal = false) {
+  d = internal ? connector_od - connector_thread_tolerance : connector_od;
+  threaded_rod(d = connector_od, l = connector_thread_height, pitch = connector_thread_pitch,
+               anchor = BOTTOM, internal = internal);
 }
 
 module connector_led_ring_right_holder() {
@@ -106,16 +142,27 @@ module connector_led_ring_right_holder() {
     right(led_ring_screw_hole_dist / 2) circle(d = led_ring_screw_hole_diameter);
   }
 
+  tube_height = connector_thread_height - led_ring_height + base_thickness;
   // Tube into which to thread the screw.
   up(base_thickness) right(led_ring_screw_hole_dist / 2) tube(
       id = led_ring_screw_hole_diameter, od = led_ring_screw_hole_diameter + base_thickness * 2,
-      h = connector_thread_height - led_ring_height + base_thickness, anchor = BOTTOM);
+      h = tube_height, anchor = BOTTOM);
+
+  // Tube support
+  support_x = led_ring_screw_hole_dist / 2 + led_ring_screw_hole_diameter;
+  support_size = [
+    connector_id / 2 - support_x,
+    base_thickness,
+    tube_height,
+  ];
+  right(support_x) up(base_thickness) cube(support_size, anchor = BOTTOM + LEFT);
 }
 
 module all() {
-  space = 20;
+  space = 0;
+  up(space) % diffuser();
   color("#ff6600aa") base();
-  color("#0066ffaa") down(base_height + space) connector();
+  color("#0066ffaa") down(base_thickness * 2 + space) connector();
   color("#00ff99aa") down(base_height + base_thickness + space * 2) bottom_lid();
 }
 
@@ -123,4 +170,4 @@ all();
 // base();
 // bottom_lid();
 // connector();
-// lamp_shade();
+// diffuser();
