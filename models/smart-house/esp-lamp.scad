@@ -32,7 +32,7 @@ nodemcu_radius = sqrt((nodemcu_size.x / 2) ^ 2 + (nodemcu_size.y / 2) ^ 2);
 lamp_shade_diameter = 70;
 lamp_shade_thickness = 2;
 
-sphere_od = base_od * 1.2;
+sphere_od = base_od;
 sphere_thickness = 1.3;
 sphere_id = sphere_od - sphere_thickness;
 sphere_opening = connector_od + base_thickness * 2;  // TODO
@@ -44,6 +44,23 @@ sphere_opening = connector_od + base_thickness * 2;  // TODO
 // echo("Lamp base outer diameter: ", lamp_base_od);
 
 module diffuser() {
+  // Half sphere
+  top_half() difference() {
+    sphere(d = sphere_od);
+    sphere(d = sphere_id);
+  }
+
+  // Bottom
+  tube(od = sphere_od + nothing, id = sphere_opening, h = base_thickness, anchor = BOTTOM);
+
+  // nut
+  difference() {
+    cylinder(h = connector_thread_height - nothing, d = sphere_opening);
+    down(nothing / 2) connector_threaded_rod(mask = true);
+  }
+}
+
+module diffuser_mark1() {
   // o = sphere_opening / 2;
   // r = h_keep + h_cut
   // r^2 = h_keep^2 + o^2
@@ -65,7 +82,7 @@ module diffuser() {
   // nut
   difference() {
     cylinder(h = connector_thread_height - nothing, d = sphere_opening);
-    down(nothing / 2) connector_threaded_rod(internal = true);
+    down(nothing / 2) connector_threaded_rod(mask = true);
   }
 }
 
@@ -125,10 +142,10 @@ module connector() {
   mirror([ 1, 0, 0 ]) connector_led_ring_right_holder();
 }
 
-module connector_threaded_rod(internal = false) {
-  d = internal ? connector_od - connector_thread_tolerance : connector_od;
+module connector_threaded_rod(mask = false) {
+  d = mask ? connector_od + connector_thread_tolerance : connector_od;
   threaded_rod(d = connector_od, l = connector_thread_height, pitch = connector_thread_pitch,
-               anchor = BOTTOM, internal = internal);
+               anchor = BOTTOM, internal = mask);
 }
 
 module connector_led_ring_right_holder() {
