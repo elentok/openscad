@@ -67,15 +67,13 @@ module tall_diffuser() {
   connector_nut();
 
   r = led_bar_diffuser_rounding;
-  // rotate_extrude() difference() {
-  //   rect([ sphere_opening / 2, led_bar_diffuser_height ], rounding = [ r, 0, 0, 0 ],
-  //        anchor = LEFT + FWD);
-  //
-  //   left(base_thickness) fwd(base_thickness) rect([ sphere_opening / 2, led_bar_diffuser_height
-  //   ],
-  //                                                 rounding = [ r, 0, 0, 0 ], anchor = LEFT +
-  //                                                 FWD);
-  // }
+  up(connector_thread_height) rotate_extrude() difference() {
+    rect([ sphere_opening / 2, led_bar_diffuser_height ], rounding = [ r, 0, 0, 0 ],
+         anchor = LEFT + FWD);
+
+    left(base_thickness) fwd(base_thickness) rect([ sphere_opening / 2, led_bar_diffuser_height ],
+                                                  rounding = [ r, 0, 0, 0 ], anchor = LEFT + FWD);
+  }
 
   // tube(od = sphere_opening, id = connector_od, h = led_bar_diffuser_height, anchor = BOTTOM);
 }
@@ -267,14 +265,10 @@ module demo_all(space = 0) {
   color("#00ff99aa") down(base_height + base_thickness + space * 2) bottom_lid();
 }
 
-module demo_connector(space = 0) {
-  color("#ff6600aa") up(space) connector_nut();
-  color("#0066ffaa") down(base_thickness * 2 + space) c,, onnector();
-}
-
-// demo_all(space = 20);
+// demo_all(space = 0);
 // demo_connector(space = 20);
 // base();
-// bottom_lid();o,nnector();
+// bottom_lid();
+// connector();
 // connector_nut();
 diffuser();
