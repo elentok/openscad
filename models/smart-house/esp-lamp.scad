@@ -1,5 +1,6 @@
 include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
+include <./esp.scad>
 $fn = 64;
 
 nothing = 0.01;
@@ -8,12 +9,14 @@ nothing = 0.01;
 leds_type = "bar";
 
 // Base
-base_od = 80;
+base_od = 70;
 base_height = 30;
 // base_size = [ 60, 60, 30 ];
 base_rounding = 4;
 base_thickness = 1.5;
 base_id = base_od - base_thickness * 2;
+
+nodemcu_feet_height = 5.5;
 
 // Led Ring
 led_ring_diameter = 26;
@@ -36,10 +39,6 @@ connector_thread_height = 7;
 connector_thread_pitch = 3;
 connector_thread_tolerance = 0.8;  // diameter-wise (includes both sides)
 base_to_connector_tolerance = 0.2;
-
-nodemcu_size = [ 50, 26, 30 ];
-// nodemcu_radius^2 = (x/2)^2 + (y/2)^2
-nodemcu_radius = sqrt((nodemcu_size.x / 2) ^ 2 + (nodemcu_size.y / 2) ^ 2);
 
 lamp_shade_diameter = 70;
 lamp_shade_thickness = 2;
@@ -141,10 +140,22 @@ module base_cut_2d() {
 }
 
 module bottom_lid() {
-  tolerance = 0.2;
-  cylinder(d = base_od, h = base_thickness, anchor = BOTTOM);
-  up(base_thickness - nothing)
+  tolerance = 0.3;
+
+  diff() {
+    // Bottom plate
+    cylinder(d = base_od, h = base_thickness, anchor = BOTTOM);
+
+    // Border
+    up(base_thickness - nothing)
       tube(od = base_id - tolerance * 2, wall = base_thickness, h = 5, anchor = BOTTOM);
+
+    // Feet
+    up(base_thickness - nothing) nodemcu_feet(nodemcu_feet_height);
+
+    usb_z = nodemcu_feet_height + base_thickness - 2;
+    tag("remove") up(usb_z) nodemcu_usb_opening_mask(base_thickness*20);
+  }
 }
 
 module connector() {
@@ -270,6 +281,13 @@ module demo_connector(space = 0) {
   color("#0066ffaa") down(base_thickness * 2 + space) connector();
 }
 
+module demo_base(space = 0) {
+  z = nodemcu_feet_height + base_thickness - 2;
+  #up(z) mirror([0,0,1]) nodemcu(anchor=TOP);
+  #up(z) nodemcu_usb_opening_mask(base_thickness*10);
+  bottom_lid();
+}
+
 module m3_washer(h = 1.5) { tube(od = 5.5, id = 3.3, h = h); }
 
 module m3_nut_handle(h = 5) {
@@ -287,11 +305,12 @@ module m3_nut_handle(h = 5) {
 }
 
 // demo_all(space = 30);
-// demo_connect,o,r,(space = 20);
+// demo_connector(space = 20);
+// demo_base(space = 0);
 // base();
-// bottom_lid();
+bottom_lid();
 // connector();
 // connector_nut();
 // diffuser();
 // m3_washer();
-m3_nut_handle();
+// m3_nut_handle();
