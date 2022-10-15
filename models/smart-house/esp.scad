@@ -11,7 +11,7 @@ nodemcu_hole_diameter = 3.5;
 // The distance of the hole center from the edge.
 nodemcu_hole_center_offset = 2.3;
 
-usb_opening_height = 9;
+usb_opening_height = 10;
 usb_opening_width = 14;
 
 function get_screw_diameter_by_type(type) =

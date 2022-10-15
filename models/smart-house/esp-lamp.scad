@@ -48,6 +48,9 @@ sphere_thickness = 1.3;
 sphere_id = sphere_od - sphere_thickness;
 sphere_opening = connector_od + connector_thickness * 2;  // TODO
 
+bottom_lid_z_offset = base_height + base_thickness;
+bottom_lid_usb_z_offset = nodemcu_feet_height + base_thickness - 2;
+
 // lamp_base_thickness = 2;
 // lamp_base_id = round(nodemcu_radius * 2.4);
 // lamp_base_od = lamp_base_id + lamp_shade_thickness * 2;
@@ -120,7 +123,12 @@ module diffuser_mark1() {
 //   }
 // }
 
-module base() { rotate_extrude() base_cut_2d(); }
+module base() {
+  diff() {
+    rotate_extrude() base_cut_2d(); 
+    tag("remove") up(bottom_lid_usb_z_offset - nothing) down(bottom_lid_z_offset) nodemcu_usb_opening_mask(base_thickness*20);
+  }
+}
 
 module base_cut_2d() {
   difference() {
@@ -153,8 +161,7 @@ module bottom_lid() {
     // Feet
     up(base_thickness - nothing) nodemcu_feet(nodemcu_feet_height);
 
-    usb_z = nodemcu_feet_height + base_thickness - 2;
-    tag("remove") up(usb_z) nodemcu_usb_opening_mask(base_thickness*20);
+    tag("remove") up(bottom_lid_usb_z_offset + nothing) nodemcu_usb_opening_mask(base_thickness*20);
   }
 }
 
@@ -273,7 +280,7 @@ module demo_all(space = 0) {
   up(space) diffuser();
   color("#ff6600aa") base();
   color("#0066ffaa") down(base_thickness * 2 + space) connector();
-  color("#00ff99aa") down(base_height + base_thickness + space * 2) bottom_lid();
+  color("#00ff99aa") down(bottom_lid_z_offset + space*2) bottom_lid();
 }
 
 module demo_connector(space = 0) {
@@ -304,11 +311,11 @@ module m3_nut_handle(h = 5) {
   }
 }
 
-// demo_all(space = 30);
+demo_all(space = 0);
 // demo_connector(space = 20);
 // demo_base(space = 0);
 // base();
-bottom_lid();
+// bottom_lid();
 // connector();
 // connector_nut();
 // diffuser();
