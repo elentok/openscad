@@ -265,10 +265,33 @@ module demo_all(space = 0) {
   color("#00ff99aa") down(base_height + base_thickness + space * 2) bottom_lid();
 }
 
-// demo_all(space = 0);
-// demo_connector(space = 20);
+module demo_connector(space = 0) {
+  color("#ff6600aa") up(space) connector_nut();
+  color("#0066ffaa") down(base_thickness * 2 + space) connector();
+}
+
+module m3_washer(h = 1.5) { tube(od = 5.5, id = 3.3, h = h); }
+
+module m3_nut_handle(h = 5) {
+  screw_diameter = 3.3;
+  nut_diameter = 6.2;
+  nut_thickness = 2.5;
+  padding = 5;
+
+  difference() {
+    linear_extrude(h) hexagon(d = nut_diameter + padding*2, rounding = 2);
+    down(nothing/2) linear_extrude(nut_thickness + nothing) hexagon(d = nut_diameter);
+    cylinder(d = screw_diameter, h = h + nothing);
+
+  }
+}
+
+// demo_all(space = 30);
+// demo_connect,o,r,(space = 20);
 // base();
 // bottom_lid();
 // connector();
 // connector_nut();
-diffuser();
+// diffuser();
+// m3_washer();
+m3_nut_handle();
