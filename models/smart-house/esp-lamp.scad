@@ -16,6 +16,9 @@ base_height = 30;
 base_rounding = 4;
 base_thickness = 1.5;
 base_id = base_od - base_thickness * 2;
+base_screw_center_dist_from_edge = 10;
+base_screw_center_dist_from_center =
+    base_od / 2 - base_screw_center_dist_from_edge;
 
 nodemcu_feet_height = 5.5;
 
@@ -133,6 +136,19 @@ module base() {
     tag("remove") up(bottom_lid_usb_z_offset - nothing)
         down(bottom_lid_z_offset) nodemcu_usb_opening_mask(base_thickness * 20);
   }
+
+  base_screw_tube(angle = 90);
+  base_screw_tube(angle = -90);
+}
+
+module base_screw_tube(angle) {
+  support = base_screw_center_dist_from_edge - base_thickness;
+  h = base_height - base_thickness;
+
+  down(h + base_thickness - nothing)
+      screw_tube(h, support = support, support_rounding = [ 2, 0, 0, 0 ],
+                 distance_from_center = base_screw_center_dist_from_center,
+                 angle = angle, container_circle_diameter = base_od);
 }
 
 module base_cut_2d() {
@@ -331,3 +347,4 @@ base();
 // diffuser();
 // m3_washer();
 // m3_nut_handle();
+// screw_tube(h = 20);
