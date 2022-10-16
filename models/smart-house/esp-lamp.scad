@@ -38,7 +38,7 @@ connector_hexagon_padding = 5;
 connector_thread_height = 7;
 connector_thread_pitch = 3;
 connector_thread_tolerance = 0.8;  // diameter-wise (includes both sides)
-base_to_connector_tolerance = 0.2;
+base_to_connector_tolerance = 0.4;
 
 lamp_shade_diameter = 70;
 lamp_shade_thickness = 2;
@@ -311,10 +311,10 @@ module m3_nut_handle(h = 5) {
   }
 }
 
-demo_all(space = 0);
+// demo_all(space = 0);
 // demo_connector(space = 20);
 // demo_base(space = 0);
-// base();
+base();
 // bottom_lid();
 // connector();
 // connector_nut();
