@@ -20,6 +20,9 @@ base_screw_center_dist_from_edge = 10;
 base_screw_center_dist_from_center =
     base_od / 2 - base_screw_center_dist_from_edge;
 
+bottom_lid_border_height = 5;
+bottom_lid_screw_head_tube_height = 5;
+
 nodemcu_feet_height = 5.5;
 
 // Led Ring
@@ -143,11 +146,12 @@ module base() {
 
 module base_screw_tube(angle) {
   support = base_screw_center_dist_from_edge - base_thickness;
-  h = base_height - base_thickness;
+  h = base_height - base_thickness - bottom_lid_screw_head_tube_height - 1;
 
   down(h + base_thickness - nothing)
       screw_tube(h, support = support, support_rounding = [ 2, 0, 0, 0 ],
                  distance_from_center = base_screw_center_dist_from_center,
+                 support_height = h - bottom_lid_border_height * 1.2,
                  angle = angle, container_circle_diameter = base_od);
 }
 
@@ -182,15 +186,26 @@ module bottom_lid() {
 
     // Border
     up(base_thickness - nothing)
-        tube(od = base_id - tolerance * 2, wall = base_thickness, h = 5,
-             anchor = BOTTOM);
+        tube(od = base_id - tolerance * 2, wall = base_thickness,
+             h = bottom_lid_border_height, anchor = BOTTOM);
 
     // Feet
     up(base_thickness - nothing) nodemcu_feet(nodemcu_feet_height);
 
     tag("remove") up(bottom_lid_usb_z_offset + nothing)
         nodemcu_usb_opening_mask(base_thickness * 20);
+
+    bottom_lid_screw_head_tube(90);
+    bottom_lid_screw_head_tube(-90);
   }
+}
+
+module bottom_lid_screw_head_tube(angle) {
+  screw_head_tube(h = bottom_lid_screw_head_tube_height,
+                  distance_from_center = base_screw_center_dist_from_center,
+                  angle = angle);
+  tag("remove") down(nothing) screw_head_mask(
+      distance_from_center = base_screw_center_dist_from_center, angle = angle);
 }
 
 module connector() {
@@ -339,8 +354,10 @@ module demo_base(space = 0) {
 
 // demo_all(space = 0);
 // demo_connector(space = 20);
-// demo_base(space = 30);
-base();
+demo_base(space = 30);
+// screw_head_tube();
+// #screw_head_mask();
+// base();
 // bottom_lid();
 // connector();
 // connector_nut();

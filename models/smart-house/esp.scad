@@ -50,7 +50,7 @@ module nodemcu_feet(h, thickness = 1.5, screw_type = "m3") {
   x = nodemcu_size.x / 2 - nodemcu_hole_center_offset;
   y = nodemcu_size.y / 2 - nodemcu_hole_center_offset;
 
-  id = get_screw_diameter_by_type(screw_type);
+  id = get_screw_diameter(screw_type);
   od = id + thickness * 2;
 
   back(y) {

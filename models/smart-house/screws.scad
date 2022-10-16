@@ -1,10 +1,13 @@
 nothing = 0.01;
 tolerance = 0.4; // diameter-wise
 
-function get_screw_diameter_by_type(type) =
+function get_screw_diameter(type) =
     type == "m2"   ? 1.9
     : type == "m3" ? 2.8
                    : assert(false, "Only supporting m2+m3 so far");
+
+function get_screw_diameter_with_tolerance(type) =
+    get_screw_diameter(type) + tolerance;
 
 // These values include tolerance
 function get_screw_head_height(type) =
@@ -33,9 +36,10 @@ module m3_nut_handle(h = 5) {
 // distance_from_center - distance of the center of the tube from the center
 //                        of the containing circle.
 module screw_tube(h, type = "m3", thickness = 1.5, support = 0,
-                  support_rounding = 0, distance_from_center = 0, angle = 0,
+                  support_height = undef, support_rounding = 0,
+                  distance_from_center = 0, angle = 0,
                   container_circle_diameter = 0) {
-  narrow_id = get_screw_diameter_by_type("m3");
+  narrow_id = get_screw_diameter("m3");
   wide_id = narrow_id + tolerance;
   od = wide_id + thickness;
   wide_height = 2;
@@ -53,10 +57,41 @@ module screw_tube(h, type = "m3", thickness = 1.5, support = 0,
                              od / 2 - thickness / 2
                        : support;
 
+    support_height_value = is_num(support_height) ? support_height : h;
+
     if (support_size > 0) {
-      rotate([ 90, 0, 0 ]) right(od / 2 - nothing)
-          rect([ support_size, h ], rounding = support_rounding,
-               anchor = LEFT + FWD);
+      rotate([ 90, 0, 0 ]) back(h - support_height_value)
+          right(od / 2 - nothing)
+              rect([ support_size, support_height_value ],
+                   rounding = support_rounding, anchor = LEFT + FWD);
     }
   }
+}
+
+module screw_head_tube(h = 5, type = "m3", thickness = 1.5,
+                       distance_from_center = 0, angle = 0) {
+  screw_hole_diameter = get_screw_diameter_with_tolerance(type);
+  screw_head_height = get_screw_head_height(type);
+  screw_head_diameter = get_screw_head_diameter(type);
+  od = screw_head_diameter + thickness * 2;
+
+  rotate([ 0, 0, angle ]) right(distance_from_center) union() {
+
+    // head tube
+    tube(id = screw_head_diameter, od = od, h = screw_head_height,
+         anchor = BOTTOM);
+
+    // screw body tube
+    up(screw_head_height - nothing)
+        tube(id = screw_hole_diameter, od = od, h = h - screw_head_height,
+             anchor = BOTTOM);
+  }
+}
+
+module screw_head_mask(type = "m3", distance_from_center = 0, angle = 0) {
+  screw_head_diameter = get_screw_head_diameter(type);
+  screw_head_height = get_screw_head_height(type);
+
+  rotate([ 0, 0, angle ]) right(distance_from_center)
+      cylinder(d = screw_head_diameter, h = screw_head_height);
 }
