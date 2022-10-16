@@ -46,7 +46,7 @@ module nodemcu(anchor) {
   }
 }
 
-module nodemcu_feet(h, thickness = 1.5, screw_type = "m3") {
+module nodemcu_feet(h, thickness = 1, screw_type = "m3") {
   x = nodemcu_size.x / 2 - nodemcu_hole_center_offset;
   y = nodemcu_size.y / 2 - nodemcu_hole_center_offset;
 

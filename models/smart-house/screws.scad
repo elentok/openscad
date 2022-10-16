@@ -11,7 +11,7 @@ function get_screw_diameter_with_tolerance(type) =
 
 // These values include tolerance
 function get_screw_head_height(type) =
-    type == "m3" ? 2 : assert(false, "Only supporting m3 so far");
+    type == "m3" ? 2.5 : assert(false, "Only supporting m3 so far");
 
 // These values include tolerance
 function get_screw_head_diameter(type) =
@@ -59,9 +59,12 @@ module screw_tube(h, type = "m3", thickness = 1.5, support = 0,
 
     support_height_value = is_num(support_height) ? support_height : h;
 
+    echo("SUPPORT SIZE", support_size);
+    echo("SUPPORT HEIGHT", support_height_value);
+
     if (support_size > 0) {
       rotate([ 90, 0, 0 ]) back(h - support_height_value)
-          right(od / 2 - nothing)
+          right(od / 2 - nothing) linear_extrude(thickness, center = true)
               rect([ support_size, support_height_value ],
                    rounding = support_rounding, anchor = LEFT + FWD);
     }

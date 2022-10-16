@@ -352,9 +352,9 @@ module demo_base(space = 0) {
   bottom_lid();
 }
 
-// demo_all(space = 0);
+demo_all(space = 0);
 // demo_connector(space = 20);
-demo_base(space = 30);
+// demo_base(space = 30);
 // screw_head_tube();
 // #screw_head_mask();
 // base();
