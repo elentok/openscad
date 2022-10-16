@@ -1,6 +1,7 @@
+include <./esp.scad>
+include <./screws.scad>
 include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
-include <./esp.scad>
 $fn = 64;
 
 nothing = 0.01;
@@ -37,7 +38,7 @@ connector_id = connector_od - connector_thickness * 2;
 connector_hexagon_padding = 5;
 connector_thread_height = 7;
 connector_thread_pitch = 3;
-connector_thread_tolerance = 0.8;  // diameter-wise (includes both sides)
+connector_thread_tolerance = 0.8; // diameter-wise (includes both sides)
 base_to_connector_tolerance = 0.4;
 
 lamp_shade_diameter = 70;
@@ -46,7 +47,7 @@ lamp_shade_thickness = 2;
 sphere_od = base_od;
 sphere_thickness = 1.3;
 sphere_id = sphere_od - sphere_thickness;
-sphere_opening = connector_od + connector_thickness * 2;  // TODO
+sphere_opening = connector_od + connector_thickness * 2; // TODO
 
 bottom_lid_z_offset = base_height + base_thickness;
 bottom_lid_usb_z_offset = nodemcu_feet_height + base_thickness - 2;
@@ -70,14 +71,16 @@ module tall_diffuser() {
 
   r = led_bar_diffuser_rounding;
   up(connector_thread_height) rotate_extrude() difference() {
-    rect([ sphere_opening / 2, led_bar_diffuser_height ], rounding = [ r, 0, 0, 0 ],
-         anchor = LEFT + FWD);
+    rect([ sphere_opening / 2, led_bar_diffuser_height ],
+         rounding = [ r, 0, 0, 0 ], anchor = LEFT + FWD);
 
-    left(base_thickness) fwd(base_thickness) rect([ sphere_opening / 2, led_bar_diffuser_height ],
-                                                  rounding = [ r, 0, 0, 0 ], anchor = LEFT + FWD);
+    left(base_thickness) fwd(base_thickness)
+        rect([ sphere_opening / 2, led_bar_diffuser_height ],
+             rounding = [ r, 0, 0, 0 ], anchor = LEFT + FWD);
   }
 
-  // tube(od = sphere_opening, id = connector_od, h = led_bar_diffuser_height, anchor = BOTTOM);
+  // tube(od = sphere_opening, id = connector_od, h = led_bar_diffuser_height,
+  // anchor = BOTTOM);
 }
 
 module sphere_diffuser() {
@@ -88,7 +91,8 @@ module sphere_diffuser() {
   }
 
   // Bottom
-  tube(od = sphere_od + nothing, id = sphere_opening, h = base_thickness, anchor = BOTTOM);
+  tube(od = sphere_od + nothing, id = sphere_opening, h = base_thickness,
+       anchor = BOTTOM);
 
   // nut
   connector_nut();
@@ -125,8 +129,9 @@ module diffuser_mark1() {
 
 module base() {
   diff() {
-    rotate_extrude() base_cut_2d(); 
-    tag("remove") up(bottom_lid_usb_z_offset - nothing) down(bottom_lid_z_offset) nodemcu_usb_opening_mask(base_thickness*20);
+    rotate_extrude() base_cut_2d();
+    tag("remove") up(bottom_lid_usb_z_offset - nothing)
+        down(bottom_lid_z_offset) nodemcu_usb_opening_mask(base_thickness * 20);
   }
 }
 
@@ -138,12 +143,17 @@ module base_cut_2d() {
 
     // inner part
     right(nothing) fwd(base_thickness)
-        rect([ base_id / 2 + nothing, base_height ], rounding = [ 0, base_rounding - 1, 0, 0 ],
-             anchor = BACK + RIGHT);
+        rect([ base_id / 2 + nothing, base_height ],
+             rounding = [ 0, base_rounding - 1, 0, 0 ], anchor = BACK + RIGHT);
 
     // hole for connector
-    rect([ connector_od / 2 + base_to_connector_tolerance / 2, base_thickness * 2 + nothing ],
-         anchor = RIGHT);
+    rect(
+        [
+          connector_od / 2 + base_to_connector_tolerance / 2,
+          base_thickness * 2 +
+          nothing
+        ],
+        anchor = RIGHT);
   }
 }
 
@@ -156,12 +166,14 @@ module bottom_lid() {
 
     // Border
     up(base_thickness - nothing)
-      tube(od = base_id - tolerance * 2, wall = base_thickness, h = 5, anchor = BOTTOM);
+        tube(od = base_id - tolerance * 2, wall = base_thickness, h = 5,
+             anchor = BOTTOM);
 
     // Feet
     up(base_thickness - nothing) nodemcu_feet(nodemcu_feet_height);
 
-    tag("remove") up(bottom_lid_usb_z_offset + nothing) nodemcu_usb_opening_mask(base_thickness*20);
+    tag("remove") up(bottom_lid_usb_z_offset + nothing)
+        nodemcu_usb_opening_mask(base_thickness * 20);
   }
 }
 
@@ -173,8 +185,8 @@ module connector() {
   }
 
   // border
-  up(base_thickness - nothing)
-      tube(od = connector_od, id = connector_id, h = base_thickness, anchor = BOTTOM);
+  up(base_thickness - nothing) tube(od = connector_od, id = connector_id,
+                                    h = base_thickness, anchor = BOTTOM);
 
   // thread
   connector_thread();
@@ -199,8 +211,8 @@ module connector_led_bar_holder() {
 
   diff() {
     cube([ connector_od, y, base_thickness ], anchor = BOTTOM) {
-      position(BACK + TOP)
-          cube([ led_bar_size.x, base_thickness, size_z ], anchor = BACK + BOTTOM) {
+      position(BACK + TOP) cube([ led_bar_size.x, base_thickness, size_z ],
+                                anchor = BACK + BOTTOM) {
         // Sides
         position(LEFT + BOTTOM + BACK)
             cube([ base_thickness, y, size_z ], anchor = RIGHT + BOTTOM + BACK);
@@ -208,20 +220,25 @@ module connector_led_bar_holder() {
             cube([ base_thickness, y, size_z ], anchor = LEFT + BOTTOM + BACK);
 
         // Screw hole
-        screw_hole_size =
-            [ led_bar_size.x * 0.8, base_thickness * 3, led_ring_screw_hole_diameter ];
-        tag("remove") up(z) position(BOTTOM)
-            cuboid(screw_hole_size, rounding = base_thickness / 2, anchor = BOTTOM);
+        screw_hole_size = [
+          led_bar_size.x * 0.8, base_thickness * 3,
+          led_ring_screw_hole_diameter
+        ];
+        tag("remove") up(z) position(BOTTOM) cuboid(
+            screw_hole_size, rounding = base_thickness / 2, anchor = BOTTOM);
       };
 
       // Supports
       support_size = [
-        (connector_od - led_bar_size.x - 4 * base_thickness) / 2, base_thickness,
+        (connector_od - led_bar_size.x - 4 * base_thickness) / 2,
+        base_thickness,
         connector_thread_height
       ];
       support_x = base_thickness + connector_thread_tolerance;
-      left(support_x) position(RIGHT + BOTTOM) cube(support_size, anchor = RIGHT + BOTTOM);
-      right(support_x) position(LEFT + BOTTOM) cube(support_size, anchor = LEFT + BOTTOM);
+      left(support_x) position(RIGHT + BOTTOM)
+          cube(support_size, anchor = RIGHT + BOTTOM);
+      right(support_x) position(LEFT + BOTTOM)
+          cube(support_size, anchor = LEFT + BOTTOM);
     }
   }
 }
@@ -230,12 +247,14 @@ module connector_thread() {
   up(base_thickness * 2 - nothing * 2) difference() {
     connector_threaded_rod();
     down(nothing / 2)
-        cylinder(d = connector_id, h = connector_thread_height + nothing, anchor = BOTTOM);
+        cylinder(d = connector_id, h = connector_thread_height + nothing,
+                 anchor = BOTTOM);
   }
 }
 
 module connector_nut() {
-  tube(od = sphere_opening, id = connector_od, h = base_thickness, anchor = BOTTOM);
+  tube(od = sphere_opening, id = connector_od, h = base_thickness,
+       anchor = BOTTOM);
   up(base_thickness - nothing) difference() {
     cylinder(h = connector_thread_height - nothing, d = sphere_opening);
     down(nothing / 2) connector_threaded_rod(mask = true);
@@ -244,27 +263,31 @@ module connector_nut() {
 
 module connector_threaded_rod(mask = false) {
   d = mask ? connector_od + connector_thread_tolerance : connector_od;
-  threaded_rod(d = d, l = connector_thread_height, pitch = connector_thread_pitch, anchor = BOTTOM,
+  threaded_rod(d = d, l = connector_thread_height,
+               pitch = connector_thread_pitch, anchor = BOTTOM,
                internal = mask);
 }
 
 module connector_led_ring_right_holder() {
-  x = led_ring_screw_hole_dist / 2 - led_ring_screw_hole_diameter / 2 - connector_thickness * 2;
+  x = led_ring_screw_hole_dist / 2 - led_ring_screw_hole_diameter / 2 -
+      connector_thickness * 2;
   width = connector_od / 2 - x;
   height = led_ring_screw_hole_diameter + base_thickness * 4;
 
   // The lip that extrudes from sides of the connector bottom plate.
   linear_extrude(base_thickness) difference() {
-    right(x) rect([ width, height ], rounding = [ 0, height / 2, height / 2, 0 ], anchor = LEFT);
-    right(led_ring_screw_hole_dist / 2) circle(d = led_ring_screw_hole_diameter);
+    right(x) rect([ width, height ],
+                  rounding = [ 0, height / 2, height / 2, 0 ], anchor = LEFT);
+    right(led_ring_screw_hole_dist / 2)
+        circle(d = led_ring_screw_hole_diameter);
   }
 
   tube_height = connector_thread_height - led_ring_height + base_thickness;
   // Tube into which to thread the screw.
   up(base_thickness) right(led_ring_screw_hole_dist / 2)
       tube(id = led_ring_screw_hole_diameter,
-           od = led_ring_screw_hole_diameter + connector_thickness * 2, h = tube_height,
-           anchor = BOTTOM);
+           od = led_ring_screw_hole_diameter + connector_thickness * 2,
+           h = tube_height, anchor = BOTTOM);
 
   // Tube support
   support_x = led_ring_screw_hole_dist / 2 + led_ring_screw_hole_diameter;
@@ -273,14 +296,15 @@ module connector_led_ring_right_holder() {
     base_thickness,
     tube_height,
   ];
-  right(support_x) up(base_thickness) cube(support_size, anchor = BOTTOM + LEFT);
+  right(support_x) up(base_thickness)
+      cube(support_size, anchor = BOTTOM + LEFT);
 }
 
 module demo_all(space = 0) {
   up(space) diffuser();
   color("#ff6600aa") base();
   color("#0066ffaa") down(base_thickness * 2 + space) connector();
-  color("#00ff99aa") down(bottom_lid_z_offset + space*2) bottom_lid();
+  color("#00ff99aa") down(bottom_lid_z_offset + space * 2) bottom_lid();
 }
 
 module demo_connector(space = 0) {
@@ -289,31 +313,17 @@ module demo_connector(space = 0) {
 }
 
 module demo_base(space = 0) {
+  up(base_height + space) base();
+
   z = nodemcu_feet_height + base_thickness - 2;
-  #up(z) mirror([0,0,1]) nodemcu(anchor=TOP);
-  #up(z) nodemcu_usb_opening_mask(base_thickness*10);
+#up(z) mirror([ 0, 0, 1 ]) nodemcu(anchor = TOP);
+#up(z) nodemcu_usb_opening_mask(base_thickness * 10);
   bottom_lid();
-}
-
-module m3_washer(h = 1.5) { tube(od = 5.5, id = 3.3, h = h); }
-
-module m3_nut_handle(h = 5) {
-  screw_diameter = 3.3;
-  nut_diameter = 6.2;
-  nut_thickness = 2.5;
-  padding = 5;
-
-  difference() {
-    linear_extrude(h) hexagon(d = nut_diameter + padding*2, rounding = 2);
-    down(nothing/2) linear_extrude(nut_thickness + nothing) hexagon(d = nut_diameter);
-    cylinder(d = screw_diameter, h = h + nothing);
-
-  }
 }
 
 // demo_all(space = 0);
 // demo_connector(space = 20);
-// demo_base(space = 0);
+// demo_base(space = 30);
 base();
 // bottom_lid();
 // connector();
