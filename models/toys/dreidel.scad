@@ -4,25 +4,27 @@ $fn = 64;
 
 nothing = 0.01;
 
-size = 30;
-cube_size = [ size, size, size ];
+edge_size = 30;
+cube_size = [ edge_size, edge_size, edge_size ];
 wall_thickness = 2;
-pyramid_height = size / 4;
-rounding = size / 8;
+pyramid_height = edge_size / 4;
+rounding = edge_size / 10;
 
-hole_diameter = size / 2;
+hole_diameter = edge_size / 2;
 hole_height = 4;
 thread_pitch = 1.5;
 thread_tolerance = 0.8; // diameter-wise (includes both sides)
 thread_stop_size = 2;
 thread_stop_height = 1;
 
+letter_height = edge_size * 0.7;
+
 module dreidel() {
   difference() {
 
     // dreidel body
     hull() {
-      cuboid(cube_size, rounding = 5, anchor = BOTTOM);
+      cuboid(cube_size, rounding = rounding, anchor = BOTTOM);
       down(pyramid_height) sphere(d = rounding);
     }
 
@@ -33,7 +35,11 @@ module dreidel() {
     // top hole thread
     up(cube_size.z - wall_thickness - nothing / 2)
         cylinder(d = hole_diameter, h = wall_thickness + nothing);
-    // up(cube_size.z - wall_thickness) hole_thread(for_mask = true);
+
+    letter_mask("נ", side = 0);
+    letter_mask("ג", side = 1);
+    letter_mask("ה", side = 2);
+    letter_mask("פ", side = 3);
   }
 
   // nut
@@ -57,6 +63,21 @@ module hole_nut() {
     cylinder(d = hole_diameter + wall_thickness * 2, h = hole_height);
     hole_thread(for_mask = true);
   }
+}
+
+module letter_mask(letter, side = 0) {
+  angle = side * 90;
+
+  letter_bottom = (edge_size - letter_height) / 2;
+
+  rotate(-angle) fwd(edge_size / 2) up(letter_bottom) rotate([ 90, 0, 0 ])
+      linear_extrude(wall_thickness / 2 + nothing, center = true)
+          back(letter_height / 2) letter2d(letter);
+}
+
+module letter2d(letter) {
+  text(letter, halign = "center", valign = "center", font = "Arial:style=Bold",
+       size = letter_height);
 }
 
 module handle_thread() { hole_thread_mask(for_mask = false); }
