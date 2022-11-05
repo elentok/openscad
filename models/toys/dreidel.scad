@@ -19,6 +19,10 @@ thread_stop_height = 1;
 
 letter_height = edge_size * 0.7;
 
+handle_height = 20;
+handle_diameter = 7;
+handle_thread_cover_height = 1;
+
 module dreidel() {
   difference() {
 
@@ -47,6 +51,36 @@ module dreidel() {
 
   // thread stops
   up(cube_size.z - thread_stop_height - hole_height) thread_stop();
+}
+
+module handle() {
+  hole_thread(for_mask = false);
+
+  // thread cover
+  up(hole_height) cylinder(h = handle_thread_cover_height, d = hole_diameter);
+
+  // Hexagon handle:
+
+  up(hole_height + handle_thread_cover_height) hexagon_handle();
+
+  // Round handle:
+
+  // handle
+  // up(hole_height + handle_thread_cover_height)
+  //     cylinder(h = handle_height, d = handle_diameter);
+  //
+  // // handle top knob
+  // up(hole_height + handle_thread_cover_height + handle_height)
+  //     sphere(d = handle_diameter);
+}
+
+module hexagon_handle() {
+  hull() {
+
+    linear_extrude(handle_height) hexagon(d = handle_diameter, rounding = 2);
+
+    up(handle_height + handle_diameter / 5) sphere(d = handle_diameter * 0.6);
+  }
 }
 
 module thread_stop() {
@@ -90,4 +124,11 @@ module hole_thread(for_mask) {
                        anchor = BOTTOM);
 }
 
-dreidel();
+module demo(spacing = 0) {
+  dreidel();
+  up(edge_size - hole_height + spacing) handle();
+}
+
+demo(spacing = 20);
+// dreidel();
+// handle();
