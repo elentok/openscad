@@ -4,12 +4,13 @@ $fn = 64;
 
 nothing = 0.01;
 
-cube_size = [ 40, 40, 40 ];
+size = 30;
+cube_size = [ size, size, size ];
 wall_thickness = 2;
-pyramid_height = 10;
-rounding = 5;
+pyramid_height = size / 4;
+rounding = size / 8;
 
-hole_diameter = 20;
+hole_diameter = size / 2;
 hole_height = 4;
 thread_pitch = 1.5;
 thread_tolerance = 0.8; // diameter-wise (includes both sides)
@@ -68,6 +69,4 @@ module hole_thread(for_mask) {
                        anchor = BOTTOM);
 }
 
-// hole_nut();
-// hole_thread(for_mask = true);
 dreidel();
