@@ -75,12 +75,12 @@ module handle() {
 }
 
 module hexagon_handle() {
-  hull() {
+  // hull() {
 
-    linear_extrude(handle_height) hexagon(d = handle_diameter, rounding = 2);
+  linear_extrude(handle_height) hexagon(d = handle_diameter, rounding = 2);
 
-    up(handle_height + handle_diameter / 5) sphere(d = handle_diameter * 0.6);
-  }
+  // up(handle_height + handle_diameter / 5) sphere(d = handle_diameter * 0.6);
+  // }
 }
 
 module thread_stop() {
@@ -129,6 +129,6 @@ module demo(spacing = 0) {
   up(edge_size - hole_height + spacing) handle();
 }
 
-demo(spacing = 20);
+// demo(spacing = 20);
 // dreidel();
-// handle();
+handle();
