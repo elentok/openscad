@@ -23,9 +23,9 @@ grip_lip_tolerance = 0.15;
 grip_width_tolerance = 0.1;
 grip_screw_hole_offset = 2;
 
-knob_large_d = 20;
-knob_small_d = 12;
-knob_length = 30;
+knob_large_d = 25;
+knob_small_d = 16;
+knob_length = 60; // 30
 
 echo("Grip lip total width", grip_lip_total_width);
 
@@ -83,8 +83,8 @@ module knob() {
 module knob_connector_mask() {
   cube_size = [
     grip_lip_total_width - grip_lip_tolerance + nothing,
-    grip_width + grip_width_tolerance, grip_lip_length +
-    nothing
+    grip_width + grip_width_tolerance,
+    grip_lip_length + 3 + nothing,
   ];
   cube(cube_size, anchor = TOP);
 
@@ -118,7 +118,7 @@ module demo(spacing = 5) {
 // ============================================================
 // Render
 
-grip();
-// knob();
+// grip();
+knob();
 // knob_connector_mask();
 // demo();
