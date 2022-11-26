@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function main() {
+  identify-platform
+  install-bosl2
+}
+
+function identify-platform() {
+  if [ "$(uname -s)" = "Darwin" ]; then
+    PLATFORM=mac
+    OPENSCAD_LIB_DIR="$HOME/Documents/OpenSCAD/libraries"
+  elif [[ "$(cat /proc/version)" =~ 'microsoft' ]]; then
+    PLATFORM=linux
+    OPENSCAD_LIB_DIR="$HOME/.local/share/OpenSCAD/libraries"
+  else
+    PLATFORM=wsl
+    WIN_USERNAME="$(wsl-get-env USERNAME)"
+    WIN_HOME="/mnt/c/Users/$WIN_USERNAME"
+    OPENSCAD_LIB_DIR="$WIN_HOME/Documents/OpenSCAD/libraries"
+  fi
+
+  echo "--------------------------------------------------"
+  echo "Platform:      $PLATFORM"
+  echo "OpenSCAD libs: $OPENSCAD_LIB_DIR"
+  echo "--------------------------------------------------"
+  echo
+}
+
+function install-bosl2() {
+  if [ -e "$OPENSCAD_LIB_DIR/BOSL2" ]; then
+    echo "- OpenSCAD BOSL2 extensions already installed."
+  else
+    echo "- Installing OpenSCAD BOSL2 extensions..."
+    git clone --depth=1 https://github.com/revarbat/BOSL2 \
+      "$OPENSCAD_LIB_DIR/BOSL2"
+  fi
+}
+
+main "$@"
