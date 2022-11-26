@@ -153,8 +153,8 @@ module extra_lip() {
 }
 
 // lip_connector_peg();
-extra_lip();
-// saw_guide();
+// extra_lip();
+saw_guide();
 
 // lip_connector_mask();
 // lip_screw_mask();
