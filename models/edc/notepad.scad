@@ -7,19 +7,21 @@ include <BOSL2/std.scad>
 notepad_type = "KohinorNo1-Large";
 // notepad_type = "KohinorNo1-Small"; (a slightly smaller variation)
 
-pen_holder_type = "round";
-// pen_holder_type = "zebra";
+// pen_holder_type = "round";
+pen_holder_type = "zebra";
 
 // ------------------------------------------------------------
 // Notepads:
 
-notepad_size = notepad_type == "KohinorNo1-Small"   ? [ 62.7, 102, 4 ]
-               : notepad_type == "KohinorNo1-Large" ? [ 62.7, 104.7, 4 ]
-                                                    : assert(false, "Invalid notepad_type");
+notepad_size = notepad_type == "KohinorNo1-Small" ? [ 62.7, 102, 4 ]
+               : notepad_type == "KohinorNo1-Large"
+                   ? [ 62.7, 104.7, 4 ]
+                   : assert(false, "Invalid notepad_type");
 
-notepad_top_length = notepad_type == "KohinorNo1-Small"   ? 13
-                     : notepad_type == "KohinorNo1-Large" ? 11
-                                                          : assert(false, "Invalid notepad_type");
+notepad_top_length = notepad_type == "KohinorNo1-Small" ? 13
+                     : notepad_type == "KohinorNo1-Large"
+                         ? 11
+                         : assert(false, "Invalid notepad_type");
 
 // ------------------------------------------------------------
 // Misc Variables:
@@ -46,7 +48,7 @@ container_size = [
 
 // ------------------------------------------------------------
 // Pen Holder Variables:
-pen_holder_thickness = 0.7;
+pen_holder_thickness = 1;
 
 // ------------------------------------------------------------
 // Round pen variables.
@@ -71,9 +73,11 @@ zebra_pen_holder_osize = [
 
 // ------------------------------------------------------------
 module container() {
-  r = pen_holder_type == "zebra" ? [ rounding, rounding, rounding, 0 ] : rounding;
+  r = pen_holder_type == "zebra" ? [ rounding, rounding, rounding, 0 ]
+                                 : rounding;
   // outer box
-  linear_extrude(container_size.z) rect([ container_size.x, container_size.y ], rounding = r);
+  linear_extrude(container_size.z)
+      rect([ container_size.x, container_size.y ], rounding = r);
 }
 
 module notepad_mask() {
@@ -99,14 +103,16 @@ module notepad_mask() {
 module keychain_hole() {
   x = (notepad_size.x - keychain_hole_diameter) / 2 - keychain_hole_margin;
   y = (notepad_size.y - keychain_hole_diameter) / 2 - keychain_hole_margin;
-  translate([ -x, y, -0.1 ]) cylinder(d = keychain_hole_diameter, h = bottom_thickness + 0.2);
+  translate([ -x, y, -0.1 ])
+      cylinder(d = keychain_hole_diameter, h = bottom_thickness + 0.2);
 }
 
 module notepad_top() { up(thickness) cube(notepad_size, anchor = BOTTOM); }
 
 module thumb_mask() {
   y = (notepad_size.y) / 2;
-  translate([ 0, -y, -0.1 ]) linear_extrude(container_size.z + 0.2) circle(d = thumb_diameter);
+  translate([ 0, -y, -0.1 ]) linear_extrude(container_size.z + 0.2)
+      circle(d = thumb_diameter);
 }
 
 module pen_holder() {
@@ -124,7 +130,8 @@ module round_pen_holder() {
   x = container_size.x / 2 + od / 2;
   y = container_size.y / 2 - round_pen_holder_dist_from_top;
   z = od / 2;
-  translate([ x, y, z ]) rotate([ 90, 0, 0 ]) linear_extrude(round_pen_holder_length) union() {
+  translate([ x, y, z ]) rotate([ 90, 0, 0 ])
+      linear_extrude(round_pen_holder_length) union() {
     shell2d(pen_holder_thickness) circle(d = round_pen_diameter);
     difference() {
       left(od / 2) fwd(od / 2) square([ od / 2, od / 2 ]);
@@ -137,16 +144,19 @@ module round_pen_holder() {
 module zebra_pen_holder() {
   rounding = zebra_pen_holder_isize.x / 2;
   x = (container_size.x / 2 + zebra_pen_holder_osize.x / 2 - thickness);
-  y = container_size.y / 2 - zebra_pen_holder_osize.z / 2 - zebra_pen_holder_dist_from_top;
+  y = container_size.y / 2 - zebra_pen_holder_osize.z / 2 -
+      zebra_pen_holder_dist_from_top;
   z = zebra_pen_holder_osize.y / 2;
   translate([ x, y, z ]) rotate([ 90, 0, 0 ]) union() {
     linear_extrude(zebra_pen_holder_isize.z, center = true) union() {
-      shell2d(thickness = pen_holder_thickness) rect(zebra_pen_holder_isize, rounding = rounding);
+      shell2d(thickness = pen_holder_thickness)
+          rect(zebra_pen_holder_isize, rounding = rounding);
 
       r = zebra_pen_holder_osize.x / 2;
 
       // quarter circle in the corner
-      back(r - zebra_pen_holder_osize.y / 2) rotate([ 0, 0, 180 ]) difference() {
+      back(r - zebra_pen_holder_osize.y / 2) rotate([ 0, 0, 180 ])
+          difference() {
         square([ r, r ]);
         circle(r = r);
       }
@@ -193,7 +203,8 @@ module zebra_pen_cap() {
   //   }
 
   // back(od / 4) right(od / 2 + zebra_pen_cap_diameter / 2)
-  //     cube([ zebra_pen_cap_distance, od / 2, zebra_pen_cap_height ], center = true);
+  //     cube([ zebra_pen_cap_distance, od / 2, zebra_pen_cap_height ], center =
+  //     true);
   //     }
 }
 
@@ -203,9 +214,10 @@ module zebra_pen_holder_notch(rounding) {
   notch_size_z = 2;
   size = [ pen_holder_thickness + notch_size_x, zebra_pen_holder_isize.y ];
 
-  down(zebra_pen_holder_osize.z / 2 - notch_size_z / 2) linear_extrude(notch_size_z, center = true)
-      left(zebra_pen_holder_osize.x / 2 - size.x / 2) #rect(
-          size, rounding = [ 0, rounding, rounding, 0 ]);
+  down(zebra_pen_holder_osize.z / 2 - notch_size_z / 2)
+      linear_extrude(notch_size_z, center = true)
+          left(zebra_pen_holder_osize.x / 2 -
+               size.x / 2) #rect(size, rounding = [ 0, rounding, rounding, 0 ]);
 }
 
 module notepad_case() {
@@ -223,12 +235,14 @@ module notepad_case() {
 }
 
 module text_on_the_back_mask() {
-  y = subtext_on_the_back != "" ? (text_on_the_back_size - subtext_on_the_back_size) : 0;
+  y = subtext_on_the_back != ""
+          ? (text_on_the_back_size - subtext_on_the_back_size)
+          : 0;
 
   back(y) down(0.1) linear_extrude(bottom_thickness + 0.2) offset(r = 1)
       mirror([ 1, 0, 0 ]) union() {
-    text(text_on_the_back, halign = "center", valign = "center", size = text_on_the_back_size,
-         font = text_on_the_back_font);
+    text(text_on_the_back, halign = "center", valign = "center",
+         size = text_on_the_back_size, font = text_on_the_back_font);
 
     if (subtext_on_the_back != "") {
       offset(r = -1) fwd(subtext_on_the_back_size * 1.4)
