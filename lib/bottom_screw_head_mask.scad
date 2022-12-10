@@ -26,8 +26,18 @@ module bottom_screw_head_mask(head_diameter, head_height, screw_diameter,
   }
 }
 
-test_mask();
+module _test_mask() {
+  difference() {
+    cylinder(d = 30, h = 8);
+
+    cylinder(d = 4, h = 9);
+
+    bottom_screw_head_mask(head_diameter = 20, head_height = 4,
+                           screw_diameter = 4, support_height = 0.25);
+  }
+}
+
+_test_mask();
 
 // bottom_screw_head_mask(head_diameter = 20, head_height = 4, screw_diameter =
-// 4,
-//                        support_height = 0.25);
+// 4, support_height = 0.25);
