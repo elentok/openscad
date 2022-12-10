@@ -35,7 +35,7 @@ guide_size = [
   thickness,
 ];
 
-triangle_support_thickness = 30;
+triangle_support_thickness = lip_size.z - guide_size.z - rounding / 2;
 triangle_support_width = guide_size.x - lip_spacing * 2;
 
 echo("Size:", guide_size);
@@ -53,18 +53,39 @@ module saw_guide() {
 }
 
 module triangle_support() {
-  fwd(guide_size.y / 2) up(guide_size.z - nothing) rotate([ 0, -90, 0 ])
-      linear_extrude(triangle_support_width, center = true)
-          right_triangle([ triangle_support_thickness, guide_size.y / 2 ]);
+  r = rounding;
+
+  hull() {
+    up(guide_size.z) cube([ triangle_support_width, guide_size.y / 2, 1 ],
+                          anchor = TOP + BACK);
+
+    fwd(guide_size.y / 2 - r / 2) up(guide_size.z + triangle_support_thickness)
+        rotate([ 0, 90, 0 ])
+            cylinder(d = r, h = triangle_support_width, center = true);
+  }
+
+  // fwd(guide_size.y / 2) up(guide_size.z - nothing) rotate([ 0, -90, 0 ])
+  //     linear_extrude(triangle_support_width, center = true)
+  //         right_triangle([ triangle_support_thickness, guide_size.y / 2 ]);
 }
 
 module saw_guide_body() {
   r = rounding;
   linear_extrude(guide_size.z) rect(guide_size, rounding = r);
+  // difference() {
+  //   hull() {
+  //     down(r / 2) cuboid(guide_size, rounding = r, anchor = BOTTOM);
+  //
+  //     back(guide_size.y / 2 - r / 2)
+  //         up(guide_size.z + triangle_support_thickness) rotate([ 0, 90, 0 ])
+  //             cylinder(d = r, h = triangle_support_width, center = true);
+  //   }
+  // }
 }
 
 module positioned_lip() {
-  fwd(guide_size.y / 2) left(guide_size.x / 2 - lip_spacing) lip();
+  fwd(guide_size.y / 2 - rounding / 2) left(guide_size.x / 2 - lip_spacing)
+      lip();
 }
 
 module lip() {
@@ -104,5 +125,6 @@ module single_magnet_holder() {
 // triangle_support();
 
 saw_guide();
+// saw_guide_body();
 // single_magnet_holder();
 // magnet_mask();
