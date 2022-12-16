@@ -3,8 +3,12 @@ $fn = 64;
 
 nothing = 0.01;
 
-ruler_width = 19.6;
-ruler_height = 0.37;
+// ruler_width = 19.6;
+// ruler_height = 0.37;
+
+// Amazon rulers
+ruler_width = 15.2; // includes 0.2 tolerance
+ruler_height = 0.76;
 
 ruler_width_tolerance = 0.85;
 ruler_height_tolerance = 0.1;
@@ -59,7 +63,7 @@ module test_ruler_size() {
   }
 }
 
-ruler_stop();
+// ruler_stop();
 // nut_mask();
 // screw_mask();
-// test_ruler_size();
+test_ruler_size();
