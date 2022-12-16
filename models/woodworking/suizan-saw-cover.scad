@@ -84,6 +84,6 @@ module demo(spacing = 0) {
   % up(cover_thickness + spacing) mirror([ 0, 0, 1 ]) saw_cover_top_half();
 }
 
-saw_cover_bottom_half();
-// saw_cover_top_half();
+// saw_cover_bottom_half();
+saw_cover_top_half();
 // demo();
