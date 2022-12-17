@@ -34,4 +34,5 @@ module nut(size, l, coarse = true) {
 }
 
 // bolt_hole(size = 10, l = 20, anchor = BOTTOM);
-nut(size = 10, l = 5);
+// nut(size = 10, l = 5);
+metric_bolt(size = 10, l = 8, headtype = "hex", orient = DOWN);
