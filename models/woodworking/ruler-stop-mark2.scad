@@ -5,6 +5,7 @@
 // easier to hold).
 //
 
+include <BOSL2/metric_screws.scad>
 include <BOSL2/std.scad>
 $fn = 64;
 
@@ -20,21 +21,22 @@ ruler_height = 0.76;
 ruler_width_tolerance = 0.85;
 ruler_height_tolerance = 0.1;
 
-stop_size = [ 50, 20, 20 ];
+stop_size = [ 50, 20, 22 ];
 stop_rounding = 4;
 
-// m4 nut (values include tolerance)
-nut_diameter = 7.8;
-nut_width = 7.1;
-nut_thickness = 3.3;
-screw_diameter = 4.3;
+screw_diameter = 10;
+screw_tolerance = 0.4;
+
+screw1_length = stop_size.x / 2 - ruler_width / 2 + 4;
+screw2_length = stop_size.y / 2 + 4;
 
 module ruler_stop() {
   difference() {
     linear_extrude(stop_size.z, center = true) ruler_stop2d();
 
-    nut_mask();
-    screw_mask();
+    rotate([ 90, 0, 0 ]) thread_mask(l = stop_size.y / 2);
+    right(ruler_width / 2 - 2) rotate([ 90, 0, 90 ])
+        thread_mask(l = stop_size.x / 2 - ruler_width / 2 + 2);
   }
 }
 
@@ -47,18 +49,9 @@ module ruler_stop2d() {
   }
 }
 
-module nut_mask() {
-  x = ruler_width / 2 + (stop_size.x - ruler_width) / 4;
-  right(x) rotate([ 0, -90, 0 ])
-      linear_extrude(nut_thickness, center = true) union() {
-    hexagon(od = nut_diameter);
-    rect([ stop_size.z / 2 + nothing, nut_width ], anchor = LEFT);
-  }
-}
-
-module screw_mask() {
-  rotate([ 0, 90, 0 ])
-      cylinder(d = screw_diameter, h = stop_size.x / 2 + nothing);
+module thread_mask(l) {
+  metric_bolt(size = screw_diameter, l = l, shank = 1, headtype = "none",
+              anchor = BOTTOM);
 }
 
 module test_ruler_size() {
@@ -70,7 +63,26 @@ module test_ruler_size() {
   }
 }
 
-ruler_stop();
-// nut_mask();
-// screw_mask();
+module screw(l) {
+  // hull() {
+  //   circle(d = 8);
+  //   left(6) circle(d = 4);
+  //   right(6) circle(d = 4);
+  // }
+  mirror([ 0, 0, 1 ]) metric_bolt(size = screw_diameter, coarse = true,
+                                  headtype = "hex", l = l, anchor = TOP);
+}
+
+module all() {
+  up(stop_size.z / 2) ruler_stop();
+  left(50) screw(screw1_length);
+  right(50) screw(screw2_length);
+}
+
+all();
+
+// screw(screw1_length);
+// #circle(d = 20);
+// thread_mask();
+// ruler_stop();
 // test_ruler_size();
