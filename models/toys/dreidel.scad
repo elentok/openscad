@@ -4,11 +4,11 @@ $fn = 64;
 
 nothing = 0.01;
 
-edge_size = 30;
+edge_size = 70;
 cube_size = [ edge_size, edge_size, edge_size ];
 wall_thickness = 2;
 pyramid_height = edge_size / 4;
-rounding = edge_size / 10;
+rounding = 5;
 
 hole_diameter = edge_size / 2;
 hole_height = 4;
@@ -19,8 +19,8 @@ thread_stop_height = 1;
 
 letter_height = edge_size * 0.7;
 
-handle_height = 20;
-handle_diameter = 7;
+handle_height = edge_size * 2 / 3;
+handle_diameter = edge_size / 4;
 handle_thread_cover_height = 1;
 
 module dreidel() {
@@ -129,6 +129,6 @@ module demo(spacing = 0) {
   up(edge_size - hole_height + spacing) handle();
 }
 
-// demo(spacing = 20);
+demo(spacing = 20);
 // dreidel();
-handle();
+// handle();
