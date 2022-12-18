@@ -72,8 +72,8 @@ module nut(size, l, d, coarse = true, anchor, spin, orient) {
 
   attachable(anchor, spin, orient, d = D, l = L) {
     difference() {
-      bolt_head(size, d = D);
-      bolt_hole(size, L + 0.01, coarse = coarse);
+      bolt_head(size, d = D, l = L);
+      bolt_hole(size, l = L + 0.01, coarse = coarse);
     }
 
     children();
@@ -92,4 +92,4 @@ module nut(size, l, d, coarse = true, anchor, spin, orient) {
 // metric_bolt(size = 10, l = 8, headtype = "hex", orient = DOWN);
 //
 
-nut(size = 12, d = 35);
+nut(size = 12, d = 35, anchor = BOTTOM);
