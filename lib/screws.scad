@@ -57,8 +57,7 @@ module bolt_hole(size, l, anchor, coarse = true, shank = 1,
   echo(str("Bolt hole for M", size, " actual diameter: ", d, "mm"));
   echo(str("Bolt hole for M", size, " pitch: ", pitch));
 
-  threaded_rod(d = d, l = l + shank, pitch = pitch, internal = true,
-               anchor = anchor) {
+  threaded_rod(d = d, l = l, pitch = pitch, internal = true, anchor = anchor) {
     position(shank_anchor) cylinder(d = size + bolt_hole_tolerance, h = shank,
                                     anchor = shank_anchor);
   };
