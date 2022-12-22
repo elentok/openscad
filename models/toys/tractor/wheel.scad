@@ -28,14 +28,19 @@ function get_wheel_rounding(od) = od / 10;
 //   => w = wheel_od * sin(a/2)
 function get_wheel_bump_width(od) = od * sin(wheel_bump_angle / 2);
 
-module wheel(od) {
-  rotate_extrude() wheel_cut(od);
-  wheel_bumps(od);
+module wheel(od, anchor, spin, orient) {
+  attachable(anchor, spin, orient, d = od, l = get_wheel_width(od)) {
+    union() {
+      rotate_extrude() wheel_cut(od);
+      wheel_bumps(od);
+    }
+    children();
+  }
 }
 
 module wheel_cut(od) {
-  rounded_tube(h = get_wheel_width(od), od = od - wheel_bump_height * 2, id = get_wheel_id(od),
-               rounding = get_wheel_rounding(od));
+  rounded_tube(h = get_wheel_width(od), od = od - wheel_bump_height * 2,
+               id = get_wheel_id(od), rounding = get_wheel_rounding(od));
 }
 
 module wheel_bumps(od) {
@@ -49,8 +54,9 @@ module wheel_bump(od) {
   h = wheel_bump_height + get_wheel_thickness(od) / 2;
   x = d_minus_bump / 2 - h + wheel_bump_height;
   rounding = [ wheel_bump_rounding, 0, 0, wheel_bump_rounding ];
-  right(x) rotate([ 90, 0, 0 ]) linear_extrude(get_wheel_bump_width(od), center = true)
-      rect([ h, get_wheel_width(od) ], rounding = rounding, anchor = LEFT);
+  right(x) rotate([ 90, 0, 0 ])
+      linear_extrude(get_wheel_bump_width(od), center = true)
+          rect([ h, get_wheel_width(od) ], rounding = rounding, anchor = LEFT);
 }
 
 module wheel_bumps_2d() {
@@ -79,7 +85,8 @@ module printable_wheel() {
     rotate(360 * 2 / 3) wheel_alignment_pin_socket();
   }
 
-  back(wheel_od / 2 * 1.2) rotate([ 90, 90, 0 ]) alignment_pin(anchor = TOP + LEFT);
+  back(wheel_od / 2 * 1.2) rotate([ 90, 90, 0 ])
+      alignment_pin(anchor = TOP + LEFT);
 }
 
 module wheel_alignment_pin_socket() {
@@ -87,12 +94,15 @@ module wheel_alignment_pin_socket() {
       alignment_pin_socket(anchor = LEFT);
 }
 
-module alignment_pin_socket(anchor) { cube(alignment_pin_socket_size, anchor = anchor); }
+module alignment_pin_socket(anchor) {
+  cube(alignment_pin_socket_size, anchor = anchor);
+}
 module alignment_pin(anchor) { cube(alignment_pin_size, anchor = anchor); }
 
-wheel(od = 40);
-up(20) wheel(od = 20);
-// printable_wheel();
+zdistribute(spacing = 20) {
+  wheel(od = 40);
+  wheel(od = 20);
+}
 
 // debug
 // #cylinder(d = wheel_od, h = wheel_width, center = true);
