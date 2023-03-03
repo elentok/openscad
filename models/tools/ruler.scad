@@ -2,7 +2,8 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 centimeters = 15;
-ruler_size = [ centimeters * 10, 30, 2 ];
+x_padding = 10;
+ruler_size = [ centimeters * 10 + x_padding * 2, 30, 2 ];
 step_size = [ 1, 5, 1 ];
 step_text_margin = 3;
 step_text_size = 5;
@@ -12,17 +13,19 @@ nothing = 0.1;
 name = "Enter name here";
 name_size = 7;
 name_margin = 3;
+border_radius = 4;
 
 module ruler() {
   linear_extrude(ruler_size.z)
-      rect([ ruler_size.x, ruler_size.y ], rounding = 2, anchor = LEFT + FWD);
+      rect([ ruler_size.x, ruler_size.y ], rounding = border_radius,
+           anchor = LEFT + FWD);
 
-  for (i = [1:centimeters - 1]) {
-    right(i * 10) step(i);
+  for (i = [0:centimeters]) {
+    right(i * 10 + x_padding) step(i);
   }
 
   for (i = [0:centimeters - 1]) {
-    right(5 + i * 10) half_step();
+    right(5 + i * 10 + x_padding) half_step();
   }
 
   back(ruler_size.y - name_margin) right(ruler_size.x / 2)
