@@ -3,7 +3,10 @@ $fn = 64;
 use <../../lib/rounded_cylinder.scad>
 
 module bowl(h, d_top, d_bottom, thickness) {
-  // rotate_extrude() {
+  rotate_extrude() bowl_cut(h, d_top, d_bottom, thickness);
+}
+
+module bowl_cut(h, d_top, d_bottom, thickness) {
   // Side
   hull() {
     // Top edge
@@ -20,27 +23,10 @@ module bowl(h, d_top, d_bottom, thickness) {
     // Center
     square([ thickness, thickness ]);
 
-// External
-#translate([ d_bottom / 2 - thickness / 2, thickness / 2 ])
-    circle(d = thickness);
+    // External
+    translate([ d_bottom / 2 - thickness / 2, thickness / 2 ])
+        circle(d = thickness);
   }
-
-  tan_alpha = (h - thickness) / (d_top / 2 - d_bottom / 2);
-  delta_x = thickness / 2 * tan_alpha;
-  angle = 180 - atan(tan_alpha);
-
-  fillet_length = 10;
-
-  fillet_radius = fillet_length / tan_alpha;
-
-  // #polygon(
-  //     [ [ 0, thickness / 2 ], [ d_bottom / 2, thickness / 2 ], [ d_bottom /
-  //     2,
-  // thickness * 2] ]);
-  // angle = 90 + atan((d_top - d_bottom) / h);
-  // fillet_length = thickness;
-  % translate([ d_bottom / 2 - thickness - fillet_length - delta_x, thickness ])
-          wide_angle_fillet(angle, fillet_length, fillet_radius);
 }
 
 module wide_angle_fillet(angle, length, radius) {
@@ -51,4 +37,4 @@ module wide_angle_fillet(angle, length, radius) {
   }
 }
 
-bowl(h = 30, d_top = 160, d_bottom = 50, thickness = 2);
+bowl(h = 40, d_top = 90, d_bottom = 70, thickness = 1.6);
