@@ -2,14 +2,14 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 nothing = 0.01;
-bottom_thickness = 0.4;
-side_thickness = 1;
+bottom_thickness = 3;
+side_thickness = 3;
 leds_od = 50;
 leds_id = 35;
 padding = 10;
 height_inner = 6;
 
-tolerance = 0.2;
+tolerance = 0;
 
 od = leds_od + padding;
 height_outer = height_inner + bottom_thickness;
@@ -17,7 +17,7 @@ inner_tube_od = leds_id - tolerance;
 inner_tube_id = inner_tube_od - side_thickness;
 
 notch_width = 10;
-cable_hole_width = 10;
+cable_hole_width = 15;
 
 center_rod_diameter = 15;
 center_rod_glue_space = 1.5;
@@ -48,7 +48,7 @@ module cover() {
 }
 
 module cable_hole_mask() {
-  rotate([ 0, 0, 60 ]) down(nothing) {
+  rotate([ 0, 0, 35 ]) down(nothing) {
     cube([ cable_hole_width, od, height_inner + nothing * 2 ],
          anchor = BOTTOM + FWD + CENTER);
   }
