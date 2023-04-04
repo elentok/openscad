@@ -150,32 +150,13 @@ module control_box_2d() {
               w1 = bottom_width - wall_thickness * 2,
               w2 = top_width - wall_thickness * 2, anchor = FWD);
   }
-  // path = [
-  //   [ -bottom_width / 2, 0 ], [ -bottom_width / 2, bottom_height ],
-  //   [ -top_width / 2, control_box_height ],
-  //   // [ top_width / 2, control_box_height ],
-  //   // [ bottom_width / 2, bottom_height ],
-  //   // [ bottom_width / 2, 0 ],
-  // ];
-  //
-  // stroke(path, width = wall_thickness);
-  }
+}
 
 module control_box_wall() {
   linear_extrude(wall_thickness)
       trapezoid(h = control_box_height - nothing, w1 = bottom_width - nothing,
                 w2 = top_width - nothing, anchor = FWD);
-  // w = wall_thickness / 2;
-  // path = [
-  //   [ -bottom_width / 2 + w, bottom_height + w ],
-  //   [ -top_width / 2, control_box_height - w ],
-  //   [ top_width / 2, control_box_height - w ],
-  //   [ bottom_width / 2 - w, bottom_height + w ],
-  // ];
-  //
-  // hull() linear_extrude(wall_thickness, center = true)
-  //     stroke(path, width = wall_thickness);
-  }
+}
 
 control_box();
 // left(20) control_box_fan_adapter_test();
