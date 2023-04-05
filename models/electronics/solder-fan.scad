@@ -12,9 +12,14 @@ top_width = 34;
 bottom_width = 56;
 bottom_height = 10;
 control_box_side_padding = 10;
-control_box_length = fan_size + control_box_side_padding * 2;
-control_box_height = 40;
-control_box_wall_x = wall_thickness / 2 + control_box_length / 2 - 25;
+
+control_box_size = [
+  fan_size + control_box_side_padding * 2,
+  bottom_width,
+  40,
+];
+
+control_box_wall_x = wall_thickness / 2 + control_box_size.x / 2 - 25;
 
 power_socket_width = 10.9;
 power_socket_diameter = 12;
@@ -134,14 +139,14 @@ module control_box_fan_adapter_test() {
 module control_box() {
   difference() {
     union() {
-      rotate([ 90, 0, 90 ]) linear_extrude(control_box_length, center = true)
+      rotate([ 90, 0, 90 ]) linear_extrude(control_box_size.x, center = true)
           control_box_2d();
       left(control_box_wall_x) control_box_wall1();
       right(control_box_wall_x) control_box_wall2();
     }
 
-    up(control_box_height + nothing) {
-      x = control_box_length / 2 - hole_margin - hole_diameter / 2 -
+    up(control_box_size.z + nothing) {
+      x = control_box_size.x / 2 - hole_margin - hole_diameter / 2 -
           control_box_side_padding;
 
       left(x) fan_adapter_hole_mask();
@@ -170,10 +175,10 @@ module fan_adapter_hole_mask() {
 
 module control_box_2d() {
   difference() {
-    trapezoid(h = control_box_height, w1 = bottom_width, w2 = top_width,
+    trapezoid(h = control_box_size.z, w1 = bottom_width, w2 = top_width,
               anchor = FWD);
 
-    trapezoid(h = control_box_height - wall_thickness,
+    trapezoid(h = control_box_size.z - wall_thickness,
               w1 = bottom_width - wall_thickness * 2,
               w2 = top_width - wall_thickness * 2, anchor = FWD);
   }
@@ -182,7 +187,7 @@ module control_box_2d() {
 module control_box_wall1() {
   difference() {
     control_box_wall();
-    up(control_box_height / 2) rotate([ 0, 90, 0 ])
+    up(control_box_size.z / 2) rotate([ 0, 90, 0 ])
         power_socket_mask(wall_thickness + nothing * 2);
   }
 }
@@ -197,7 +202,7 @@ module power_socket_mask(thickness) {
 module control_box_wall2() {
   difference() {
     control_box_wall();
-    up(control_box_height / 2) rotate([ 0, 90, 0 ])
+    up(control_box_size.z / 2) rotate([ 0, 90, 0 ])
         power_switch_mask(wall_thickness + nothing * 2);
   }
 }
@@ -220,7 +225,7 @@ module power_switch_mask(thickness) {
 module control_box_wall() {
   rotate([ 90, 0, 90 ]) linear_extrude(wall_thickness, center = true)
       difference() {
-    trapezoid(h = control_box_height - nothing, w1 = bottom_width - nothing,
+    trapezoid(h = control_box_size.z - nothing, w1 = bottom_width - nothing,
               w2 = top_width - nothing, anchor = FWD);
 
     back(bottom_lid_screw_hole_distance)
