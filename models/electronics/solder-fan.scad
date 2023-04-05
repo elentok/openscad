@@ -9,12 +9,30 @@ nothing = 0.01;
 
 wall_thickness = 2;
 top_width = 34;
-bottom_width = 50;
+bottom_width = 56;
 bottom_height = 10;
 control_box_side_padding = 10;
 control_box_length = fan_size + control_box_side_padding * 2;
 control_box_height = 40;
 control_box_wall_z = control_box_length / 2 - 25;
+
+power_socket_width = 10.9;
+power_socket_diameter = 12;
+
+power_switch_hole_diameter = 6.3;
+power_switch_nib_size = [ 3, 3 ];
+power_switch_nib_dist_from_hole_center = 5.5;
+
+// The control box has a bottom lid that connects with screws from the side.
+bottom_lid_screw_hole_diameter = 3.2;
+// Distance between the center of the screw hole and the bottom and the control
+// box.
+bottom_lid_screw_hole_distance = 5;
+
+// The top of the control box has a hole for the fan cable to go through.
+cable_hole_size_z = 25;
+cable_hole_size_x = 9;
+cable_hole_distance_from_wall = 5;
 
 // ========================================
 // Fan adapter
@@ -118,8 +136,8 @@ module control_box() {
     union() {
       // control_box_2d();
       linear_extrude(control_box_length, center = true) control_box_2d();
-      up(control_box_wall_z) control_box_wall();
-      down(control_box_wall_z) control_box_wall();
+      up(control_box_wall_z) control_box_wall1();
+      down(control_box_wall_z) control_box_wall2();
     }
 
     back(control_box_height + nothing) {
@@ -128,8 +146,17 @@ module control_box() {
 
       up(z) fan_adapter_hole_mask();
       down(z) fan_adapter_hole_mask();
+      up(control_box_wall_z - cable_hole_distance_from_wall)
+          cable_hole_mask(TOP);
+      down(control_box_wall_z - cable_hole_distance_from_wall)
+          cable_hole_mask(BOTTOM);
     }
   }
+}
+
+module cable_hole_mask(anchor) {
+  cube([ cable_hole_size_x, wall_thickness + nothing * 2, cable_hole_size_z ],
+       anchor = BACK + anchor);
 }
 
 module fan_adapter_hole_mask() {
@@ -152,12 +179,60 @@ module control_box_2d() {
   }
 }
 
-module control_box_wall() {
-  linear_extrude(wall_thickness)
-      trapezoid(h = control_box_height - nothing, w1 = bottom_width - nothing,
-                w2 = top_width - nothing, anchor = FWD);
+module control_box_wall1() {
+  difference() {
+    control_box_wall();
+    down(nothing) back(control_box_height / 2)
+        power_socket_mask(wall_thickness + nothing * 2);
+  }
+
 }
 
+module power_socket_mask(thickness) {
+  linear_extrude(thickness) intersection() {
+    circle(d = power_socket_diameter);
+    rect([ power_socket_diameter, power_socket_width ]);
+  }
+}
+
+
+module control_box_wall2() {
+  difference() {
+    control_box_wall();
+    down(nothing) back(control_box_height / 2)
+        power_switch_mask(wall_thickness + nothing * 2);
+  }
+
+}
+
+module power_switch_mask(thickness) {
+  linear_extrude(thickness) intersection() {
+    circle(d = power_switch_hole_diameter);
+  }
+
+  // nibs
+  linear_extrude(thickness / 2) {
+    right(power_switch_nib_dist_from_hole_center)
+        rect(power_switch_nib_size, anchor = LEFT);
+
+    back(power_switch_nib_dist_from_hole_center)
+        rect(power_switch_nib_size, anchor = FWD);
+  }
+}
+
+module control_box_wall() {
+  linear_extrude(wall_thickness) difference() {
+    trapezoid(h = control_box_height - nothing, w1 = bottom_width - nothing,
+              w2 = top_width - nothing, anchor = FWD);
+
+    back(bottom_lid_screw_hole_distance)
+        circle(d = bottom_lid_screw_hole_diameter);
+  }
+}
+
+// power_switch_mask(4);
+// control_box_wall1();
+// control_box_wall2();
 control_box();
 // left(20) control_box_fan_adapter_test();
 // control_box_fan_adapter_test();
