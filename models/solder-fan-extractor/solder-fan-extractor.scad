@@ -19,9 +19,9 @@ module demo(spacing) {
 // Print orientation:
 // rotate([ 180, 0, 0 ]) base();
 // rotate([ 90, 0, 0 ]) fan_connector();
-bottom_lid();
+// bottom_lid();
 
-// demo(0);
+demo(10);
 
 // bottom_lid_connector(anchor = BOTTOM + LEFT);
 // bottom_lid();
