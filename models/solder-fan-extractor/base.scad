@@ -88,7 +88,7 @@ module base_wall() {
     trapezoid(h = base_size.z - nothing, w1 = base_size_y_bottom - nothing,
               w2 = base_size_y_top - nothing, anchor = FWD);
 
-    back(bottom_lid_screw_hole_distance)
-        circle(d = bottom_lid_screw_hole_diameter);
+    back(bottom_connector_hole_distance)
+        circle(d = bottom_connector_base_hole_diameter);
   }
 }

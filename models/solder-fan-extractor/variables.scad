@@ -86,3 +86,20 @@ assert(fan_connector_leg_width > fan_connector_screw_diameter, "Fan adapter leg
 width must be larger than the screw diameter");
 assert(fan_connector_leg_width < fan_connector_size.x, "Fan adapter leg
 width must be smaller than the fan adapter itself");
+
+// ========================================
+// BOTTOM LID
+
+// The diameter of the bottom connector hole on the base itself, it's slightly
+// larger so the screw passes smoothly.
+bottom_connector_base_hole_diameter = 3.2;
+bottom_connector_lid_hole_diameter = 2.8;
+
+// Distance between the center of the screw hole and the bottom of the base.
+bottom_connector_hole_distance = 5;
+
+bottom_connector_wall_thickness = 3;
+
+// The diameter of the hole for the screw in the tube.
+bottom_lid_screw_tube_hole_diameter = 2.8;
+bottom_lid_screw_tube_thickness = 2.8;

@@ -1,46 +1,10 @@
 // See README.md file
 
 include <./base.scad>
+include <./bottom-lid.scad>
 include <./fan-connector.scad>
 include <./variables.scad>
 include <BOSL2/std.scad>
-
-// The control box has a bottom lid that connects with screws from the side.
-bottom_lid_screw_hole_diameter = 3.2;
-// Distance between the center of the screw hole and the bottom and the control
-// box.
-bottom_lid_screw_hole_distance = 5;
-
-bottom_lid_screw_tube_wall_thickness = 3;
-
-// The diameter of the hole for the screw in the tube
-bottom_lid_screw_tube_hole_diameter = 2.8;
-bottom_lid_screw_tube_thickness = 2.8;
-
-// ========================================
-// Fan adapter
-
-module base_bottom_lid() {
-  cuboid([ base_size.x, base_size.y, wall_thickness ], anchor = TOP);
-
-#bottom_lid_screw_tube();
-}
-
-module bottom_lid_screw_tube() {
-  size = [
-    bottom_lid_screw_hole_distance + fan_connector_screw_diameter / 2 +
-        wall_thickness,
-    fan_connector_screw_diameter + wall_thickness * 2
-  ];
-
-  r = size.y / 2;
-
-  difference() {
-    rect(size, rounding = [ r, 0, 0, r ], anchor = LEFT);
-    right(bottom_lid_screw_hole_distance)
-        circle(d = fan_connector_screw_diameter);
-  }
-}
 
 module demo(spacing) {
   color("#0fe038") base();
