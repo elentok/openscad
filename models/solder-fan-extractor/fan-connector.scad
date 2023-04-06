@@ -1,6 +1,12 @@
 module fan_connector() {
-  rotate([ 90, 0, 0 ]) linear_extrude(fan_connector_size.y, center = true)
-      fan_connector_2d();
+  difference() {
+    rotate([ 90, 0, 0 ]) linear_extrude(fan_connector_size.y, center = true)
+        fan_connector_2d();
+
+    // screw hole
+    down(wall_thickness + nothing) cylinder(d = fan_connector_screw_diameter,
+                                            h = fan_connector_screw_height);
+  }
 }
 
 module fan_connector_2d() {
