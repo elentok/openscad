@@ -1,16 +1,4 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
+$fn = 64;
 
 // ========================================
 // FAN
@@ -27,7 +15,7 @@ nothing = 0.01;
 wall_thickness = 2;
 
 // ========================================
-// Base
+// BASE
 
 // The base has a trapezoid-like structure, the bottom is wider than the top.
 base_size_y_top = 34;
@@ -46,7 +34,7 @@ base_size = [
 base_wall_x = wall_thickness / 2 + base_size.x / 2 - 25;
 
 // ========================================
-// Power socket and switch sizes
+// POWER SOCKET AND SWITCH SIZES
 
 power_socket_width = 10.9;
 power_socket_diameter = 12;

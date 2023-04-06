@@ -1,11 +1,9 @@
 // See README.md file
 
-include <BOSL2/std.scad>
-$fn = 64;
-
 include <./base.scad>
 include <./fan-connector.scad>
 include <./variables.scad>
+include <BOSL2/std.scad>
 
 // The control box has a bottom lid that connects with screws from the side.
 bottom_lid_screw_hole_diameter = 3.2;
