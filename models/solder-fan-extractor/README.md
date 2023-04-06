@@ -1,5 +1,11 @@
 # Solder Fume Extractor
 
+![Render #1](render1.png)
+
+![Render #2](render2.png)
+
+![Render #3](render3.png)
+
 ## Components
 
 ### 1. Base
