@@ -1,6 +1,33 @@
 include <BOSL2/std.scad>
 $fn = 64;
 
+// ========================================
+// Solder Fume Extractor
+//
+// Components:
+//
+// 1. Base
+//
+//    Trapezoid-like structure that hosts the wiring.
+//    Includes two "walls" on the side:
+//
+//    1. DC 12V Power socket hole
+//    2. Power switch hole
+//
+//    Has two sets of holes at the top:
+//
+//    1. Two holes for the fan wires
+//    2. Two holes for the fan connectors
+//
+// 2. Fan connectors
+//
+//    Tubes that connect the base to the fan:
+//
+//    1. 2xM4 50mm bolts go through the fan screw holes and the connectors.
+//    2. 
+//
+//
+
 fan_size = 120;
 nothing = 0.01;
 
@@ -33,6 +60,12 @@ bottom_lid_screw_hole_diameter = 3.2;
 // Distance between the center of the screw hole and the bottom and the control
 // box.
 bottom_lid_screw_hole_distance = 5;
+
+bottom_lid_screw_tube_wall_thickness = 3;
+
+// The diameter of the hole for the screw in the tube
+bottom_lid_screw_tube_hole_diameter = 2.8;
+bottom_lid_screw_tube_thickness = 2.8;
 
 // The top of the control box has a hole for the fan cable to go through.
 cable_hole_size_z = 25;
@@ -233,10 +266,41 @@ module control_box_wall() {
   }
 }
 
+module control_box_bottom_lid() {
+  cuboid([ control_box_size.x, control_box_size.y, wall_thickness ],
+         anchor = TOP);
+
+#bottom_lid_screw_tube();
+}
+
+module bottom_lid_screw_tube() {
+  size = [
+    bottom_lid_screw_hole_distance + fan_adapter_screw_diameter / 2 +
+        wall_thickness,
+    fan_adapter_screw_diameter + wall_thickness * 2
+  ];
+
+  r = size.y / 2;
+
+  difference() {
+    rect(size, rounding = [ r, 0, 0, r ], anchor = LEFT);
+    right(bottom_lid_screw_hole_distance)
+        circle(d = fan_adapter_screw_diameter);
+  }
+}
+
+module demo(spacing) {
+  control_box();
+  down(spacing) control_box_bottom_lid();
+}
+
+// demo(10);
+
 // power_switch_mask(4);
 // control_box_wall1();
 // control_box_wall2();
-control_box();
+// control_box();
+control_box_bottom_lid();
 // left(20) control_box_fan_adapter_test();
 // control_box_fan_adapter_test();
 // fan_adapter();
