@@ -103,3 +103,13 @@ bottom_connector_wall_thickness = 3;
 // The diameter of the hole for the screw in the tube.
 bottom_lid_screw_tube_hole_diameter = 2.8;
 bottom_lid_screw_tube_thickness = 2.8;
+
+bottom_lid_connector_size = [
+  // x:
+  10,
+  // y:
+  fan_connector_screw_diameter + wall_thickness * 2,
+  // z:
+  bottom_connector_hole_distance + bottom_connector_lid_hole_diameter / 2 +
+      wall_thickness,
+];
