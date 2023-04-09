@@ -16,7 +16,7 @@ thumb_width = 25;
 wall_thickness = 2;
 cards_tolerance_xy = 4;
 cards_tolerance_z = 6;
-lid_tolerance = 1;
+lid_tolerance = 0.4;
 
 lid_text = "TAKI";
 // lid_text_font = "Arial:style=Bold";
@@ -129,6 +129,16 @@ module lid_side_thumb_mask_2d() {
       rounded_corner_mask_2d(radius = r, anchor = LEFT + BACK);
 }
 
+module lid_size_test() {
+  linear_extrude(5, convexity = 4) difference() {
+    difference() {
+      rect(lid_outer_size, rounding = card_border_radius);
+      rect(lid_inner_size, rounding = card_border_radius);
+    }
+  }
+}
+
+// lid_size_test();
 // rounded_corner_mask_2d(10, anchor = LEFT + TOP);
 // lid_side_thumb_mask();
 // thumb_rounded_corner_mask();
