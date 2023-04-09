@@ -23,6 +23,9 @@ lid_text = "TAKI";
 lid_text_font = "Arial Black:style=Bold";
 lid_text_size = 14;
 
+// Make the lid slightly shorter than the box.
+lid_box_height_diff = 2;
+
 box_inner_size = [
   card_stack_size.x + cards_tolerance_xy,
   card_stack_size.y + cards_tolerance_xy,
@@ -35,7 +38,12 @@ box_outer_size = [
   box_inner_size.z + wall_thickness,
 ];
 
-lid_inner_size = add_scalar(box_outer_size, lid_tolerance);
+lid_inner_size = [
+  box_outer_size.x + lid_tolerance,
+  box_outer_size.y + lid_tolerance,
+  box_outer_size.z - lid_box_height_diff,
+];
+
 lid_outer_size = [
   lid_inner_size.x + wall_thickness * 2,
   lid_inner_size.y + wall_thickness * 2,
@@ -76,20 +84,55 @@ module thumb_rounded_corner_mask() {
   down(thumb_rounding) right(thumb_rounding + thumb_width / 2 - epsilon)
       back(wall_thickness + epsilon) rotate([ 90, 0, 0 ])
           linear_extrude(wall_thickness + epsilon * 2, convexity = 4)
-              difference() {
-    rect([ thumb_rounding, thumb_rounding ], anchor = RIGHT + FWD);
-    circle(r = thumb_rounding);
+              rounded_corner_mask_2d(thumb_rounding, anchor = RIGHT + BOTTOM);
+}
+
+module rounded_corner_mask_2d(radius, anchor = CENTER, spin = 0) {
+  fwd(radius / 2) right(radius / 2)
+      attachable(anchor, spin, two_d = true, path = rect([ radius, radius ])) {
+    difference() {
+      rect([ radius, radius ], anchor = RIGHT + FWD);
+      circle(r = radius);
+    }
+    children();
   }
 }
 
-module lid() { box(lid_inner_size, lid_outer_size); }
-
-module demo(spacing) {
-  back(wall_thickness + lid_tolerance) box();
-  up(lid_outer_size.z + spacing) rotate([ 0, 180, 0 ]) lid();
+module lid() {
+  difference() {
+    box(lid_inner_size, lid_outer_size);
+    lid_side_thumb_mask();
+  }
 }
 
+module demo(spacing) {
+  color("tomato") back(wall_thickness + lid_tolerance) box();
+  color("green") up(lid_outer_size.z + lid_box_height_diff + spacing)
+      rotate([ 0, 180, 0 ]) lid();
+}
+
+module lid_side_thumb_mask() {
+  up(lid_outer_size.z + epsilon) back(lid_outer_size.y / 2)
+      rotate([ 90, 0, 90 ]) linear_extrude(lid_outer_size.x + epsilon * 2,
+                                           center = true, convexity = 4)
+          lid_side_thumb_mask_2d();
+}
+
+module lid_side_thumb_mask_2d() {
+  rect([ thumb_width, lid_outer_size.z / 2 ],
+       rounding = [ 0, 0, thumb_width / 2, thumb_width / 2 ], anchor = BACK);
+
+  r = thumb_rounding;
+  right(thumb_width / 2)
+      rounded_corner_mask_2d(radius = r, anchor = LEFT + BACK);
+  left(thumb_width / 2) mirror([ 1, 0, 0 ])
+      rounded_corner_mask_2d(radius = r, anchor = LEFT + BACK);
+}
+
+// rounded_corner_mask_2d(10, anchor = LEFT + TOP);
+// lid_side_thumb_mask();
 // thumb_rounded_corner_mask();
 // box();
 // lid();
-demo((1 - $t) * 50);
+demo(60);
+// demo((1 - $t) * 60);
