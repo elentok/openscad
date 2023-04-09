@@ -35,30 +35,38 @@ box_outer_size = [
   box_inner_size.z + wall_thickness,
 ];
 
-module box() {
+lid_inner_size = add_scalar(box_outer_size, lid_tolerance);
+lid_outer_size = [
+  lid_inner_size.x + wall_thickness * 2,
+  lid_inner_size.y + wall_thickness * 2,
+  lid_inner_size.z + wall_thickness,
+];
+
+module box(inner_size = box_inner_size, outer_size = box_outer_size) {
   difference() {
-    base_box();
-    up(box_outer_size.z + epsilon) {
+    base_box(inner_size, outer_size);
+    up(outer_size.z + epsilon) {
       thumb_rounded_corner_mask();
       mirror([ 1, 0, 0 ]) thumb_rounded_corner_mask();
     }
-    down(epsilon) linear_extrude(wall_thickness / 2) back(box_outer_size.y / 2)
-        mirror([ 1, 0, 0 ]) text(lid_text, halign = "center", valign = "center",
-                                 size = lid_text_size, font = lid_text_font);
+    down(epsilon) linear_extrude(wall_thickness / 2, convexity = 4)
+        back(outer_size.y / 2) mirror([ 1, 0, 0 ])
+            text(lid_text, halign = "center", valign = "center",
+                 size = lid_text_size, font = lid_text_font);
   }
 }
 
-module base_box() {
+module base_box(inner_size, outer_size) {
   // floor
-  linear_extrude(wall_thickness)
-      rect(box_outer_size, rounding = card_border_radius, anchor = FWD);
+  linear_extrude(wall_thickness, convexity = 4)
+      rect(outer_size, rounding = card_border_radius, anchor = FWD);
 
   // walls
-  linear_extrude(box_outer_size.z) {
+  linear_extrude(outer_size.z, convexity = 4) {
     difference() {
-      rect(box_outer_size, rounding = card_border_radius, anchor = FWD);
+      rect(outer_size, rounding = card_border_radius, anchor = FWD);
       back(wall_thickness)
-          rect(box_inner_size, rounding = card_border_radius, anchor = FWD);
+          rect(inner_size, rounding = card_border_radius, anchor = FWD);
       rect([ thumb_width, wall_thickness ], anchor = FWD);
     }
   }
@@ -67,11 +75,21 @@ module base_box() {
 module thumb_rounded_corner_mask() {
   down(thumb_rounding) right(thumb_rounding + thumb_width / 2 - epsilon)
       back(wall_thickness + epsilon) rotate([ 90, 0, 0 ])
-          linear_extrude(wall_thickness + epsilon * 2) difference() {
+          linear_extrude(wall_thickness + epsilon * 2, convexity = 4)
+              difference() {
     rect([ thumb_rounding, thumb_rounding ], anchor = RIGHT + FWD);
     circle(r = thumb_rounding);
   }
 }
 
+module lid() { box(lid_inner_size, lid_outer_size); }
+
+module demo(spacing) {
+  back(wall_thickness + lid_tolerance) box();
+  up(lid_outer_size.z + spacing) rotate([ 0, 180, 0 ]) lid();
+}
+
 // thumb_rounded_corner_mask();
-box();
+// box();
+// lid();
+demo((1 - $t) * 50);
