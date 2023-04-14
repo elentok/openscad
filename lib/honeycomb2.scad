@@ -63,41 +63,54 @@ module honeycomb_mask(size, x_spacing, x_hexagons) {
   }
 }
 
-module honeycomb_bin(size, wall_thickness, rounding, x_hexagons = 4, x_spacing,
-                     padding_bottom, padding_top, padding_x) {
-  the_padding_bottom = is_def(padding_bottom) ? padding_bottom : size.z / 10;
-  the_padding_top = is_def(padding_top) ? padding_top : size.z / 10;
-  the_padding_x = is_def(padding_x) ? padding_x : max(10, size.x / 10);
-  the_x_spacing = is_def(x_spacing) ? x_spacing : max(5, size.x / 20);
-
-  echo("PADDING BOTTOM", the_padding_bottom);
-  echo("PADDING TOP", the_padding_top);
-  echo("X SPACING", the_x_spacing);
+module honeycomb_bin(size, wall_thickness, rounding, x_hexagons, x_spacing,
+                     y_spacing, y_hexagons, padding_bottom, padding_top,
+                     padding_x, padding_y) {
+  echo("PADDING BOTTOM", padding_bottom);
+  echo("PADDING TOP", padding_top);
+  echo("X SPACING", x_spacing);
 
   diff() {
     bin(size, wall_thickness, rounding) {
       x_mask_size = [
-        size.x - the_padding_x * 2,
+        size.x - padding_x * 2,
         wall_thickness + epsilon * 2,
-        size.z - the_padding_top - the_padding_bottom,
+        size.z - padding_top - padding_bottom,
       ];
       echo("X MASK SIZE", x_mask_size);
-      tag("remove") up(the_padding_bottom) back(epsilon) position(BACK + BOTTOM)
-          honeycomb_wall_mask_3d(size = x_mask_size, x_spacing = the_x_spacing,
+      tag("remove") up(padding_bottom) back(epsilon) position(BACK + BOTTOM)
+          honeycomb_wall_mask_3d(size = x_mask_size, x_spacing = x_spacing,
                                  x_hexagons = x_hexagons,
                                  anchor = BACK + BOTTOM);
 
-      tag("remove") up(the_padding_bottom) fwd(epsilon) position(FWD + BOTTOM)
-          honeycomb_wall_mask_3d(size = x_mask_size, x_spacing = the_x_spacing,
+      tag("remove") up(padding_bottom) fwd(epsilon) position(FWD + BOTTOM)
+          honeycomb_wall_mask_3d(size = x_mask_size, x_spacing = x_spacing,
                                  x_hexagons = x_hexagons,
                                  anchor = FWD + BOTTOM);
+
+      y_mask_size = [
+        size.y - padding_y * 2,
+        wall_thickness + epsilon * 2,
+        size.z - padding_top - padding_bottom,
+      ];
+      echo("Y MASK SIZE", y_mask_size);
+      tag("remove") up(padding_bottom) right(wall_thickness / 2) back(epsilon)
+          position(LEFT + BOTTOM) rotate([ 0, 0, 90 ])
+              honeycomb_wall_mask_3d(size = y_mask_size, x_spacing = y_spacing,
+                                     x_hexagons = y_hexagons, anchor = BOTTOM);
+
+      tag("remove") up(padding_bottom) left(wall_thickness / 2) back(epsilon)
+          position(RIGHT + BOTTOM) rotate([ 0, 0, 90 ])
+              honeycomb_wall_mask_3d(size = y_mask_size, x_spacing = y_spacing,
+                                     x_hexagons = y_hexagons, anchor = BOTTOM);
     }
   }
 }
 
 honeycomb_bin(size = [ 170, 72, 70 ], wall_thickness = 2.5,
-              rounding = [ 0, 0, 10, 10 ], padding_bottom = 5, padding_top = 15,
-              padding_x = 10, x_spacing = 10, x_hexagons = 5);
+              rounding = [ 0, 0, 10, 10 ], padding_bottom = 10,
+              padding_top = 15, padding_x = 10, padding_y = 10, x_spacing = 10,
+              y_spacing = 10, x_hexagons = 4, y_hexagons = 2);
 // honeycomb_mask(size = [ 170, 70 ], x_spacing = 10, x_hexagons = 4);
 // honeycomb_mask_3d(size = [ 170, 70, 30 ], x_spacing = 7, x_hexagons = 5);
 // honeycomb_wall_mask_3d(size = [ 100, 10, 70 ], x_spacing = 7, x_hexagons = 5,
