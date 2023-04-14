@@ -1,25 +1,28 @@
 $fn = 50;
 
+include <BOSL2/std.scad>
 use <../../lib/rounded_square.scad>
 use <../../lib/shelf.scad>
-include <BOSL2/std.scad>
 
 // ------------------------------------------------------------
 // Box
 // ------------------------------------------------------------
 
-module box(size, rounding = 2, thickness = 2, has_bottom = true, separators_x = [],
-           separator_thickness = 1) {
+module box(size, rounding = 2, thickness = 2, has_bottom = true,
+           separators_x = [], separator_thickness = 1) {
   if (has_bottom) {
-    linear_extrude(thickness) rect([ size.x, size.y ], rounding = rounding);
+    linear_extrude(thickness, convexity = 4)
+        rect([ size.x, size.y ], rounding = rounding);
   }
 
-  linear_extrude(size.z) shell2d(-thickness, ir = rounding)
+  linear_extrude(size.z, convexity = 4) shell2d(-thickness, ir = rounding)
       rect([ size.x, size.y ], rounding = rounding);
 
-  for (i = [0:len(separators_x) - 1]) {
-    right(separators_x[i]) left(size.x / 2)
-        cube([ separator_thickness, size.y, size.z ], anchor = BOTTOM + LEFT);
+  if (len(separators_x) > 0) {
+    for (i = [0:len(separators_x) - 1]) {
+      right(separators_x[i]) left(size.x / 2)
+          cube([ separator_thickness, size.y, size.z ], anchor = BOTTOM + LEFT);
+    }
   }
 }
 
