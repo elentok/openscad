@@ -33,6 +33,17 @@ module negative_edge(width, radius) {
   }
 }
 
+module rounded_edge_2d(radius, anchor = CENTER, spin = 0) {
+  fwd(radius / 2) right(radius / 2)
+      attachable(anchor, spin, two_d = true, path = rect([ radius, radius ])) {
+    difference() {
+      rect([ radius, radius ], anchor = RIGHT + FWD);
+      circle(r = radius);
+    }
+    children();
+  }
+}
+
 module rounded_edge(width, depth, height, radius) {
   assert(radius <= height, "Radius must be less or equal to the height");
   union() {
