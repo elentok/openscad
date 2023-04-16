@@ -47,7 +47,8 @@ case_size_y = kb_size_y + case_kb_padding * 2;
 // ];
 
 case_top_height = kb_height / 2 + case_top_thickness + case_vertical_tolerance;
-case_bottom_height = kb_height / 2 + case_bottom_thickness + case_vertical_tolerance;
+case_bottom_height =
+    kb_height / 2 + case_bottom_thickness + case_vertical_tolerance;
 case_top_border_height = case_top_height - case_top_thickness;
 case_bottom_border_height = case_bottom_height - case_bottom_thickness;
 case_height = case_top_height + case_bottom_height;
@@ -66,10 +67,12 @@ case_usb_hole_height = test_mode ? 3 : 9;
 // doesn't interfere with the back screws, but it wasn't necessary):
 //
 //   case_screw5_dist_from_left =
-//     case_size_x - kb_back_screws[4].x - case_border_thickness - case_border_tolerance / 2;
+//     case_size_x - kb_back_screws[4].x - case_border_thickness -
+//     case_border_tolerance / 2;
 //
 //   case_tent_hole_center_x_offset_from_edge =
-//     case_screw5_dist_from_left + (kb_back_screws[4].x - kb_back_screws[3].x) / 2;
+//     case_screw5_dist_from_left + (kb_back_screws[4].x - kb_back_screws[3].x)
+//     / 2;
 case_tent_hole_center_x_offset_from_edge = 29;
 case_tent_hole_center_y_offset_from_edge = 20;
 wrist_rest_tent_hole_center_x_offset_from_edge = 15;
@@ -82,13 +85,37 @@ leg_screw_head_diameter = 6.8;
 leg_screw_head_flexibility = 6;
 
 // ------------------------------------------------------------
+// Foot
+
+foot_od = 15;
+foot_thread_diameter = 8; /* M6 */
+foot_thread_pitch = get_metric_iso_coarse_thread_pitch(foot_thread_diameter);
+
+// Make the bolt diameter slightly smaller than the designated M value
+// e.g. M10 will be 9.8, M8 will be 7.8
+foot_thread_tolerance = 0.2;
+
+// The nut will be 0.5mm higher than the thread to make sure it goes all the
+// way in.
+foot_thread_height_tolerance = 0.5;
+
+foot_extender_height = 7;
+foot_extender_thread_height = 2.9;
+foot_thread_height = foot_extender_thread_height + 1;
+// a separation layer between the thread and the nut (same diameter as the nut)
+foot_extender_middle_height = 1;
+foot_extender_nut_height = foot_extender_height - foot_extender_middle_height;
+
+// ------------------------------------------------------------
 // Wrist Rest
 wrist_pillow_size = [ 132, 84 ];
-wrist_pillow_rounding = 14;
+wrist_pillow_rounding = 16;
 wrist_rest_border_height = 4;
 wrist_rest_border_thickness = 1.5;
 wrist_rest_bottom_thickness = 2;
 wrist_rest_size = add_scalar(wrist_pillow_size, wrist_rest_border_thickness);
+// distance of the center of foot screw from the edge
+wrist_rest_foot_screw_dist_from_edge = foot_od;
 
 // ------------------------------------------------------------
 // Connector
@@ -106,14 +133,18 @@ bottom_connector_socket_size = [
   case_bottom_thickness / 2,
 ];
 
-top_connector_notch_size = add_scalar(top_connector_socket_size, -connector_tolerance);
-bottom_connector_notch_size = add_scalar(bottom_connector_socket_size, -connector_tolerance);
+top_connector_notch_size =
+    add_scalar(top_connector_socket_size, -connector_tolerance);
+bottom_connector_notch_size =
+    add_scalar(bottom_connector_socket_size, -connector_tolerance);
 
-function get_connector_socket_size(z_pos) = z_pos == TOP ? top_connector_socket_size
-                                                         : bottom_connector_socket_size;
+function get_connector_socket_size(z_pos) = z_pos == TOP
+                                                ? top_connector_socket_size
+                                                : bottom_connector_socket_size;
 
-function get_connector_notch_size(z_pos) = z_pos == TOP ? top_connector_notch_size
-                                                        : bottom_connector_notch_size;
+function get_connector_notch_size(z_pos) = z_pos == TOP
+                                               ? top_connector_notch_size
+                                               : bottom_connector_notch_size;
 
 // ------------------------------------------------------------
 // Tent
@@ -132,8 +163,8 @@ tent_screw_nut_hole_diameter = 8;
 // Reset Button
 
 // Distance of the center of the reset button from the bottom-left edge of the
-// left keyboard (and hopefully also the bottom-right edge of the right keyboard).
-// (edge = edge of the keyboard panel, not the case, add the border to the
-// calculation).
-reset_button_pos = [ -89, 46.2 ];
+// left keyboard (and hopefully also the bottom-right edge of the right
+// keyboard). (edge = edge of the keyboard panel, not the case, add the border
+// to the calculation).
+reset_button_pos = [ -91, 46.2 + 5 ];
 reset_button_hole_diameter = 7.5;
