@@ -1,6 +1,7 @@
 include <./connector.scad>
 include <./screws.scad>
 include <BOSL2/std.scad>
+use <./foot.scad>
 $fn = 64;
 
 module case_mask(is_socket, connector_z_pos) {
@@ -43,11 +44,11 @@ module case_top() {
   difference() {
     union() {
       // Top
-      linear_extrude(case_top_thickness) case_top_2d();
+      linear_extrude(case_top_thickness, convexity = 4) case_top_2d();
 
       // Border
       h = case_top_border_height;
-      down(h) linear_extrude(h) case_border();
+      down(h) linear_extrude(h, convexity = 4) case_border();
       case_top_front_row_spaces();
 
       // case_top_debug_borders();
@@ -61,19 +62,23 @@ module case_bottom() {
   difference() {
     down(z) union() {
       // Bottom plate
-      linear_extrude(case_bottom_thickness) case_bottom_2d();
+      linear_extrude(case_bottom_thickness, convexity = 4) case_bottom_2d();
       // Border
-      up(case_bottom_thickness) linear_extrude(case_bottom_border_height) case_border();
+      up(case_bottom_thickness) linear_extrude(case_bottom_border_height,
+                                               convexity = 4) case_border();
+      case_bottom_spacers();
     }
 
     case_usb_holes();
-    case_bottom_tent_screw_holes();
+    case_bottom_feet_holes();
+    down(z) case_bottom_air_holes();
   }
 }
 
 module case_top_2d() {
   diff() {
-    rect([ case_size_x, case_size_y ], rounding = case_border_radius, anchor = BOTTOM + LEFT) {
+    rect([ case_size_x, case_size_y ], rounding = case_border_radius,
+         anchor = BOTTOM + LEFT) {
       case_keys_mask();
       case_keys_padding_mask();
       case_screw_holes();
@@ -83,7 +88,8 @@ module case_top_2d() {
 
 module case_bottom_2d() {
   diff() {
-    rect([ case_size_x, case_size_y ], rounding = case_border_radius, anchor = BOTTOM + LEFT) {
+    rect([ case_size_x, case_size_y ], rounding = case_border_radius,
+         anchor = BOTTOM + LEFT) {
       case_screw_holes();
       case_reset_button_hole();
     }
@@ -108,32 +114,95 @@ module case_screw_holes() {
 
 module case_border() {
   shell2d(-case_border_thickness)
-      rect([ case_size_x, case_size_y ], rounding = case_border_radius, anchor = BOTTOM + LEFT) {}
+      rect([ case_size_x, case_size_y ], rounding = case_border_radius,
+           anchor = BOTTOM + LEFT) {}
 }
 
 module case_usb_holes() {
   y = case_size_y - case_border_thickness - nothing / 2;
   z = -kb_height;
-  size = [ case_usb_hole_width, case_border_thickness + nothing, case_usb_hole_height ];
+  size = [
+    case_usb_hole_width, case_border_thickness + nothing,
+    case_usb_hole_height
+  ];
   for (i = [0:len(case_usb_hole_start_from_left) - 1]) {
     x = case_usb_hole_start_from_left[i];
     tag("remove3d") translate([ x, y, z ]) cube(size);
   }
 }
 
+module case_bottom_air_holes() {
+  back(case_size_y / 2) down(nothing / 2) {
+    right(case_size_x / 5) cylinder(d = case_bottom_air_hole_diameter,
+                                    h = case_bottom_thickness + nothing);
+
+    right(case_size_x * 4 / 5) cylinder(d = case_bottom_air_hole_diameter,
+                                        h = case_bottom_thickness + nothing);
+  }
+}
+
+module case_bottom_spacers() {
+  spacers_x = 5;
+  x0 = case_foot_screw_dist_from_edge;
+  space_x = (case_size_x - case_foot_screw_dist_from_edge * 2) / spacers_x;
+
+  right(case_foot_screw_dist_from_edge) {
+    back(case_foot_screw_dist_from_edge) case_bottom_spacer();
+    back(case_size_y - case_foot_screw_dist_from_edge) case_bottom_spacer();
+  }
+  right(case_size_x - case_foot_screw_dist_from_edge) {
+    back(case_foot_screw_dist_from_edge) case_bottom_spacer();
+    back(case_size_y - case_foot_screw_dist_from_edge) case_bottom_spacer();
+  }
+
+  for (i = [1:spacers_x]) {
+    right(x0 + space_x * i) {
+      back(case_foot_screw_dist_from_edge) case_bottom_spacer();
+      back(case_size_y - case_foot_screw_dist_from_edge) case_bottom_spacer();
+    }
+  }
+}
+
+module case_bottom_spacer() {
+  up(case_bottom_thickness) cylinder(d = case_bottom_spacers_diameter,
+                                     h = case_bottom_spacers_height);
+}
+
+module case_bottom_feet_holes() {
+  down(case_top_border_height + case_bottom_height + nothing) {
+    right(case_foot_screw_dist_from_edge) {
+      back(case_foot_screw_dist_from_edge) case_bottom_foot_hole();
+      back(case_size_y - case_foot_screw_dist_from_edge)
+          case_bottom_foot_hole();
+    }
+    right(case_size_x - case_foot_screw_dist_from_edge) {
+      back(case_foot_screw_dist_from_edge) case_bottom_foot_hole();
+      back(case_size_y - case_foot_screw_dist_from_edge)
+          case_bottom_foot_hole();
+    }
+  }
+}
+
+module case_bottom_foot_hole() {
+  foot_thread_mask(
+      h = case_bottom_thickness + case_bottom_spacers_height + nothing * 2,
+      anchor = BOTTOM);
+}
+
 module case_bottom_tent_screw_holes() {
   x = case_size_x / 2;
   y = case_size_y / 2;
   z = -(case_height - case_top_thickness);
-  translate([ x, y, z ])
-      leg_screw_holes([ case_size_x, case_size_y ], case_bottom_thickness,
-                      x_offset_from_edge = case_tent_hole_center_x_offset_from_edge,
-                      y_offset_from_edge = case_tent_hole_center_y_offset_from_edge);
+  translate([ x, y, z ]) leg_screw_holes(
+      [ case_size_x, case_size_y ], case_bottom_thickness,
+      x_offset_from_edge = case_tent_hole_center_x_offset_from_edge,
+      y_offset_from_edge = case_tent_hole_center_y_offset_from_edge);
 }
 
 module case_keys_mask() {
   keys_size = [ kb_size_x - kb_padding, kb_size_y - kb_padding * 2 ];
-  keys_offset = [ -kb_padding - case_border_thickness, (case_size_y - keys_size.y) / 2 ];
+  keys_offset =
+      [ -kb_padding - case_border_thickness, (case_size_y - keys_size.y) / 2 ];
   tag("remove") translate(keys_offset) position(BOTTOM + RIGHT)
       rect(keys_size, rounding = 1, anchor = BOTTOM + RIGHT);
 }
@@ -174,8 +243,9 @@ module case_top_front_row_spaces() {
     x = spaces[0];
     width = spaces[1];
 
-    translate([ x, y, 0 ]) linear_extrude(case_top_thickness) rect(
-        [ width, kb_bottom_row_spaces_height ], anchor = BOTTOM + LEFT, rounding = [ 1, 1, 0, 0 ]);
+    translate([ x, y, 0 ]) linear_extrude(case_top_thickness, convexity = 4)
+        rect([ width, kb_bottom_row_spaces_height ], anchor = BOTTOM + LEFT,
+             rounding = [ 1, 1, 0, 0 ]);
   }
 }
 

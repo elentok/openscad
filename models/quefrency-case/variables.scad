@@ -1,3 +1,4 @@
+include <BOSL2/metric_screws.scad>
 include <BOSL2/std.scad>
 $fn = 64;
 
@@ -47,11 +48,16 @@ case_size_y = kb_size_y + case_kb_padding * 2;
 // ];
 
 case_top_height = kb_height / 2 + case_top_thickness + case_vertical_tolerance;
-case_bottom_height =
-    kb_height / 2 + case_bottom_thickness + case_vertical_tolerance;
+// Add space between the bottom plate and the case to allow for more feet screw
+// threads and for better airflow.
+case_bottom_spacers_height = 2;
+case_bottom_spacers_diameter = 14;
+case_bottom_height = kb_height / 2 + case_bottom_thickness +
+                     case_vertical_tolerance + case_bottom_spacers_height;
 case_top_border_height = case_top_height - case_top_thickness;
 case_bottom_border_height = case_bottom_height - case_bottom_thickness;
 case_height = case_top_height + case_bottom_height;
+case_bottom_air_hole_diameter = 30;
 
 // ------------------------------------------------------------
 // USB Holes
@@ -61,7 +67,31 @@ case_usb_hole_width = 15;
 case_usb_hole_height = test_mode ? 3 : 9;
 
 // ------------------------------------------------------------
+// Foot
+
+foot_od = 15;
+foot_thread_diameter = 8; /* M6 */
+foot_thread_pitch = get_metric_iso_coarse_thread_pitch(foot_thread_diameter);
+
+// Make the bolt diameter slightly smaller than the designated M value
+// e.g. M10 will be 9.8, M8 will be 7.8
+foot_thread_tolerance = 0.2;
+
+// The nut will be 0.5mm higher than the thread to make sure it goes all the
+// way in.
+foot_thread_height_tolerance = 0.5;
+
+foot_extender_height = 10;
+foot_extender_thread_height = 4.5;
+foot_thread_height = foot_extender_thread_height + 1;
+// a separation layer between the thread and the nut (same diameter as the nut)
+foot_extender_middle_height = 1;
+foot_extender_nut_height = foot_extender_height - foot_extender_middle_height;
+
+// ------------------------------------------------------------
 // Legs
+
+case_foot_screw_dist_from_edge = foot_od + 2;
 
 // This X offset value was calculated for the right half of the keyboard (so it
 // doesn't interfere with the back screws, but it wasn't necessary):
@@ -83,28 +113,6 @@ leg_screw_head_height = 2;
 leg_screw_head_diameter = 6.8;
 // The flexibility to each side
 leg_screw_head_flexibility = 6;
-
-// ------------------------------------------------------------
-// Foot
-
-foot_od = 15;
-foot_thread_diameter = 8; /* M6 */
-foot_thread_pitch = get_metric_iso_coarse_thread_pitch(foot_thread_diameter);
-
-// Make the bolt diameter slightly smaller than the designated M value
-// e.g. M10 will be 9.8, M8 will be 7.8
-foot_thread_tolerance = 0.2;
-
-// The nut will be 0.5mm higher than the thread to make sure it goes all the
-// way in.
-foot_thread_height_tolerance = 0.5;
-
-foot_extender_height = 7;
-foot_extender_thread_height = 2.9;
-foot_thread_height = foot_extender_thread_height + 1;
-// a separation layer between the thread and the nut (same diameter as the nut)
-foot_extender_middle_height = 1;
-foot_extender_nut_height = foot_extender_height - foot_extender_middle_height;
 
 // ------------------------------------------------------------
 // Wrist Rest
@@ -166,5 +174,5 @@ tent_screw_nut_hole_diameter = 8;
 // left keyboard (and hopefully also the bottom-right edge of the right
 // keyboard). (edge = edge of the keyboard panel, not the case, add the border
 // to the calculation).
-reset_button_pos = [ -91, 46.2 + 5 ];
+reset_button_pos = [ -91, 46.2 + 3.5 ];
 reset_button_hole_diameter = 7.5;
