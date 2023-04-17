@@ -38,16 +38,50 @@ module foot_thread(h = foot_extender_thread_height) {
                internal = false);
 }
 
-module foot() {
+module foot_extender_bottom() {
   difference() {
     bottom_half() { sphere(d = foot_od); }
     down(foot_extender_thread_height / 2) foot_thread_mask(foot_thread_height);
   }
 }
 
+module foot() {
+  difference() {
+    base_foot();
+    // bottom_half() sphere(d = foot_diameter);
+
+    up(nothing / 2) {
+      // screw hole
+      cylinder(d = foot_screw_hole_diameter, h = foot_diameter + nothing,
+               anchor = TOP);
+
+      // screw head hole
+      // down(2) cylinder(d = foot_screw_head_diameter, h = foot_diameter,
+      //                  anchor = TOP);
+
+      down(1.5) foot_thread_mask(h = foot_diameter, anchor = TOP);
+    }
+  }
+}
+
+module base_foot(anchor = TOP) {
+  attachable(d = foot_diameter, l = foot_height, anchor) {
+    rotate_extrude() base_foot_2d();
+    children();
+  }
+}
+
+module base_foot_2d() {
+  rect([ foot_diameter / 2, foot_height ], rounding = [ 0, 0, 0, foot_radius ],
+       anchor = LEFT);
+}
+
 // Connects the foot and the foot extender (or directly to the case)
 module foot_screw() { foot_thread(h = foot_extender_thread_height * 2); }
 
+// base_foot_2d();
+// base_foot();
+foot();
+
 // foot_screw();
-// foot();
-foot_extender();
+// foot_extender();

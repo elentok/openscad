@@ -69,6 +69,12 @@ case_usb_hole_height = test_mode ? 3 : 9;
 // ------------------------------------------------------------
 // Foot
 
+foot_screw_hole_diameter = 3.4;
+foot_screw_head_diameter = 8;
+foot_diameter = 16;
+foot_height = 8;
+foot_radius = 4;
+
 foot_od = 15;
 foot_thread_diameter = 8; /* M6 */
 foot_thread_pitch = get_metric_iso_coarse_thread_pitch(foot_thread_diameter);
