@@ -77,11 +77,12 @@ module base_foot_2d() {
 }
 
 // Connects the foot and the foot extender (or directly to the case)
-module foot_screw() { foot_thread(h = foot_extender_thread_height * 2); }
+module foot_screw() { foot_thread(h = foot_extender_thread_height * 2 - 1); }
 
 // base_foot_2d();
 // base_foot();
-foot();
+// foot();
 
 // foot_screw();
-// foot_extender();
+foot_extender();
+// foot_extender_bottom();

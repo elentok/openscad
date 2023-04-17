@@ -51,7 +51,7 @@ case_top_height = kb_height / 2 + case_top_thickness + case_vertical_tolerance;
 // Add space between the bottom plate and the case to allow for more feet screw
 // threads and for better airflow.
 case_bottom_spacers_height = 2;
-case_bottom_spacers_diameter = 14;
+case_bottom_spacers_diameter = 12;
 case_bottom_height = kb_height / 2 + case_bottom_thickness +
                      case_vertical_tolerance + case_bottom_spacers_height;
 case_top_border_height = case_top_height - case_top_thickness;
@@ -70,13 +70,14 @@ case_usb_hole_height = test_mode ? 3 : 9;
 // Foot
 
 foot_screw_hole_diameter = 3.4;
-foot_screw_head_diameter = 8;
-foot_diameter = 16;
+foot_diameter = 18;
 foot_height = 8;
 foot_radius = 4;
+foot_nut_diameter = 6.3;
+foot_nut_height = 3.5;
 
 foot_od = 15;
-foot_thread_diameter = 8; /* M6 */
+foot_thread_diameter = 10; /* M6 */
 foot_thread_pitch = get_metric_iso_coarse_thread_pitch(foot_thread_diameter);
 
 // Make the bolt diameter slightly smaller than the designated M value
@@ -87,7 +88,7 @@ foot_thread_tolerance = 0.2;
 // way in.
 foot_thread_height_tolerance = 0.5;
 
-foot_extender_height = 10;
+foot_extender_height = 7;
 foot_extender_thread_height = 4.5;
 foot_thread_height = foot_extender_thread_height + 1;
 // a separation layer between the thread and the nut (same diameter as the nut)

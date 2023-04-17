@@ -184,9 +184,17 @@ module case_bottom_feet_holes() {
 }
 
 module case_bottom_foot_hole() {
-  foot_thread_mask(
-      h = case_bottom_thickness + case_bottom_spacers_height + nothing * 2,
-      anchor = BOTTOM);
+  h = case_bottom_thickness + case_bottom_spacers_height;
+
+  cylinder(d = foot_screw_hole_diameter, h = h + nothing * 2);
+
+  up(h - foot_nut_height + nothing * 2) linear_extrude(
+      foot_nut_height, convexity = 4) hexagon(d = foot_nut_diameter);
+  echo("h-foo", h - foot_nut_height);
+
+  // foot_thread_mask(
+  //     h = case_bottom_thickness + case_bottom_spacers_height + nothing * 2,
+  //     anchor = BOTTOM);
 }
 
 module case_bottom_tent_screw_holes() {

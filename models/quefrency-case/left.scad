@@ -9,3 +9,12 @@ mirror([ 1, 0, 0 ]) union() {
   case_bottom_left();  // left-bottom-right
   // case_bottom_right();  // left-bottom-left
 }
+
+module test_foot_screw() {
+  intersection() {
+    mirror([ 1, 0, 0 ]) case_bottom();
+    back(10) left(10) cuboid([ 14, 14, 70 ], anchor = RIGHT + FWD + TOP);
+  }
+}
+
+// test_foot_screw();
