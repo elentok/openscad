@@ -190,11 +190,6 @@ module case_bottom_foot_hole() {
 
   up(h - foot_nut_height + nothing * 2) linear_extrude(
       foot_nut_height, convexity = 4) hexagon(d = foot_nut_diameter);
-  echo("h-foo", h - foot_nut_height);
-
-  // foot_thread_mask(
-  //     h = case_bottom_thickness + case_bottom_spacers_height + nothing * 2,
-  //     anchor = BOTTOM);
 }
 
 module case_bottom_tent_screw_holes() {

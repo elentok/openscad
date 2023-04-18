@@ -125,12 +125,14 @@ leg_screw_head_flexibility = 6;
 // Wrist Rest
 wrist_pillow_size = [ 132, 84 ];
 wrist_pillow_rounding = 16;
-wrist_rest_border_height = 4;
+wrist_rest_border_height = 6;
 wrist_rest_border_thickness = 1.5;
 wrist_rest_bottom_thickness = 2;
 wrist_rest_size = add_scalar(wrist_pillow_size, wrist_rest_border_thickness);
 // distance of the center of foot screw from the edge
-wrist_rest_foot_screw_dist_from_edge = foot_od;
+wrist_rest_spacers_height = 2;
+wrist_rest_spacers_diameter = 12;
+wrist_rest_foot_screw_dist_from_edge = 15;
 
 // ------------------------------------------------------------
 // Connector

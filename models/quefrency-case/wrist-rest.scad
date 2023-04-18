@@ -19,42 +19,49 @@ module wrist_rest() {
           shell2d(-wrist_rest_border_thickness)
               rect(wrist_rest_size, rounding = wrist_pillow_rounding);
 
-      // cylinders to give the screws more space to latch on
-      back(hole_y) {
-        left(hole_x) cylinder(d = foot_od, h = foot_extender_thread_height,
-                              anchor = BOTTOM);
-        right(hole_x) cylinder(d = foot_od, h = foot_extender_thread_height,
-                               anchor = BOTTOM);
-      }
-      fwd(hole_y) {
-        left(hole_x) cylinder(d = foot_od, h = foot_extender_thread_height,
-                              anchor = BOTTOM);
-        right(hole_x) cylinder(d = foot_od, h = foot_extender_thread_height,
-                               anchor = BOTTOM);
+      // Spacers
+      up(wrist_rest_bottom_thickness) {
+        wrist_rest_spacer();
+        left(hole_x) wrist_rest_spacer();
+        right(hole_x) wrist_rest_spacer();
+
+        back(hole_y) {
+          wrist_rest_spacer();
+          left(hole_x) wrist_rest_spacer();
+          right(hole_x) wrist_rest_spacer();
+        }
+        fwd(hole_y) {
+          wrist_rest_spacer();
+          left(hole_x) wrist_rest_spacer();
+          right(hole_x) wrist_rest_spacer();
+        }
       }
     }
 
     down(nothing / 2) {
       back(hole_y) {
-        left(hole_x) foot_thread_mask(h = foot_extender_thread_height + nothing,
-                                      anchor = BOTTOM);
-        right(hole_x) foot_thread_mask(
-            h = foot_extender_thread_height + nothing, anchor = BOTTOM);
+        left(hole_x) wrist_rest_foot_hole_and_nut();
+        right(hole_x) wrist_rest_foot_hole_and_nut();
       }
       fwd(hole_y) {
-        left(hole_x) foot_thread_mask(h = foot_extender_thread_height + nothing,
-                                      anchor = BOTTOM);
-        right(hole_x) foot_thread_mask(
-            h = foot_extender_thread_height + nothing, anchor = BOTTOM);
+        left(hole_x) wrist_rest_foot_hole_and_nut();
+        right(hole_x) wrist_rest_foot_hole_and_nut();
       }
     }
-
-    // leg_screw_holes(
-    //     wrist_rest_size, wrist_rest_bottom_thickness, screw_head_height =
-    //     0.5, x_offset_from_edge =
-    //     wrist_rest_tent_hole_center_x_offset_from_edge, y_offset_from_edge =
-    //     wrist_rest_tent_hole_center_y_offset_from_edge);
   }
+}
+
+module wrist_rest_foot_hole_and_nut() {
+  h = wrist_rest_bottom_thickness + wrist_rest_spacers_height;
+  cylinder(d = foot_screw_hole_diameter, h = h + nothing * 2);
+
+  up(h - foot_nut_height + nothing * 2) linear_extrude(
+      foot_nut_height, convexity = 4) hexagon(d = foot_nut_diameter);
+}
+
+module wrist_rest_spacer() {
+  cylinder(d = wrist_rest_spacers_diameter, h = wrist_rest_spacers_height,
+           anchor = BOTTOM);
 }
 
 wrist_rest();
