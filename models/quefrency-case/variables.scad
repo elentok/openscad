@@ -75,6 +75,8 @@ foot_height = 8;
 foot_radius = 4;
 foot_nut_diameter = 6.3;
 foot_nut_height = 3.5;
+// to make the wrist rest bottom slightly thicker:
+wrist_rest_foot_nut_height = 2.8;
 
 foot_od = 15;
 foot_thread_diameter = 10; /* M6 */
@@ -123,8 +125,8 @@ leg_screw_head_flexibility = 6;
 
 // ------------------------------------------------------------
 // Wrist Rest
-wrist_pillow_size = [ 132, 84 ];
-wrist_pillow_rounding = 16;
+wrist_pillow_size = [ 131, 83 ];
+wrist_pillow_rounding = 18;
 wrist_rest_border_height = 6;
 wrist_rest_border_thickness = 1.5;
 wrist_rest_bottom_thickness = 2;
