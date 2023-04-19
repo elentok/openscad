@@ -41,25 +41,21 @@ module foot_thread(h = foot_extender_thread_height) {
 module foot_extender_bottom() {
   difference() {
     bottom_half() { sphere(d = foot_od); }
-    down(foot_extender_thread_height / 2) foot_thread_mask(foot_thread_height);
+    down(foot_extender_thread_height / 2)
+        foot_thread_mask(foot_extender_thread_height + 1);
   }
 }
 
 module foot() {
   difference() {
     base_foot();
-    // bottom_half() sphere(d = foot_diameter);
 
     up(nothing / 2) {
-      // screw hole
       cylinder(d = foot_screw_hole_diameter, h = foot_diameter + nothing,
                anchor = TOP);
 
-      // screw head hole
-      // down(2) cylinder(d = foot_screw_head_diameter, h = foot_diameter,
-      //                  anchor = TOP);
-
-      down(1.5) foot_thread_mask(h = foot_diameter, anchor = TOP);
+      down(foot_screw_meat_thickness + nothing)
+          foot_thread_mask(h = foot_thread_height, anchor = TOP);
     }
   }
 }
@@ -81,8 +77,8 @@ module foot_screw() { foot_thread(h = foot_extender_thread_height * 2 - 1); }
 
 // base_foot_2d();
 // base_foot();
-// foot();
+foot();
 
 // foot_screw();
-foot_extender();
+// foot_extender();
 // foot_extender_bottom();

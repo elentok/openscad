@@ -71,10 +71,31 @@ case_usb_hole_height = test_mode ? 3 : 9;
 
 foot_screw_hole_diameter = 3.4;
 foot_diameter = 18;
+
+// The length of the screw that will be used to attach the foot to the
+// case/wrist-rest.
+foot_screw_length = 5;
+
 foot_height = 8;
+
+// The area between the screw head and the bottom of the foot,
+// it should be at least 1.5mm so it's not too weak.
+// The " - 1.5mm" part relates to the thickness of the "meat" area for the nut
+// on the case/wrist-rest (TODO: replace it with the actual calculation).
+foot_screw_meat_thickness = foot_height - foot_screw_length - 1.5;
+assert(
+    foot_screw_meat_thickness >= 1.5,
+    str("The area the screw head puts pressure is less than 1.5mm which could ",
+        "make it too weak, you should either use a smaller screw or increase ",
+        "the foot height"));
+
 foot_radius = 4;
 foot_nut_diameter = 6.3;
 foot_nut_height = 3.5;
+// The height of the plastic thread in the
+foot_thread_height = foot_height - foot_screw_meat_thickness;
+assert(foot_thread_height >= 4,
+       "The foot thread height should be at least 4mm or it'll be too weak");
 // to make the wrist rest bottom slightly thicker:
 wrist_rest_foot_nut_height = 2.8;
 
@@ -92,7 +113,6 @@ foot_thread_height_tolerance = 0.5;
 
 foot_extender_height = 7;
 foot_extender_thread_height = 4.5;
-foot_thread_height = foot_extender_thread_height + 1;
 // a separation layer between the thread and the nut (same diameter as the nut)
 foot_extender_middle_height = 1;
 foot_extender_nut_height = foot_extender_height - foot_extender_middle_height;
