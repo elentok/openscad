@@ -58,6 +58,12 @@ module foot() {
           foot_thread_mask(h = foot_thread_height, anchor = TOP);
     }
   }
+
+  echo("========================================");
+  echo("Foot height: ", foot_height);
+  echo("Foot screw length: ", foot_screw_length);
+  echo("Foot screw meat thickness: ", foot_screw_meat_thickness);
+  echo("Foot thread height:", foot_thread_height);
 }
 
 module base_foot(anchor = TOP) {
@@ -73,12 +79,20 @@ module base_foot_2d() {
 }
 
 // Connects the foot and the foot extender (or directly to the case)
-module foot_screw() { foot_thread(h = foot_extender_thread_height * 2 - 1); }
+module foot_screw() {
+  h = foot_extender_thread_height * 2 - 1;
+  difference() {
+    foot_thread(h = h);
+    // screwdriver slit
+    up(h / 2 + nothing) cuboid([ 5, 2, 2 ], anchor = TOP);
+    down(h / 2 + nothing) cuboid([ 5, 2, 2 ], anchor = BOTTOM);
+  }
+}
 
 // base_foot_2d();
 // base_foot();
-foot();
+// foot();
 
-// foot_screw();
+foot_screw();
 // foot_extender();
 // foot_extender_bottom();

@@ -74,20 +74,19 @@ foot_diameter = 18;
 
 // The length of the screw that will be used to attach the foot to the
 // case/wrist-rest.
-foot_screw_length = 5;
-
-foot_height = 8;
+foot_screw_length = 12;
 
 // The area between the screw head and the bottom of the foot,
 // it should be at least 1.5mm so it's not too weak.
 // The " - 1.5mm" part relates to the thickness of the "meat" area for the nut
 // on the case/wrist-rest (TODO: replace it with the actual calculation).
-foot_screw_meat_thickness = foot_height - foot_screw_length - 1.5;
-assert(
-    foot_screw_meat_thickness >= 1.5,
-    str("The area the screw head puts pressure is less than 1.5mm which could ",
-        "make it too weak, you should either use a smaller screw or increase ",
-        "the foot height"));
+foot_screw_meat_thickness = foot_screw_length - 3.5;
+assert(foot_screw_meat_thickness >= 1.5, 
+       str("The area the screw head puts pressure on is only ",
+           foot_screw_meat_thickness, "mm, you should use a longer screw (at
+           least 5mm"));
+
+foot_height = 15;
 
 foot_radius = 4;
 foot_nut_diameter = 6.3;
@@ -95,12 +94,13 @@ foot_nut_height = 3.5;
 // The height of the plastic thread in the
 foot_thread_height = foot_height - foot_screw_meat_thickness;
 assert(foot_thread_height >= 4,
-       "The foot thread height should be at least 4mm or it'll be too weak");
+       str("The foot thread height is ", foot_thread_height,
+           "mm, it should be at least 4mm or it'll be too weak"));
 // to make the wrist rest bottom slightly thicker:
 wrist_rest_foot_nut_height = 2.8;
 
 foot_od = 15;
-foot_thread_diameter = 10; /* M6 */
+foot_thread_diameter = 10;/* M6 */
 foot_thread_pitch = get_metric_iso_coarse_thread_pitch(foot_thread_diameter);
 
 // Make the bolt diameter slightly smaller than the designated M value
