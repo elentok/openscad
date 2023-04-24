@@ -9,7 +9,7 @@ is_quefrency = keyboard == "quefrency";
 is_sinc = keyboard == "sinc";
 
 // When set to true it makes some of the parts thinner so they print faster
-test_mode = true;
+test_mode = false;
 
 nothing = 0.1;
 
