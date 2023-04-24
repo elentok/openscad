@@ -227,7 +227,7 @@ module case_keys_padding_mask() {
 
       round_top = i > 0 && kb_padding_by_row[i - 1] < padding;
       round_bottom = i < row_count - 1 && kb_padding_by_row[i + 1] < padding;
-      rounding = [
+      rounding = !round_top && !round_bottom ? 0 : [
         round_top ? 1 : 0,
         0,
         0,
