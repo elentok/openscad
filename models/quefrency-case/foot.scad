@@ -41,8 +41,8 @@ module foot_thread(h = foot_extender_thread_height) {
 module foot_extender_bottom() {
   difference() {
     bottom_half() { sphere(d = foot_od); }
-    down(foot_extender_thread_height / 2)
-        foot_thread_mask(foot_extender_thread_height + 1);
+    down(foot_screw_height / 4 - nothing)
+        foot_thread_mask(foot_screw_height / 2);
   }
 }
 
@@ -80,7 +80,7 @@ module base_foot_2d() {
 
 // Connects the foot and the foot extender (or directly to the case)
 module foot_screw() {
-  h = foot_extender_thread_height * 2 - 1;
+  h = foot_screw_height;
   difference() {
     foot_thread(h = h);
     // screwdriver slit

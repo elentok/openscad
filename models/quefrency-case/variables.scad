@@ -108,6 +108,8 @@ foot_thread_height_tolerance = 0.5;
 
 foot_extender_height = 7;
 foot_extender_thread_height = 4.5;
+// the bottom has a limited height so the screw must be shorter
+foot_screw_height = foot_extender_thread_height * 2 - 2;
 // a separation layer between the thread and the nut (same diameter as the nut)
 foot_extender_middle_height = 1;
 foot_extender_nut_height = foot_extender_height - foot_extender_middle_height;
