@@ -26,7 +26,16 @@ kb_fwd_screws = [
 ];
 
 // Distances of the back screws from the back right
-kb_back_screws = [
+quefrency_back_screws = [
+  [ 4.4, 4.4 ],
+  [ 4.4 + 59, 3.8 ],
+  [ 4.4 + 59 + 22, 3.8 ],
+  [ 4.4 + 59 + 22 + 75.5, 3.8 ],
+  [ 4.4 + 59 + 22 + 75.5 + 24, 3.8 ],
+];
+
+sinc_back_screws = [
+
   [ 4.4, 4.4 ],
   [ 4.4 + 59, 3.8 ],
   [ 4.4 + 59 + 22, 3.8 ],
@@ -34,6 +43,8 @@ kb_back_screws = [
   [ 4.4 + 59 + 22 + 63.3 + 18, 3.8 ],
   [ 4.4 + 59 + 22 + 63.3 + 18 + 27.4, 3.8 ],
 ];
+
+kb_back_screws = is_quefrency ? quefrency_back_screws : sinc_back_screws;
 
 case_fwd_connector = case_kb_padding + kb_fwd_screws[1].x;
 case_back_connector = case_kb_padding + kb_back_screws[2].x;
