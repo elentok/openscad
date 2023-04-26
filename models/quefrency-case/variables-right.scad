@@ -45,3 +45,8 @@ case_fwd_connector = case_kb_padding + kb_fwd_screws[1].x;
 case_back_connector = case_kb_padding + kb_back_screws[2].x;
 
 case_usb_hole_start_from_left = is_quefrency ? [ 24, 119 ] : [ 55.5, 114.5 ];
+
+// TODO: fix quefrency values
+// Distance of the center of the reset button from the bottom-right edge of the
+// right keyboard case.
+reset_button_pos = is_quefrency ? [ -91, 46.2 + 3.5 ] : [ -76, 43 ];

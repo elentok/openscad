@@ -198,8 +198,4 @@ tent_screw_nut_hole_diameter = 8;
 
 // Reset Button
 
-// Distance of the center of the reset button from the bottom-left edge of the
-// left keyboard case (and hopefully also the bottom-right edge of the right
-// keyboard).
-reset_button_pos = is_quefrency ? [ -91, 46.2 + 3.5 ] : [-89, 48];
 reset_button_hole_diameter = 7.5;

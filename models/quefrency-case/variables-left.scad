@@ -53,3 +53,7 @@ case_screw5_dist_from_left = case_size_x - kb_back_screws[4].x -
                              case_border_thickness - case_border_tolerance / 2;
 
 case_usb_hole_start_from_left = is_quefrency ? [ 18, 114 ] : [ 36, 119 ];
+
+// Distance of the center of the reset button from the bottom-left edge of the
+// left keyboard case.
+reset_button_pos = is_quefrency ? [ -91, 46.2 + 3.5 ] : [ -89, 48 ];
