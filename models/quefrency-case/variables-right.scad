@@ -6,12 +6,12 @@ kb_size_x = 190;
 case_size_x = kb_size_x + case_kb_padding * 2;
 
 kb_row_heights = is_quefrency ? [ 19.5, 19.5, 19.5, 19.5, 19.5 ]
-                              : [ 23.3, 19.5, 19.5, 19.5, 19.5, 19.5 ];
+                              : [ 23.3, 19.5, 20.5, 19.5, 19.5, 19.5 ];
 kb_padding_by_row =
-    is_quefrency ? [ 11, 0, 4.5, 14.5, 19.5 ] : [ 20, 11, 0, 4.5, 14.5, 19.5 ];
+    is_quefrency ? [ 11, 0, 4.5, 14.5, 19.5 ] : [ 19, 10, 0, 4.5, 14.5, 19.5 ];
 
 // [ [x, width], [x,width], ...]
-kb_bottom_row_spaces = is_quefrency ? [ [ 66, 6 ], [ 120, 6 ] ] : [[ 66, 5 ]];
+kb_bottom_row_spaces = is_quefrency ? [ [ 66, 6 ], [ 120, 6 ] ] : [[ 64.5, 4 ]];
 kb_bottom_row_spaces_height = 18;
 
 // Distances of the forward screws from the right
