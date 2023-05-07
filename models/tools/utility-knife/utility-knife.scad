@@ -16,19 +16,23 @@ blade_hole_tolerance = 0.5;
 // distance from the bottom of the blade hole to the bottom of the blade.
 blade_hole_dist_to_bottom = 14;
 
-handle_screw_diameter = 3.4;
+handle_screw_diameter = 3.3;
 handle_screw_head_diameter = 5.8;
 handle_screw_head_height = 2;
 handle_support_height = 0.4;  // should match the print layer height
 
+// For the fingers area on the handle
+finger_width = 16;
+
 padding = 4;
+padding_x = 5;
 rounding = 4;
 
 // Because the blade is triangular at the end one side of the case is taller
 // than the other one.
 case_height_high = blade_length + padding * 2;
 case_height_low = blade_length + padding - 10;
-case_width = blade_width_with_tolerance + padding * 2;
+case_width = blade_width_with_tolerance + padding_x * 2;
 case_thickness = blade_thickness_with_tolerance + padding * 2;
 
 notch1_width = 10;
@@ -50,6 +54,8 @@ module knife() {
     blade_mask();
     notch1_mask();
     notch2_mask();
+    fingers_mask();
+    thumb_mask();
   }
 }
 
@@ -141,10 +147,28 @@ module screw_cap() {
   }
 }
 
+module fingers_mask() {
+  up(case_height_low * 0.35) left(case_width / 2 + 1) rotate([ 90, 0, 0 ])
+      linear_extrude(case_thickness + epsilon, center = true)
+          round2d(r = 3) for (i = [0:4]) {
+    back(i * finger_width * 0.9) circle(d = finger_width, anchor = FWD + RIGHT);
+  }
+}
+
+module thumb_mask() {
+  up(case_height_low - finger_width * 2.5) right(case_width * 1.36)
+      rotate([ 90, 0, 0 ])
+          linear_extrude(case_thickness + epsilon, center = true)
+              scale([ 1, 1.8, 1 ])
+                  circle(d = finger_width * 2, anchor = FWD + RIGHT);
+}
+
+// fingers_mask();
+// thumb_mask();
 // notch2_mask();
 // tolerance_test();
 // knife();
-// screw_cap();
+screw_cap();
 
-knob(knob_height = 8, knob_diameter = 20, extension_height = padding,
-     extension_diameter = notch2_outer_width - 1, nut_size = "m3");
+// knob(knob_height = 8, knob_diameter = 20, extension_height = padding,
+//      extension_diameter = notch2_outer_width - 1, nut_size = "m3");
