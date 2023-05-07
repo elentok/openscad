@@ -27,7 +27,7 @@ rounding = 4;
 // Because the blade is triangular at the end one side of the case is taller
 // than the other one.
 case_height_high = blade_length + padding * 2;
-case_height_low = blade_length + padding * 2 - 10;
+case_height_low = blade_length + padding - 10;
 case_width = blade_width_with_tolerance + padding * 2;
 case_thickness = blade_thickness_with_tolerance + padding * 2;
 
