@@ -1,5 +1,6 @@
 include <BOSL2/std.scad>
 use <../../../lib/bottom_screw_head_mask.scad>
+use <../knob/knob.scad>
 $fn = 64;
 
 epsilon = 0.01;
@@ -143,4 +144,7 @@ module screw_cap() {
 // notch2_mask();
 // tolerance_test();
 // knife();
-screw_cap();
+// screw_cap();
+
+knob(knob_height = 8, knob_diameter = 20, extension_height = padding,
+     extension_diameter = notch2_outer_width - 1, nut_size = "m3");
