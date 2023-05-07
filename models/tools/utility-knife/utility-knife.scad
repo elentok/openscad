@@ -1,4 +1,5 @@
 include <BOSL2/std.scad>
+use <../../../lib/bottom_screw_head_mask.scad>
 $fn = 64;
 
 epsilon = 0.01;
@@ -10,8 +11,14 @@ blade_thickness = 0.42;
 blade_thickness_with_tolerance = 0.7;
 
 blade_hole_diameter = 5.5;
+blade_hole_tolerance = 0.5;
 // distance from the bottom of the blade hole to the bottom of the blade.
 blade_hole_dist_to_bottom = 14;
+
+handle_screw_diameter = 3.4;
+handle_screw_head_diameter = 5.8;
+handle_screw_head_height = 2;
+handle_support_height = 0.4;  // should match the print layer height
 
 padding = 4;
 rounding = 4;
@@ -27,11 +34,21 @@ notch1_width = 10;
 notch1_bottom = padding + blade_hole_dist_to_bottom / 2;
 notch1_top = case_height_low - padding;
 
+screw_cap_tolerance = 0.3;
+screw_cap_size = notch1_width - screw_cap_tolerance;
+
+notch2_outer_width = 11;
+notch2_outer_height = notch1_top - notch1_bottom;
+notch2_inner_width = blade_hole_diameter - blade_hole_tolerance;
+notch2_inner_height =
+    notch2_outer_height - (notch2_outer_width - notch2_inner_width);
+
 module knife() {
   difference() {
     case_base();
     blade_mask();
     notch1_mask();
+    notch2_mask();
   }
 }
 
@@ -75,7 +92,20 @@ module notch1_mask() {
 }
 
 module notch2_mask() {
-  // hello
+  fwd(blade_thickness_with_tolerance / 2 - epsilon / 4) up(notch1_bottom)
+      rotate([ 90, 0, 0 ]) {
+    // inner notch
+    linear_extrude(padding / 2, convexity = 4)
+        back((notch2_outer_height - notch2_inner_height) / 2)
+            rect([ notch2_inner_width, notch2_inner_height ],
+                 rounding = notch2_inner_width / 2, anchor = FWD);
+
+    // outer notch
+    up(padding / 2 - epsilon / 2)
+        linear_extrude(padding / 2 + epsilon, convexity = 4)
+            rect([ notch2_outer_width, notch2_outer_height ],
+                 rounding = notch2_outer_width / 2, anchor = FWD);
+  }
 }
 
 module tolerance_test() {
@@ -85,5 +115,32 @@ module tolerance_test() {
   }
 }
 
+// The cap that covers the screw that goes into notch1 and out of notch2.
+module screw_cap() {
+  base_height = padding;
+  rod_height = blade_thickness_with_tolerance + padding / 3;
+  difference() {
+    union() {
+      // base
+      cube([ screw_cap_size, screw_cap_size, base_height ], anchor = BOTTOM);
+
+      // rod
+      up(padding - epsilon) cylinder(
+          d = blade_hole_diameter - blade_hole_tolerance, h = rod_height);
+    }
+
+    // screw hole
+    down(epsilon / 2) cylinder(d = handle_screw_diameter,
+                               h = rod_height + base_height + epsilon);
+
+    bottom_screw_head_mask(head_diameter = handle_screw_head_diameter,
+                           head_height = handle_screw_head_height,
+                           screw_diameter = handle_screw_diameter,
+                           support_height = handle_support_height);
+  }
+}
+
+// notch2_mask();
 // tolerance_test();
-knife();
+// knife();
+screw_cap();
