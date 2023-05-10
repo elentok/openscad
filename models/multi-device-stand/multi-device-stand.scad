@@ -4,15 +4,28 @@ $fn = 64;
 
 epsilon = 0.01;
 
-device_widths = [ 28, 28, 20 ];
-spacer_width = 7;
+// Laptops
+// device_widths = [ 28, 28, 20 ];
+// spacer_width = 7;
+// spacer_thickness = 10;
+// side_triangle_width = 12;
+// wire_openings = true;
+// wire_opening_width = 4;
+// wire_hole_diameter = 5;
+// stand_bottom_height = 10;
+// stand_height = 70;
+
+// Charger + Emergency batteries
+device_widths = [ 17, 17, 17, 28 ];
+spacer_width = 4;
 spacer_thickness = 10;
-side_triangle_width = 12;
+side_triangle_width = 6;
+wire_openings = false;
 wire_opening_width = 4;
 wire_hole_diameter = 5;
+stand_bottom_height = 5;
+stand_height = 40;
 
-stand_bottom_height = 10;
-stand_height = 70;
 stand_width =
     // devices
     sum(device_widths) +
@@ -68,13 +81,15 @@ module device_mask(i) {
                                           anchor = LEFT + BOTTOM, rounding = 3);
 
   // wire hole
-  right(x + w / 2) {
-    up(stand_bottom_height - wire_hole_diameter / 2) rotate([ 90, 0, 0 ])
-        cylinder(d = wire_hole_diameter, h = stand_depth, center = true);
+  if (wire_openings) {
+    right(x + w / 2) {
+      up(stand_bottom_height - wire_hole_diameter / 2) rotate([ 90, 0, 0 ])
+          cylinder(d = wire_hole_diameter, h = stand_depth, center = true);
 
-    up(stand_bottom_height + epsilon)
-        cube([ wire_opening_width, stand_depth, wire_hole_diameter / 2 ],
-             anchor = TOP);
+      up(stand_bottom_height + epsilon)
+          cube([ wire_opening_width, stand_depth, wire_hole_diameter / 2 ],
+               anchor = TOP);
+    }
   }
 }
 
