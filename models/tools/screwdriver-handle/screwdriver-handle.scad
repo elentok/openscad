@@ -3,7 +3,7 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 bit_diameter = 7;
-bit_diameter_tolerance = 0.4;
+bit_diameter_tolerance = 0.5;
 bit_length = 20;
 
 handle_n = 10;
