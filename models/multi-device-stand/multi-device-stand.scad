@@ -4,7 +4,17 @@ $fn = 64;
 
 epsilon = 0.01;
 
-// Laptops
+// Two Laptops
+device_widths = [ 18, 18 ];
+spacer_width = 7;
+spacer_thickness = 10;
+side_triangle_width = 30;
+wire_openings = false;
+strengtheners = false;
+stand_bottom_height = 10;
+stand_height = 70;
+
+// Tablets
 // device_widths = [ 28, 28, 20 ];
 // spacer_width = 7;
 // spacer_thickness = 10;
@@ -14,17 +24,19 @@ epsilon = 0.01;
 // wire_hole_diameter = 5;
 // stand_bottom_height = 10;
 // stand_height = 70;
+// strengtheners = true;
 
 // Charger + Emergency batteries
-device_widths = [ 17, 17, 17, 28 ];
-spacer_width = 4;
-spacer_thickness = 10;
-side_triangle_width = 6;
-wire_openings = false;
-wire_opening_width = 4;
-wire_hole_diameter = 5;
-stand_bottom_height = 5;
-stand_height = 40;
+// device_widths = [ 17, 17, 17, 28 ];
+// spacer_width = 4;
+// spacer_thickness = 10;
+// side_triangle_width = 6;
+// wire_openings = false;
+// wire_opening_width = 4;
+// wire_hole_diameter = 5;
+// stand_bottom_height = 5;
+// stand_height = 40;
+// strengtheners = true;
 
 stand_width =
     // devices
@@ -44,12 +56,25 @@ module stand() {
     device_masks();
   }
 
-  // strengtheners
-  right(side_triangle_width) strengthener(LEFT);
-  right(stand_width - side_triangle_width) strengthener(RIGHT);
+  if (strengtheners) {
+    // strengtheners
+    right(side_triangle_width) strengthener(LEFT);
+    right(stand_width - side_triangle_width) strengthener(RIGHT);
 
-  right(stand_width / 2) cross_strengthener();
-  right(stand_width / 2) rotate([ 0, 0, 90 ]) cross_strengthener();
+    cross_strengthener2();
+    mirror([ 0, -1, 0 ]) cross_strengthener2();
+  }
+
+  // right(stand_width / 2) cross_strengthener();
+  // right(stand_width / 2) rotate([ 0, 0, 90 ]) cross_strengthener();
+}
+
+module cross_strengthener2() {
+  path = [[side_triangle_width, stand_depth / 2 - spacer_thickness],
+          [stand_width - side_triangle_width,
+           -stand_depth / 2 + spacer_thickness]];
+
+  linear_extrude(stand_bottom_height / 3) stroke(path, width = spacer_width);
 }
 
 module strengthener(anchor) {
@@ -96,6 +121,7 @@ module device_mask(i) {
 module stand_base() {
   intersection() {
     stand_tube();
+    // stand_trapezoid();
     stand_triangles();
   }
 }
@@ -105,7 +131,7 @@ module stand_tube() {
     scale([ 1, stand_depth / (stand_height * 2), 1 ]) rotate([ 90, 0, 90 ])
         cylinder(r = stand_height, h = stand_width, center = true);
 
-    scale([ 1, stand_depth / (stand_height * 2) * 0.8, 1.07 ])
+    scale([ 1, stand_depth / (stand_height * 2) * 0.7, 1.07 ])
         rotate([ 90, 0, 90 ])
             cylinder(r = stand_height - spacer_thickness,
                      h = stand_width + epsilon, center = true);
@@ -126,6 +152,23 @@ module stand_triangles() {
   }
 }
 
+// stand();
+
+// stand_tube();
+
+module stand_trapezoid() {
+  w = 20;
+  rotate([ 90, 0, 90 ]) linear_extrude(
+      stand_width, center = true, convexity = 4) round2d(r = 2) difference() {
+    trapezoid(h = stand_height, w1 = stand_depth, w2 = stand_depth / 2,
+              anchor = FWD);
+
+    trapezoid(h = stand_height - w, w1 = stand_depth - w,
+              w2 = stand_depth / 2 - w, anchor = FWD);
+  }
+}
+
+// stand_trapezoid();
 stand();
 
 // stand_tube();
