@@ -6,14 +6,14 @@ epsilon = 0.01;
 jar_outer_diameter = 40;  // 100;
 jar_height = 20;          // 30;
 wall_thickness = 2;
-thread_max_size = 2;
+thread_max_size = 2.5;
 jar_wall_thickness = wall_thickness + thread_max_size;
 jar_inner_diameter = jar_outer_diameter - jar_wall_thickness * 2;
 // inner_diameter = jar_outer_diameter - jar_wall_thickness * 2;
 // inner_diameter = jar_outer_diameter - wall_thickness * 2;
 thread_guide_height = 1;
 space_below_thread = 3;
-thread_height = 10;
+thread_height = 12;
 jar_thread_minor_patch_major =
     add_scalar([ 0, thread_max_size / 2, thread_max_size ],
                jar_inner_diameter + wall_thickness - epsilon);
@@ -111,5 +111,5 @@ module threading_test() {
 // lid();
 // demo(spacing = -8);
 // demo(spacing = 10);
-// print();
-threading_test();
+print();
+// threading_test();
