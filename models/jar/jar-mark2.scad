@@ -1,29 +1,31 @@
-include <BOSL2/bottlecaps.scad>
 include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
 $fn = 64;
 
 epsilon = 0.01;
 jar_outer_diameter = 40;  // 100;
-jar_height = 20;          // 30;
+height = 20;              // 30;
 wall_thickness = 2;
-thread_max_size = 2.5;
+thread_max_size = 2;
 jar_wall_thickness = wall_thickness + thread_max_size;
 jar_inner_diameter = jar_outer_diameter - jar_wall_thickness * 2;
 // inner_diameter = jar_outer_diameter - jar_wall_thickness * 2;
 // inner_diameter = jar_outer_diameter - wall_thickness * 2;
+thread_guide_height = 1;
 thread_height = 8;
-jar_base_height = jar_height - thread_height;
-jar_thread_minor_patch_major = jar_inner_diameter + wall_thickness;
-// add_scalar([ 0, thread_max_size / 2, thread_max_size ],
-//            jar_inner_diameter + wall_thickness - epsilon);
-thread_pitch = 3;
+jar_thread_minor_patch_major =
+    add_scalar([ 0, thread_max_size / 2, thread_max_size ],
+               jar_inner_diameter + wall_thickness - epsilon);
+thread_pitch = 4;
 thread_tolerance = 0.6;
-lid_thread_minor_patch_major = jar_thread_minor_patch_major + thread_tolerance;
-// add_scalar(jar_thread_minor_patch_major, thread_tolerance);
+lid_thread_minor_patch_major =
+    add_scalar(jar_thread_minor_patch_major, thread_tolerance);
 felt_thickness = 2;
 rounding = 3;
-lid_height = wall_thickness + thread_height + felt_thickness + rounding / 2;
+// lid_height =
+//     wall_thickness + thread_height + rounding / 2 + thread_guide_height;
+lid_height = wall_thickness + thread_height + thread_guide_height +
+             felt_thickness + rounding / 2;
 
 echo("Lid height", lid_height);
 
@@ -33,27 +35,20 @@ lid_outer_diameter =
     jar_outer_diameter;  // lid_inner_diameter + wall_thickness * 2;
 
 module jar() {
+  h = height - thread_height;
   rounded_container(od = jar_outer_diameter,
-                    wall_thickness = jar_wall_thickness, h = jar_base_height,
+                    wall_thickness = jar_wall_thickness, h = h,
                     rounding = rounding);
-  // up(jar_base_height - epsilon)
-  //     tube(id = jar_inner_diameter, od = jar_inner_diameter + wall_thickness,
-  //          h = thread_height, anchor = BOTTOM);
-  // jar_thread();
-  neck_d = jar_inner_diameter + wall_thickness;
-  up(jar_base_height - epsilon)
-      generic_bottle_neck(neck_d = neck_d, pitch = thread_pitch,
-                          id = jar_inner_diameter, height = thread_height,
-                          support_d = 0, thread_od = neck_d + thread_max_size);
+  up(h - epsilon)
+      tube(id = jar_inner_diameter, od = jar_inner_diameter + wall_thickness,
+           h = thread_height, anchor = BOTTOM);
+  jar_thread();
 }
 
-module jar_thread() {
-  // % up(jar_base_height)
-  //         cylinder(h = thread_height, d = jar_thread_minor_patch_major[2]);
-
-  up(jar_height - thread_height / 2) difference() {
-    threaded_rod(d = jar_thread_minor_patch_major, end_len = 1,
-                 l = thread_height, pitch = thread_pitch, internal = false);
+module jar_thread(anchor = CENTER) {
+  up(height - thread_height / 2 - thread_guide_height) difference() {
+    threaded_rod(d = jar_thread_minor_patch_major, l = thread_height,
+                 pitch = thread_pitch, internal = false);
 
     cylinder(d = jar_inner_diameter + wall_thickness,
              h = thread_height + epsilon, center = true);
@@ -61,22 +56,16 @@ module jar_thread() {
 }
 
 module lid() {
-  neck_od = jar_inner_diameter + wall_thickness;
-  // generic_bottle_cap();
-  generic_bottle_cap(wall = wall_thickness, neck_od = neck_od,
-                     pitch = thread_pitch, id = jar_inner_diameter,
-                     height = thread_height, tolerance = thread_tolerance,
-                     thread_od = neck_od + thread_max_size);
-  // up(lid_height) mirror([ 0, 0, 1 ]) rounded_container(
-  //     od = lid_outer_diameter, wall_thickness = wall_thickness, h =
-  //     lid_height, rounding = rounding);
-  //
-  // difference() {
-  //   cylinder(d = lid_inner_diameter + epsilon, h = thread_height);
-  //   down(epsilon / 2) threaded_rod(
-  //       d = lid_thread_minor_patch_major, l = thread_height + epsilon,
-  //       end_len = 1, pitch = thread_pitch, internal = true, anchor = BOTTOM);
-  // }
+  up(lid_height) mirror([ 0, 0, 1 ]) rounded_container(
+      od = lid_outer_diameter, wall_thickness = wall_thickness, h = lid_height,
+      rounding = rounding);
+
+  up(thread_guide_height) difference() {
+    cylinder(d = lid_inner_diameter + epsilon, h = thread_height);
+    down(epsilon / 2) threaded_rod(
+        d = lid_thread_minor_patch_major, l = thread_height + epsilon,
+        pitch = thread_pitch, internal = true, anchor = BOTTOM);
+  }
 }
 
 module rounded_container(od, wall_thickness, h, rounding) {
@@ -91,25 +80,11 @@ module rounded_container(od, wall_thickness, h, rounding) {
 
 module demo(spacing) {
   jar();
-  up(jar_height + spacing) lid();
-}
-
-module test_threading() {
-  up(10) intersection() {
-    jar();
-    up(jar_base_height - 1)
-        cylinder(d = jar_outer_diameter, h = thread_height + 1);
-  }
-
-  intersection() {
-    lid();
-    cylinder(d = jar_outer_diameter, thread_height + 1);
-  }
+  % up(height + spacing) lid();
 }
 
 // rounded_container(od = 120, wall_thickness = 2, h = 30, rounding = 2);
-// jar();
-lid();
+jar();
+// lid();
 // demo(spacing = -8);
-// demo(spacing = 10);
-// test_threading();
+
