@@ -90,7 +90,7 @@ module demo(spacing) {
 
 module print() {
   jar();
-  left(lid_outer_diameter * 1.5) up(lid_height) mirror([ 0, 0, 1 ]) lid();
+  left(lid_outer_diameter * 1.5) lid();
 }
 
 module threading_test() {
@@ -110,6 +110,6 @@ module threading_test() {
 // jar();
 // lid();
 // demo(spacing = -8);
-// demo(spacing = 10);
-print();
+demo(spacing = 10);
+// print();
 // threading_test();

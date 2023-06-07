@@ -8,7 +8,7 @@ epsilon = 0.01;
 od = 40;
 jar_wall = 2;
 
-thread_wall = 1.2;
+thread_wall = 1.5;
 thread_pitch = 1.5;
 // thread_size = 3;
 thread_tolerance = 0.6;
@@ -29,7 +29,7 @@ lid_base_height = lid_height - jar_thread_height;
 
 module jar() {
   jar_base();
-  threaded_neck(od = od - jar_wall, id = jar_id, l = jar_thread_height,
+  threaded_neck(od = od - jar_wall * 2, id = jar_id, l = jar_thread_height,
                 pitch = thread_pitch, anchor = BOTTOM);
 }
 
@@ -73,19 +73,19 @@ module threaded_ring(od, wall, l, pitch, anchor, spin, orient) {
   }
 }
 
-module demo() {
-  down(10) jar();
-  up(10) lid();
+module demo(spacing = 5) {
+  down(spacing + jar_thread_height) jar();
+  up(spacing + jar_thread_height) lid();
 }
 
 // module print() {
 //   jar();
-//   left(od * 1.5) mirror([ 0, 0, 1 ]) lid();
+//   left(od * 1.5)  lid();
 // }
 //
 // print();
 // demo();
 
-// jar();
-lid();
+jar();
+// lid();
 // threaded_ring();
