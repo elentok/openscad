@@ -1,31 +1,29 @@
-// include <BOSL2/bottlecaps.scad>
 include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
 $fn = 64;
 
 epsilon = 0.01;
 
-od = 40;
+od = 105;  // 40;
 jar_wall = 2;
 
 thread_wall = 3;
 thread_pitch = 2.5;
-// thread_size = 3;
 thread_tolerance = 0.6;
 
 lid_wall = jar_wall - thread_tolerance / 2;
 
-jar_height = 20;
+jar_height = 30;
 jar_thread_height = 8;
 jar_base_height = jar_height - jar_thread_height;
 jar_rounding = 3;
 
 jar_id = od - jar_wall * 2 - thread_wall * 2;
 
+echo("Jar inner diameter", jar_id);
+
 lid_height = 14;
 lid_base_height = lid_height - jar_thread_height;
-
-// #tube(od = od, id = od - wall * 2, h = 5, anchor = BOTTOM);
 
 module jar() {
   jar_base();
@@ -78,14 +76,8 @@ module demo(spacing = 5) {
   up(spacing + jar_thread_height) lid();
 }
 
-// module print() {
-//   jar();
-//   left(od * 1.5)  lid();
-// }
-//
-// print();
-demo();
+// demo();
 
 // jar();
-// lid();
+lid();
 // threaded_ring();
