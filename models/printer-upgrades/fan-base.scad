@@ -1,10 +1,15 @@
 include <BOSL2/std.scad>
 $fn = 64;
 
-fan_size = 50;
-fan_hole_diameter = 4;
-fan_hole_margin = 3;
-fan_thickness = 11.7 + 2 * 3;  // 3mm is the thickness of the grill
+fan_size = 140;
+fan_thickness = 27.6 + 2 * 4.6;  // 3mm is the thickness of the grill
+fan_hole_margin = 5.8;
+fan_hole_diameter = 4.6;
+
+// fan_size = 50;
+// fan_thickness = 11.7 + 2 * 3;  // 3mm is the thickness of the grill
+// fan_hole_margin = 3;
+// fan_hole_diameter = 4;
 
 base_fan_spacing = 1;
 
@@ -26,11 +31,17 @@ base_size = [
   fan_size + fan_holder_padding * 2,
   fan_thickness * 3,
 ];
-base_rounding = 12;
+// base_rounding = 12;
+base_rounding = fan_thickness;
 base_diameter = fan_size + fan_holder_padding * 2;
 
 module fan_base() {
-  linear_extrude(base_height) rect(base_size, rounding = base_rounding);
+  linear_extrude(base_height) {
+    difference() {
+      rect(base_size, rounding = base_rounding);
+      circle(d = min(base_size.x, base_size.y) * 0.7);
+    }
+  }
 
   up(base_height - 0.01) {
     x = fan_size / 2 - fan_hole_margin - fan_hole_diameter / 2;
