@@ -10,21 +10,27 @@ l_max = 47;
 d_button = 10.5;  // 9.7;
 button_padding = 3;
 margin = 7;  // 7.6;
-wall = 2;
-
-echo(ellipse_d1, ellipse_d2);
+wall = 1;
+bump_height = 1;
 
 module button_cover() {
   difference() {  // outer
-    linear_extrude(h_max + wall * 2, convexity = 4, center = true)
-        body_slice(l_min, w_max + wall * 2);
+    union() {
+      linear_extrude(h_max + wall * 2, convexity = 4, center = true)
+          body_slice(l_min, w_max + wall * 2);
+
+      // bump
+      up(h_max / 2) cuboid([ l_min, d_button + 6, wall + bump_height ],
+                           anchor = LEFT + BOTTOM, rounding = wall);
+    }
 
     // inner
     left(0.01 / 2) linear_extrude(h_max, convexity = 4, center = true)
         body_slice(l_min + 0.01, w_max);
 
     right(l_min - margin)
-        cyl(d = d_button, h = h_max / 2 + wall + 0.01, anchor = BOTTOM + RIGHT);
+        cyl(d = d_button, h = h_max / 2 + bump_height + wall + 0.01,
+            anchor = BOTTOM + RIGHT);
   }
 
   // extension
@@ -43,7 +49,8 @@ module button_cover() {
 }
 
 module body_slice(l_min, w_max) {
-  ellipse_d1 = 2 * (l_min + (w_min * w_min) / (4 * l_min));
+  // ellipse_d1 = 2 * (l_min + (w_min * w_min) / (4 * l_min));
+  ellipse_d1 = l_min * 4;
   ellipse_d2 = w_max;
 
   intersection() {
