@@ -18,8 +18,24 @@ nut_diameter = 7.8;  // m4
 // The plastic area between the nut and the screw
 nut_plastic_thickness = 2;
 
-thread_padding = 2;
+thread_tolerance = 0.6;
+thread_padding = 2.5;
 thread_pitch = round(hole_thickness / 3);
+
+module external_cover() {
+  outer_diameter = hole_diameter - thread_padding * 2;
+  inner_diameter = outer_diameter - thread_padding * 2 - thickness * 2;
+  thread_height = hole_thickness * 0.9;
+
+  difference() {
+    threaded_rod(d = outer_diameter, h = thread_height, pitch = thread_pitch,
+                 anchor = BOTTOM);
+    down(epsilon / 2) cylinder(d = inner_diameter, h = thread_height + epsilon,
+                               anchor = BOTTOM);
+  }
+
+  cylinder(d = outer_diameter + 10, h = thickness, anchor = TOP);
+}
 
 module internal_cover() {
   top_hole_diameter = fan_size - border_width * 2;
@@ -49,7 +65,7 @@ module internal_cover() {
     internal_cover_screw_holes();
   }
 
-  internal_cover_thread();
+  up(epsilon) internal_cover_thread();
 }
 
 module internal_cover_thread() {
@@ -82,3 +98,5 @@ module internal_cover_screw_hole() {
 }
 
 internal_cover();
+down(50) external_cover();
+// external_cover();
