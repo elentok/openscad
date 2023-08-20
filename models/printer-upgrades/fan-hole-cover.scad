@@ -22,19 +22,82 @@ thread_tolerance = 0.6;
 thread_padding = 4;
 thread_pitch = round(hole_thickness / 3);
 
+grill_padding = 7;
+
 module external_cover() {
-  outer_diameter = hole_diameter - thread_padding * 2;
-  inner_diameter = outer_diameter - thread_padding * 2 - thickness * 2;
+  thread_outer_diameter = hole_diameter - thread_padding * 2;
+  thread_inner_diameter =
+      thread_outer_diameter - thread_padding * 2 - thickness * 2;
   thread_height = hole_thickness * 0.9;
 
   difference() {
-    threaded_rod(d = outer_diameter, h = thread_height, pitch = thread_pitch,
-                 anchor = BOTTOM);
-    down(epsilon / 2) cylinder(d = inner_diameter, h = thread_height + epsilon,
-                               anchor = BOTTOM);
+    threaded_rod(d = thread_outer_diameter - thread_tolerance,
+                 h = thread_height, pitch = thread_pitch, anchor = BOTTOM);
+    down(epsilon / 2) cylinder(d = thread_inner_diameter,
+                               h = thread_height + epsilon, anchor = BOTTOM);
   }
 
-  cylinder(d = outer_diameter + 10, h = thickness, anchor = TOP);
+  grill_outer_diameter = thread_outer_diameter + grill_padding * 2;
+  grill_border_width = (grill_outer_diameter - thread_inner_diameter) / 2;
+  up(epsilon) grill(d = grill_outer_diameter, h = thickness,
+                    border_width = grill_border_width, anchor = TOP);
+  // external_cover_grill();
+}
+
+// module external_cover_grill() {
+//   difference() {
+//     circle(d = outer_diameter + 10);
+//     circle(d =)
+//     // cylinder(d = outer_diameter + 10, h = thickness, anchor = TOP);
+//     // cylinder(d = grill_diameter )
+//   }
+// }
+
+module grill(d, h, border_width = 0, line_width = 2, space = 3,
+             anchor = BOTTOM) {
+  outer_diameter = d;
+  inner_diameter = d - border_width * 2;
+  inner_radius = inner_diameter / 2;
+
+  attachable(anchor, d = d, h = h) {
+    linear_extrude(h, center = true) {
+      if (border_width > 0) {
+        ring2d(od = outer_diameter, id = inner_diameter);
+      }
+
+      rect([ inner_diameter + epsilon, line_width ]);
+      rect([ line_width, inner_diameter + epsilon ]);
+      rotate(45) rect([ inner_diameter + epsilon, line_width ]);
+      rotate(-45) rect([ inner_diameter + epsilon, line_width ]);
+      // rect([ line_width, inner_diameter + epsilon ]);
+
+      // n circles
+      // (n+1) * space + n * line_width = inner_radius
+      // n * (space + line_width) + space = inner_radius
+      // n = (inner_radius - space) / (space + line_width)
+      n = round((inner_radius - space) / (space + line_width));
+
+      // after rounding we need to re-calculate the space so it's accurate
+      // (n+1) * space + n * line_width = inner_radius
+      // space = (inner_radius - n * line_width) / (n+1);
+      space2 = (inner_radius - n * line_width) / (n + 1);
+
+      for (i = [1:n]) {
+        id = 2 * space2 * i + 2 * line_width * (i - 1);
+        echo("ID", id);
+        ring2d(id = id, od = id + line_width * 2);
+      }
+    }
+
+    children();
+  }
+}
+
+module ring2d(od, id) {
+  difference() {
+    circle(d = od);
+    circle(d = id);
+  }
 }
 
 module internal_cover() {
@@ -101,6 +164,6 @@ module internal_cover_screw_hole() {
 }
 
 // internal_cover_thread();
-internal_cover();
+// internal_cover();
 // down(50) external_cover();
-// external_cover();
+external_cover();
