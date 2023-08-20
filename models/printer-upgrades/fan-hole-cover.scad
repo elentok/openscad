@@ -23,6 +23,7 @@ thread_padding = 4;
 thread_pitch = round(hole_thickness / 3);
 
 grill_padding = 7;
+grill_spacer_height = 1;
 
 module external_cover() {
   thread_outer_diameter = hole_diameter - thread_padding * 2;
@@ -163,7 +164,39 @@ module internal_cover_screw_hole() {
       hexagon(d = nut_diameter);
 }
 
+module fan_grill() {
+  d = fan_size - border_width * 2;
+
+  linear_extrude(thickness) difference() {
+    rect([ fan_size, fan_size ], rounding = 4);
+    circle(d = d - epsilon);
+
+    spread_to_corners(screw_hole_center_dist) circle(d = screw_hole_diameter);
+  }
+
+  grill(d = d, h = thickness, space = 9);
+
+  // spacers
+  spread_to_corners(screw_hole_center_dist) {
+    up(thickness - epsilon) linear_extrude(grill_spacer_height)
+        ring2d(od = screw_hole_diameter + 2, id = screw_hole_diameter);
+  }
+}
+
+module spread_to_corners(dist) {
+  back(dist / 2) {
+    right(dist / 2) children();
+    left(dist / 2) children();
+  }
+  fwd(dist / 2) {
+    right(dist / 2) children();
+    left(dist / 2) children();
+  }
+}
+
 // internal_cover_thread();
 // internal_cover();
 // down(50) external_cover();
-external_cover();
+// external_cover();
+
+fan_grill();
