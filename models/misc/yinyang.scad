@@ -1,12 +1,42 @@
 include <BOSL2/std.scad>
 $fn = 64;
 
-module half_yinyang(d, h) { linear_extrude(h) half_yinyang_2d(d); }
+height = 3;
+outer_diameter = 50;
+dot_hole_diameter = outer_diameter / 4;
+tolerance = 0.04;
+dot_diameter = dot_hole_diameter - tolerance;
+wrapper_border_width = 2;
+wrapper_bottom_thickness = 2;
+magnet_d = 10;
+magnet_h = 1.5;
 
-module half_yinyang_2d(d) {
-  r = d / 2;
+assert(magnet_h <= wrapper_bottom_thickness,
+       "Wrapper bottom must be at least as thick as the magnet");
+
+module wrapper() {
+  wrapper_id = outer_diameter + tolerance;
+  wrapper_od = wrapper_id + wrapper_border_width;
 
   difference() {
+    union() {
+      cyl(d = wrapper_od, h = wrapper_bottom_thickness, anchor = TOP);
+      tube(od = wrapper_od, id = wrapper_id, h = height, anchor = BOTTOM);
+    }
+
+    // magnet
+    down(wrapper_bottom_thickness - magnet_h + 0.01)
+        cyl(d = magnet_d, h = magnet_h, anchor = TOP);
+  }
+}
+
+module half_yinyang() { linear_extrude(height) half_yinyang_2d(); }
+
+module half_yinyang_2d() {
+  d = outer_diameter;
+  r = d / 2;
+
+  round2d(0.2) difference() {
     union() {
       difference() {
         circle(d = d);
@@ -17,8 +47,26 @@ module half_yinyang_2d(d) {
     }
 
     circle(d = r, anchor = RIGHT);
+
+    // dot
+    right(r / 4) circle(d = r / 2, anchor = LEFT);
   }
 }
 
-color("white") half_yinyang(30, 3);
-rotate(180) color("black") half_yinyang(30, 3);
+module dot() { cyl(d = dot_diameter, h = height, anchor = BOTTOM); }
+
+module demo(space = 0) {
+  color("green") wrapper();
+
+  color("white") half_yinyang();
+  color("black") right(dot_hole_diameter) dot();
+
+  rotate(180) color("black") half_yinyang();
+  color("white") left(dot_hole_diameter) dot();
+}
+
+wrapper();
+// half_yinyang();
+// dot();
+
+// demo();
