@@ -7,9 +7,9 @@ dot_hole_diameter = outer_diameter / 4;
 tolerance = 0.04;
 dot_diameter = dot_hole_diameter - tolerance;
 wrapper_border_width = 2;
-wrapper_bottom_thickness = 2;
-magnet_d = 10;
-magnet_h = 1.5;
+wrapper_bottom_thickness = 2.4;
+magnet_d = 15.1;
+magnet_h = 1.8;
 
 assert(magnet_h <= wrapper_bottom_thickness,
        "Wrapper bottom must be at least as thick as the magnet");
@@ -19,15 +19,12 @@ module wrapper() {
   wrapper_od = wrapper_id + wrapper_border_width;
 
   difference() {
-    union() {
-      cyl(d = wrapper_od, h = wrapper_bottom_thickness, anchor = TOP);
-      tube(od = wrapper_od, id = wrapper_id, h = height, anchor = BOTTOM);
-    }
-
+    cyl(d = wrapper_od, h = wrapper_bottom_thickness, anchor = TOP);
     // magnet
     down(wrapper_bottom_thickness - magnet_h + 0.01)
         cyl(d = magnet_d, h = magnet_h, anchor = TOP);
   }
+  tube(od = wrapper_od, id = wrapper_id, h = height, anchor = BOTTOM);
 }
 
 module half_yinyang() { linear_extrude(height) half_yinyang_2d(); }
