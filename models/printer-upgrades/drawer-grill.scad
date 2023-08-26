@@ -4,13 +4,17 @@ $fn = 64;
 
 grill_size = [ 345, 60 ];
 thickness = 2.5;
-side_depth = 40;
+side_depth = 60;
+
+middle_support_depth = side_depth / 2;
 
 grip_depth = 10;
 
 grill_padding = 10;
 grill_holes = [ 6, 4 ];
 grill_space = 5;
+
+shelf_thickness = 12;
 
 grill_hole_size =
     rect_grill_hole_size(size = grill_size, holes = grill_holes,
@@ -20,37 +24,88 @@ echo("Grill hole size:", grill_hole_size);
 
 module grill() {
   rotate([ -90, 0, 0 ]) linear_extrude(thickness) grill2d();
-  cuboid([ grill_size.x, grip_depth + thickness, thickness ], anchor = FWD);
+
+  cuboid([ grill_size.x, thickness, shelf_thickness + thickness ],
+         anchor = TOP + FWD);
+
+  // top grip
+  cuboid([ grill_size.x, grip_depth + thickness, thickness ],
+         anchor = FWD + BOTTOM);
+
+  // bottom grip
+  down(shelf_thickness + thickness)
+      cuboid([ grill_size.x, grip_depth + thickness, thickness ],
+             anchor = FWD + BOTTOM);
+
+  // sides
+  side_x = grill_size.x / 2 - thickness / 2;
+  right(side_x) mirror([ 1, 0, 0 ]) side();
+  left(side_x) side();
+
+  // supports
+  middle_support();
+}
+
+module middle_support() {
+  back(thickness) {
+    difference() {
+      union() {
+        up(thickness) wedge(
+            [ grill_space, middle_support_depth, grill_size.y - thickness ],
+            anchor = BOTTOM + FWD);
+
+        cuboid([ grip_depth * 2, middle_support_depth, thickness ],
+               anchor = BOTTOM + FWD);
+      }
+
+      up(grill_size.y * 0.3) back(middle_support_depth * 0.4)
+          rotate([ 90, 0, 90 ]) cyl(d = 4.2, h = thickness * 2 + 0.01);
+    }
+  }
+}
+
+module side() {
+  rotate([ -90, 0, 90 ]) linear_extrude(thickness, center = true) side2d();
+
+  // top side grip
+  right(thickness / 2) cuboid([ grip_depth, side_depth, thickness ],
+                              anchor = BOTTOM + FWD + LEFT);
+
+  // bottom side grip
+  down(shelf_thickness + thickness) right(thickness / 2) cuboid(
+      [ grip_depth, side_depth, thickness ], anchor = BOTTOM + FWD + LEFT);
 }
 
 module side2d() {
-  difference() {
-    side_base2d();
-
-    side_grill_slit_width = side_depth - grill_padding * 2;
-
-    // x_offset = grill_slit_width + grill_slits_x_space;
-    z_offset = grill_slit_height + grill_slits_z_space;
-    fwd(grill_padding) left(grill_padding) {
-      // for (j = [0:grill_slits_x_count - 1]) {
-      // right(j * x_offset) {
-      for (i = [0:grill_slits_z_count - 1]) {
-#fwd(i* z_offset)
-        rect([ side_grill_slit_width, grill_slit_height ],
-             rounding = grill_slit_height / 2, anchor = LEFT + FWD);
-      }
-      //   }
-      // }
-    }
-  }
+  difference() { side_base2d(); }
 }
 
 module side_base2d() {
   rect_depth = side_depth * 0.2;
   triangle_depth = side_depth - rect_depth;
-  rect([ rect_depth, height ], anchor = BACK + RIGHT);
-  left(rect_depth) mirror([ 1, 0 ]) mirror([ 0, 1 ])
-      right_triangle([ triangle_depth, height ]);
+
+  difference() {
+    union() {
+      right(rect_depth) {
+        rect([ rect_depth, grill_size.y ], anchor = BACK + RIGHT);
+        mirror([ 0, 1 ]) back(thickness)
+            right_triangle([ triangle_depth, grill_size.y - thickness ]);
+      }
+      fwd(thickness) rect([ side_depth, shelf_thickness + thickness * 2 ],
+                          anchor = FWD + LEFT);
+    }
+
+    hole_offset = add_scalar(grill_hole_size, grill_space);
+    width1 = triangle_depth - grill_padding;
+    right(grill_padding / 2) fwd(grill_padding) {
+      rect_grill_hole([ width1, grill_hole_size.y ]);
+      fwd(hole_offset.y) rect_grill_hole([ width1 * 0.7, grill_hole_size.y ]);
+      fwd(hole_offset.y * 2)
+          rect_grill_hole([ width1 * 0.5, grill_hole_size.y ]);
+      fwd(hole_offset.y * 3)
+          rect_grill_hole([ width1 * 0.3, grill_hole_size.y ]);
+    }
+  }
 }
 
 module grill2d() {
@@ -74,6 +129,8 @@ module grill_handle(hole_size, space) {
        anchor = LEFT + BACK);
 }
 
+// side();
 // grill2d();
 grill();
-// side2d();ho
+// side2d();
+// middle_support();
