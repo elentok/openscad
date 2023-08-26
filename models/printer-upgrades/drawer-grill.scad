@@ -1,10 +1,11 @@
 include <BOSL2/std.scad>
 use <../../lib/rect-grill.scad>
-$fn = 64;
+$fn = 32;
 
 shelf_width = 345;
+shelf_thickness = 12.1;
 
-thickness = 2.5;
+thickness = 3;
 grill_size = [ shelf_width + thickness * 2, 60 ];
 side_depth = 80;
 
@@ -15,8 +16,6 @@ grip_depth = 15;
 grill_padding = 10;
 grill_holes = [ 6, 4 ];
 grill_space = 5;
-
-shelf_thickness = 12;
 
 grill_hole_size =
     rect_grill_hole_size(size = grill_size, holes = grill_holes,
@@ -32,12 +31,21 @@ module grill() {
   cuboid([ grill_size.x, thickness, shelf_thickness + thickness ],
          anchor = TOP + FWD);
 
-  // top grip
   screw_x = thickness + grill_hole_size.x / 2;
-  back(thickness) grip(width = grill_size.x, screws = [ screw_x, -screw_x ]);
+  screws = [
+    5 * screw_x,
+    3 * screw_x,
+    screw_x,
+    -screw_x,
+    -3 * screw_x,
+    -5 * screw_x,
+  ];
+
+  // top grip
+  back(thickness) grip(width = grill_size.x, screws = screws);
 
   // bottom grip
-  down(shelf_thickness + thickness) grip(width = grill_size.x);
+  down(shelf_thickness + thickness) grip(width = grill_size.x, screws = screws);
 
   // sides
   side_x = grill_size.x / 2 - thickness / 2;
@@ -78,8 +86,8 @@ module middle_support_grip() {
 }
 
 module small_support() {
-  up(thickness) back(thickness)
-      wedge([ grill_space, grip_depth, grill_padding ], anchor = FWD + BOTTOM);
+  up(thickness) back(thickness) wedge(
+      [ grill_space, grip_depth, grill_padding * 2 ], anchor = FWD + BOTTOM);
 }
 
 module side() {
@@ -157,7 +165,7 @@ module test_shelf() {
 }
 
 module half_grill() {
-  intersection() {
+  difference() {
     grill();
 
     down(shelf_thickness + thickness + 0.01 / 2) fwd(0.01 / 2) cuboid(
@@ -174,7 +182,7 @@ module grip(width, screws, rounding = 0, anchor = FWD + BOTTOM) {
     linear_extrude(thickness, convexity = 4, center = true) difference() {
       rect([ width, grip_depth ], rounding = rounding);
 
-      if (is_def(screws)) {
+      if (is_def(screws) && len(screws) > 0) {
         for (i = [0:len(screws) - 1]) {
           left(screws[i]) circle(d = 4.2);
         }
@@ -187,7 +195,8 @@ module grip(width, screws, rounding = 0, anchor = FWD + BOTTOM) {
 
 // grip(60, screws = [20], anchor = BACK + TOP);
 
-half_grill();
+grill();
+// half_grill();
 
 // test_shelf();
 // side();
