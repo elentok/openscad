@@ -2,7 +2,7 @@ include <BOSL2/std.scad>
 use <../../lib/rect-grill.scad>
 $fn = 64;
 
-size = [ 345, 60 ];
+grill_size = [ 345, 60 ];
 thickness = 2.5;
 side_depth = 40;
 
@@ -13,14 +13,14 @@ grill_holes = [ 6, 4 ];
 grill_space = 5;
 
 grill_hole_size =
-    rect_grill_hole_size(size = size, holes = grill_holes, space = grill_space,
-                         padding = grill_padding);
+    rect_grill_hole_size(size = grill_size, holes = grill_holes,
+                         space = grill_space, padding = grill_padding);
 
 echo("Grill hole size:", grill_hole_size);
 
 module grill() {
   rotate([ -90, 0, 0 ]) linear_extrude(thickness) grill2d();
-  cuboid([ width, grip_depth + thickness, thickness ], anchor = FWD);
+  cuboid([ grill_size.x, grip_depth + thickness, thickness ], anchor = FWD);
 }
 
 module side2d() {
@@ -54,10 +54,10 @@ module side_base2d() {
 }
 
 module grill2d() {
-  left(size.x / 2) difference() {
-    rect(size, anchor = LEFT + BACK);
+  left(grill_size.x / 2) difference() {
+    rect(grill_size, anchor = LEFT + BACK);
 
-    rect_grill_mask(size, holes = grill_holes, space = grill_space,
+    rect_grill_mask(grill_size, holes = grill_holes, space = grill_space,
                     padding = grill_padding);
 
     // handles
@@ -74,6 +74,6 @@ module grill_handle(hole_size, space) {
        anchor = LEFT + BACK);
 }
 
-grill2d();
-// grill();
+// grill2d();
+grill();
 // side2d();ho
