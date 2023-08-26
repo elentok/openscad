@@ -71,7 +71,7 @@ module middle_support() {
 }
 
 module middle_support_grip() {
-  right(thickness / 2) rotate([ 0, 0, 90 ])
+  rotate([ 0, 0, 90 ])
       grip(width = middle_support_depth,
            screws = [-middle_support_depth / 2 + grill_padding],
            rounding = [ 0, 0, 0, 5 ], anchor = LEFT + BACK + BOTTOM);
@@ -185,15 +185,15 @@ module grip(width, screws, rounding = 0, anchor = FWD + BOTTOM) {
   }
 }
 
-// grip(60, screw = 20, anchor = BACK + TOP);
+// grip(60, screws = [20], anchor = BACK + TOP);
 
-// half_grill();
+half_grill();
 
 // test_shelf();
 // side();
 // grill2d();
 // side();
-grill();
+// grill();
 // side2d();
 // middle_support();
 // left_half(s = grill_size.x * 2) grill();

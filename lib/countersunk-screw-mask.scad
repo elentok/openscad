@@ -5,6 +5,7 @@ $fn = 64;
 // screw type, [ screw body diameter, head diameter, head height ]
 screws = [
   [ "M4", [ 4, 7.8, 3 ] ],
+  [ "M4-tight", [ 4, 6, 1 ] ],
 ];
 
 module countersunk_screw_mask(h, h_above = 0, screw = "M4", anchor = BOTTOM) {
