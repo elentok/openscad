@@ -12,7 +12,7 @@ hole_thickness = 16;
 border_width = 2;
 fan_size = 120;
 screw_hole_center_dist = 105;
-screw_hole_diameter = 5;
+screw_hole_diameter = 5.5;
 thickness = 2;
 nut_diameter = 8;  // m4
 // The plastic area between the nut and the screw
