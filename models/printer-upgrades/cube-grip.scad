@@ -5,8 +5,11 @@ $fn = 64;
 // Grips a cube object to a surface (to attach the Raspberry Pi, power splitters
 // and PSUs to a drawer).
 
-object_width = 76.5;
-object_height = 32.1;
+// MK4 PSU
+object_width = 105.7;
+object_height = 48.3;
+// object_width = 76.5;
+// object_height = 32.1;
 // object_width = 63;
 // object_height = 31.1;
 
@@ -17,7 +20,8 @@ triangular_supports_width = 2;
 
 // Add space between the grip and the surface to allow for better airflow
 // Set to 0 to remove feet
-feet_height = 10;
+feet_height = 8;
+// feet_height = 10;
 feet_width = 10;
 feet_margin = 4;  // distance of the feet from the edge
 
