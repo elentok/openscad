@@ -1,3 +1,4 @@
+include <BOSL2/rounding.scad>
 include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
 $fn = 64;
@@ -10,46 +11,82 @@ bit_height = 25;
 bit_height_padding = 5;
 bit_head_height = 8;
 bit_tolerance = 0.1;
-bit_spacing_x = 4;
-bit_spacing_y = 4;
+bit_spacing_x = 2.5;
+bit_spacing_y = 3;
+honeycomb_spacing = 1;
+honeycomb_spacing_x = honeycomb_spacing / sqrt(2);
+honeycomb_spacing_y = honeycomb_spacing / sqrt(2);
 
 bit_holder_diameter = 9.9;
 bit_holder_hexagon_height = 28;
 bit_holder_round_height = 32.5;
 bit_holder_round_inset_height = 10;
+bit_holder_tolerance = 0.1;
 
-bits = 4;
+bits = 6;
 
-top_rounding = 5;
+top_rounding = 10;
 bottom_rounding = 5;
 bottom_height_without_threads = 7;
 bottom_thickness = 2;
 middle_thickness = 2;
 side_thickness = 2;
-thread_height = 4;
+thread_height = 5;
 thread_thickness = 2;
 thread_pitch = 1.5;
-thread_tolerance = 0.2;
+thread_tolerance = 0.6;
 
 bottom_height_with_threads = bottom_height_without_threads + thread_height;
 bit_height_inside_bottom = bottom_height_with_threads - bottom_thickness;
-bit_height_inside_top = bit_height + bit_height_padding - bit_height_inside_bottom;
-top_height = bit_height_inside_top + middle_thickness + bit_holder_hexagon_height + bit_holder_round_inset_height;
+bit_height_inside_top =
+    bit_height + bit_height_padding - bit_height_inside_bottom;
+top_height = bit_height_inside_top + middle_thickness +
+             bit_holder_hexagon_height + bit_holder_round_inset_height;
 
-// TODO: more bits
-id = bit_diameter * 2 + bit_spacing_x + side_thickness * 2;
+id = bits == 3 ? bit_diameter * 2 + side_thickness * 2
+               : bit_width * 3 + honeycomb_spacing_y * 2 + side_thickness * 2;
 od = id + thread_thickness;
 
 echo("Outer diameter: ", od);
 echo("Top height:", top_height);
 
+module round_3d_hexagon(d, h, bottom_r = 0, top_r = 0) {
+  offset_sweep(hexagon(d = d, rounding = 3), height = h,
+               bottom = os_circle(r = bottom_r), top = os_circle(r = top_r),
+               steps = 20);
+}
+
 module top() {
   difference() {
-    cyl(d = od, h = top_height, anchor = BOTTOM, rounding2 = top_rounding);
-    down(epsilon / 2)
-        threaded_rod(d = id + thread_tolerance, pitch = thread_pitch, h = thread_height + epsilon,
-                     anchor = BOTTOM);
-    // cyl(d = id, h = bit_height);
+    hull() {
+      cyl(d = od, h = bit_height_inside_top, anchor = BOTTOM, rounding2 = 1);
+      // up(top_height * 0.75) linear_extrude(4) hexagon(d = od, rounding = 3);
+      // up(top_height) linear_extrude(1) hexagon(d = od / 2, rounding = 3);
+      up(top_height * 0.75)
+          round_3d_hexagon(od, h = 6, bottom_r = 3, top_r = 3);
+      up(top_height) round_3d_hexagon(od / 2, h = 2, bottom_r = 2);
+    }
+    // cyl(d = od, h = top_height, anchor = BOTTOM, rounding2 = top_rounding);
+    up(thread_height)
+        cyl(d = id, h = bit_height_inside_top - thread_height, anchor = BOTTOM);
+    down(epsilon / 2) threaded_rod(
+        d = id + thread_tolerance, pitch = thread_pitch,
+        h = thread_height + epsilon, anchor = BOTTOM, internal = true);
+
+    up(bit_height_inside_top + middle_thickness + epsilon)
+        bit_holder(mask = true);
+
+    // top_fingers_mask();
+  }
+}
+
+module top_fingers_mask() {
+  n = 7;
+  angle = 360 / n;
+
+  for (i = [1:n]) {
+    rotate([ 0, 0, angle * (i - 1) ]) right(od / 2 + 7) scale([ -0.3, -0.3, 1 ])
+        sphere(d = top_height, anchor = BOTTOM);
   }
 }
 
@@ -76,12 +113,44 @@ module bits_mask() {
 }
 
 module move_bits() {
-  up(bottom_thickness) {
-    left(bit_diameter / 2 + bit_spacing_x / 2) children();
-    right(bit_diameter / 2 + bit_spacing_x / 2) children();
+  x = bit_diameter - bit_width / (2 * sqrt(3)) + honeycomb_spacing_x;
+  y = bit_width / 2 + honeycomb_spacing_y / 2;
 
-    back(bit_width / 2 + bit_spacing_y / 2) children();
-    fwd(bit_width / 2 + bit_spacing_y / 2) children();
+  if (bits == 3) {
+    up(bottom_thickness) left(bit_diameter / 2 + honeycomb_spacing_x / 2) {
+      back(y) right(x) children();
+      children();
+      fwd(y) right(x) children();
+      // left(bit_diameter / 2 + bit_spacing_x / 2) children();
+      // right(bit_diameter / 2 + bit_spacing_x / 2) children();
+      //
+      // back(bit_width / 2 + bit_spacing_y / 2) children();
+      // fwd(bit_width / 2 + bit_spacing_y / 2) children();
+    }
+  }
+
+  else if (bits == 6) {
+    // x = bit_diameter / 2 + honeycomb_spacing_x / 2;
+    // y = bit_width / 2 + honeycomb_spacing_y / 2;
+    up(bottom_thickness) {
+      children();
+      back(y * 2) children();
+      fwd(y * 2) children();
+
+      right(x) {
+        back(y) children();
+        fwd(y) children();
+      }
+
+      left(x) {
+        back(y) children();
+        fwd(y) children();
+      }
+    }
+  }
+
+  else {
+    assert(false, "Only supporting 4 or 6 bits");
   }
 }
 
@@ -90,10 +159,12 @@ module bit_mask(h) {
 }
 
 module bottom_base() {
-  cyl(d = od, h = bottom_height_without_threads, rounding1 = bottom_rounding, anchor = BOTTOM);
+  cyl(d = od, h = bottom_height_without_threads, rounding1 = bottom_rounding,
+      anchor = BOTTOM);
 
-  up(bottom_height_without_threads - epsilon) threaded_rod(d = id, pitch = thread_pitch,
-                               h = thread_height + epsilon, anchor = BOTTOM);
+  up(bottom_height_without_threads - epsilon)
+      threaded_rod(d = id, pitch = thread_pitch, h = thread_height + epsilon,
+                   end_len = 0.5, anchor = BOTTOM);
 
   // cyl(d = id, h = thread_height, rounding1 = bottom_height / 2,
   //     anchor = BOTTOM);
@@ -108,24 +179,37 @@ module bit(color = "green") {
   }
 }
 
-module bit_holder(color = "blue") {
-  linear_extrude(bit_holder_hexagon_height) hexagon(d = bit_diameter);
+module bit_holder(color = "cyan", mask = false) {
+  bit_d = bit_diameter + (mask ? bit_holder_tolerance : 0);
+  round_d = bit_holder_diameter + (mask ? bit_holder_tolerance : 0);
 
-  up(bit_holder_hexagon_height) difference() {
-    cyl(d = bit_holder_diameter, h = bit_holder_round_height, anchor=BOTTOM);
+  color(color) {
+    linear_extrude(bit_holder_hexagon_height) hexagon(d = bit_d);
+
+    up(bit_holder_hexagon_height - epsilon) difference() {
+      cyl(d = bit_holder_diameter, h = bit_holder_round_height,
+          anchor = BOTTOM);
+
+      if (!mask) {
+        up(1) linear_extrude(bit_holder_round_height) hexagon(d = bit_diameter);
+      }
+    }
   }
 }
 
 module bits() { move_bits() bit(); }
 
-module demo(space = 10) {
-  up(bottom_height_with_threads + space) %top();
-  %bottom();
+module demo(space = 4) {
+  up(bottom_height_without_threads + space) {
+    % top();
+    up(bit_height_inside_top + middle_thickness + space * 1.5) bit_holder();
+  }
+  bottom();
   bits();
 }
 
-bit_holder();
-// top();
+// bit_holder();
+top();
 // demo();
 // bottom();
 // bit();
