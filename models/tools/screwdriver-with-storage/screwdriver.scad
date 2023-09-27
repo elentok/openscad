@@ -5,12 +5,12 @@ $fn = 64;
 
 epsilon = 0.1;
 
-bit_diameter = 7.2;
+bit_diameter = 7.3;
 bit_width = 6.36;
 bit_height = 25;
 bit_height_padding = 5;
 bit_head_height = 8;
-bit_tolerance = 0.1;
+bit_tolerance = 0.2;
 bit_spacing_x = 2.5;
 bit_spacing_y = 3;
 honeycomb_spacing = 1;
@@ -28,12 +28,12 @@ bits = 6;
 top_rounding = 10;
 bottom_rounding = 5;
 bottom_height_without_threads = 7;
-bottom_thickness = 2;
+bottom_thickness = 5;
 middle_thickness = 2;
 side_thickness = 2;
-thread_height = 5;
-thread_thickness = 2;
-thread_pitch = 1.5;
+thread_height = 7;
+thread_thickness = 2.5;
+thread_pitch = 2;
 thread_tolerance = 0.6;
 
 bottom_height_with_threads = bottom_height_without_threads + thread_height;
@@ -209,7 +209,7 @@ module demo(space = 4) {
 }
 
 // bit_holder();
-top();
+// top();
 // demo();
-// bottom();
+bottom();
 // bit();
