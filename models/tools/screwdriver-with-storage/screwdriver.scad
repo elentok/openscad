@@ -10,7 +10,7 @@ bit_width = 6.36;
 bit_height = 25;
 bit_height_padding = 5;
 bit_head_height = 8;
-bit_tolerance = 0.2;
+bit_tolerance = 0.3;
 bit_spacing_x = 2.5;
 bit_spacing_y = 3;
 honeycomb_spacing = 1;
@@ -21,7 +21,7 @@ bit_holder_diameter = 9.9;
 bit_holder_hexagon_height = 28;
 bit_holder_round_height = 32.5;
 bit_holder_round_inset_height = 10;
-bit_holder_tolerance = 0.1;
+bit_holder_tolerance = 0.2;
 
 bits = 6;
 
@@ -43,8 +43,12 @@ bit_height_inside_top =
 top_height = bit_height_inside_top + middle_thickness +
              bit_holder_hexagon_height + bit_holder_round_inset_height;
 
+echo("Bottom height (with threads):", bottom_height_with_threads);
+echo("Bit height inside top:", bit_height_inside_top);
+echo("Bit height inside bottom:", bit_height_inside_bottom);
+
 id = bits == 3 ? bit_diameter * 2 + side_thickness * 2
-               : bit_width * 3 + honeycomb_spacing_y * 2 + side_thickness * 2;
+               : bit_width * 3 + honeycomb_spacing_y * 3 + side_thickness * 2;
 od = id + thread_thickness;
 
 echo("Outer diameter: ", od);
@@ -211,5 +215,75 @@ module demo(space = 4) {
 // bit_holder();
 // top();
 // demo();
-bottom();
+// bottom();
 // bit();
+
+// pth = [
+//   [ 0, 0 ],
+//   [ 0, 27 ],
+//   [ 30, 27 ],
+//   [ 40, 16 ],
+//   [ 50, 16 ],
+//   [ 70, 20 ],
+//   [ 80, 20 ],
+//   [ 80, 0 ],
+// ];
+// // polygon(smooth_path(pth));
+// stroke(pth, width = 1, color = "green");
+// stroke(smooth_path(pth, size = 3), width = 1);
+
+w1 = 27 / 2;
+w2 = 16 / 2;
+w3 = 20 / 2;
+w4 = 16 / 2;
+
+h1 = 30;
+h1to2 = 15;
+h2 = 5;
+h2to3 = 5;
+h3 = 10;
+h3to4 = 5;
+
+path = [
+  [ 0, 0 ],
+  [ w1, 0 ],
+  [ w1, h1 ],
+  [ w2, h1 + h1to2 ],
+  [ w2, h1 + h1to2 + h2 ],
+  [ w3, h1 + h1to2 + h2 + h2to3 ],
+  [ w3, h1 + h1to2 + h2 + h2to3 + h3 ],
+  [ w4, h1 + h1to2 + h2 + h2to3 + h3 + h3to4 ],
+  [ 0, h1 + h1to2 + h2 + h2to3 + h3 + h3to4 ],
+];
+
+function split_path(path, i) = is_undef(i) ? split_path(path, 1)
+                               : i >= len(path)
+                                   ? []
+                                   : concat([[path [i - 1], path [i]]],
+                                            split_path(path, i + 1));
+
+// pth1 = [ [ 0, 0 ], [ 0, 27 ] ];
+paths = [
+  [ [ 0, 0 ], [ w1, 0 ] ],
+  [[w1, 0], [w1, h1]],
+  [[w1, h1], [w2, h1 + h1to2]],
+  [[w2, h1 + h1to2], [w2, h1 + h1to2 + h2]],
+  [[w2, h1 + h1to2 + h2], [w3, h1 + h1to2 + h2 + h2to3]],
+  [[w3, h1 + h1to2 + h2 + h2to3], [w3, h1 + h1to2 + h2 + h2to3 + h3]],
+  [[w3, h1 + h1to2 + h2 + h2to3 + h3], [0, h1 + h1to2 + h2 + h2to3 + h3]],
+];
+
+module half_body() {
+  rotate_extrude(angle = 180) polygon(path_join(split_path(path), joint = 3));
+}
+
+half_body();
+
+// up(h1 + h1to2 + h2 + h2to3) linear_extrude(h3)
+//     hexagon(r = w3 + 2, rounding = 2);
+// star(n = 10, r = w3 + 1, ir = w3);
+
+// stroke(path_join(paths, joint = 3), width = 1, color = "green");
+// stroke(flatten([ pth1, pth2 ]), width = 1);
+// rotate_extrude() right(0.5)
+//     stroke(path_join(paths, joint = 3), width = 1, color = "green");
