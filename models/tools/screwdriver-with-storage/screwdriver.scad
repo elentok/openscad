@@ -62,27 +62,48 @@ module round_3d_hexagon(d, h, bottom_r = 0, top_r = 0) {
 
 module top() {
   difference() {
-    hull() {
-      cyl(d = od, h = bit_height_inside_top, anchor = BOTTOM, rounding2 = 1);
-      // up(top_height * 0.75) linear_extrude(4) hexagon(d = od, rounding = 3);
-      // up(top_height) linear_extrude(1) hexagon(d = od / 2, rounding = 3);
-      up(top_height * 0.75)
-          round_3d_hexagon(od, h = 6, bottom_r = 3, top_r = 3);
-      up(top_height) round_3d_hexagon(od / 2, h = 2, bottom_r = 2);
+    union() {
+      top_base();
+      top_top();
     }
-    // cyl(d = od, h = top_height, anchor = BOTTOM, rounding2 = top_rounding);
+
     up(thread_height)
-        cyl(d = id, h = bit_height_inside_top - thread_height, anchor = BOTTOM);
+        cyl(d = id + 0.7, h = bit_height_inside_top - thread_height,
+            anchor = BOTTOM);
     down(epsilon / 2) threaded_rod(
         d = id + thread_tolerance, pitch = thread_pitch,
         h = thread_height + epsilon, anchor = BOTTOM, internal = true);
 
     up(bit_height_inside_top + middle_thickness + epsilon)
         bit_holder(mask = true);
-
-    // top_fingers_mask();
   }
 }
+
+// module top() {
+//   difference() {
+//     hull() {
+//       cyl(d = od, h = bit_height_inside_top, anchor = BOTTOM, rounding2 = 1);
+//       // up(top_height * 0.75) linear_extrude(4) hexagon(d = od, rounding =
+//       3);
+//       // up(top_height) linear_extrude(1) hexagon(d = od / 2, rounding = 3);
+//       up(top_height * 0.75)
+//           round_3d_hexagon(od, h = 6, bottom_r = 3, top_r = 3);
+//       up(top_height) round_3d_hexagon(od / 2, h = 2, bottom_r = 2);
+//     }
+//     // cyl(d = od, h = top_height, anchor = BOTTOM, rounding2 =
+//     top_rounding); up(thread_height)
+//         cyl(d = id, h = bit_height_inside_top - thread_height, anchor =
+//         BOTTOM);
+//     down(epsilon / 2) threaded_rod(
+//         d = id + thread_tolerance, pitch = thread_pitch,
+//         h = thread_height + epsilon, anchor = BOTTOM, internal = true);
+//
+//     up(bit_height_inside_top + middle_thickness + epsilon)
+//         bit_holder(mask = true);
+//
+//     // top_fingers_mask();
+//   }
+// }
 
 module top_fingers_mask() {
   n = 7;
@@ -159,7 +180,7 @@ module move_bits() {
 }
 
 module bit_mask(h) {
-  linear_extrude(h) hexagon(d = bit_diameter + bit_tolerance);
+  linear_extrude(h, convexity = 4) hexagon(d = bit_diameter + bit_tolerance);
 }
 
 module bottom_base() {
@@ -188,14 +209,15 @@ module bit_holder(color = "cyan", mask = false) {
   round_d = bit_holder_diameter + (mask ? bit_holder_tolerance : 0);
 
   color(color) {
-    linear_extrude(bit_holder_hexagon_height) hexagon(d = bit_d);
+    linear_extrude(bit_holder_hexagon_height, convexity = 4) hexagon(d = bit_d);
 
     up(bit_holder_hexagon_height - epsilon) difference() {
       cyl(d = bit_holder_diameter, h = bit_holder_round_height,
           anchor = BOTTOM);
 
       if (!mask) {
-        up(1) linear_extrude(bit_holder_round_height) hexagon(d = bit_diameter);
+        up(1) linear_extrude(bit_holder_round_height, convexity = 4)
+            hexagon(d = bit_diameter);
       }
     }
   }
@@ -232,13 +254,15 @@ module demo(space = 4) {
 // stroke(pth, width = 1, color = "green");
 // stroke(smooth_path(pth, size = 3), width = 1);
 
-w1 = 27 / 2;
+w_center = 5;
+w1 = od / 2;
 w2 = 16 / 2;
 w3 = 20 / 2;
 w4 = 16 / 2;
 
-h1 = 30;
-h1to2 = 15;
+h0 = 10;
+h1 = bit_height_inside_top;
+h1to2 = 10;
 h2 = 5;
 h2to3 = 5;
 h3 = 10;
@@ -247,13 +271,13 @@ h3to4 = 5;
 path = [
   [ 0, 0 ],
   [ w1, 0 ],
-  [ w1, h1 ],
-  [ w2, h1 + h1to2 ],
-  [ w2, h1 + h1to2 + h2 ],
-  [ w3, h1 + h1to2 + h2 + h2to3 ],
-  [ w3, h1 + h1to2 + h2 + h2to3 + h3 ],
-  [ w4, h1 + h1to2 + h2 + h2to3 + h3 + h3to4 ],
-  [ 0, h1 + h1to2 + h2 + h2to3 + h3 + h3to4 ],
+  [ w1, h1 / 2 ],
+  [ w2, h1 / 2 + h1to2 ],
+  [ w2, h1 / 2 + h1to2 + h2 ],
+  [ w3, h1 / 2 + h1to2 + h2 + h2to3 ],
+  [ w3, h1 / 2 + h1to2 + h2 + h2to3 + h3 ],
+  [ w4, h1 / 2 + h1to2 + h2 + h2to3 + h3 + h3to4 ],
+  [ 0, h1 / 2 + h1to2 + h2 + h2to3 + h3 + h3to4 ],
 ];
 
 function split_path(path, i) = is_undef(i) ? split_path(path, 1)
@@ -262,22 +286,64 @@ function split_path(path, i) = is_undef(i) ? split_path(path, 1)
                                    : concat([[path [i - 1], path [i]]],
                                             split_path(path, i + 1));
 
-// pth1 = [ [ 0, 0 ], [ 0, 27 ] ];
-paths = [
-  [ [ 0, 0 ], [ w1, 0 ] ],
-  [[w1, 0], [w1, h1]],
-  [[w1, h1], [w2, h1 + h1to2]],
-  [[w2, h1 + h1to2], [w2, h1 + h1to2 + h2]],
-  [[w2, h1 + h1to2 + h2], [w3, h1 + h1to2 + h2 + h2to3]],
-  [[w3, h1 + h1to2 + h2 + h2to3], [w3, h1 + h1to2 + h2 + h2to3 + h3]],
-  [[w3, h1 + h1to2 + h2 + h2to3 + h3], [0, h1 + h1to2 + h2 + h2to3 + h3]],
-];
+module top_base() {
+  hull() {
+    up(h0) union() {
+      left(w_center / 2) bottom_helper();
+      right(w_center / 2) mirror([ 1, 0, 0 ]) bottom_helper();
 
-module half_body() {
-  rotate_extrude(angle = 180) polygon(path_join(split_path(path), joint = 3));
+      rotate([ 90, 0, 90 ])
+          linear_extrude(w_center, center = true, convexity = 4) {
+        top_base_polygon();
+        mirror([ 1, 0, 0 ]) top_base_polygon();
+      }
+    }
+
+    cyl(r = w1, h = 1, anchor = BOTTOM);
+  }
 }
 
-half_body();
+module top_base_polygon() {
+  polygon(path_join(
+      split_path([ [ 0, 0 ], [ w1, 0 ], [ w1, h1 / 2 ], [ 0, h1 / 2 ] ]),
+      joint = 3));
+}
+
+module bottom_helper() {
+  rotate([ 0, 0, 90 ]) rotate_extrude(angle = 180) top_base_polygon();
+}
+
+module top_top() {
+  up(h1 / 2) {
+    left(w_center / 2) half_top_top();
+    right(w_center / 2) mirror([ 1, 0, 0 ]) half_top_top();
+
+    top_top_center();
+  }
+}
+
+module half_top_top() {
+  rotate([ 0, 0, 90 ]) rotate_extrude(angle = 180)
+      polygon(path_join(split_path(path), joint = 3));
+}
+
+module half_top_top_center2d() {
+  polygon(path_join(split_path(path), joint = 3));
+}
+
+module top_top_center() {
+  rotate([ 90, 0, 90 ]) linear_extrude(w_center, center = true, convexity = 4) {
+    half_top_top_center2d();
+    mirror([ 1, 0, 0 ]) half_top_top_center2d();
+  }
+}
+
+top();
+
+// cyl(d = 5, h = 20, anchor = BOTTOM);
+
+// body();
+// half_body();
 
 // up(h1 + h1to2 + h2 + h2to3) linear_extrude(h3)
 //     hexagon(r = w3 + 2, rounding = 2);
