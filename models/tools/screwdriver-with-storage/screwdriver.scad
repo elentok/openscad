@@ -168,7 +168,7 @@ handle_curve_path = [
 module top() {
   difference() {
     union() {
-      top_base();
+      top_bottom();
       top_top();
     }
 
@@ -184,16 +184,17 @@ module top() {
   }
 }
 
-module top_base() {
+module top_bottom() {
   hull() {
     up(h0) union() {
-      left(w_center / 2) bottom_helper();
-      right(w_center / 2) mirror([ 1, 0, 0 ]) bottom_helper();
+      left(w_center / 2) top_bottom_helper();
+      right(w_center / 2) mirror([ 1, 0, 0 ]) top_bottom_helper();
 
+      // center
       rotate([ 90, 0, 90 ])
           linear_extrude(w_center, center = true, convexity = 4) {
-        top_base_polygon();
-        mirror([ 1, 0, 0 ]) top_base_polygon();
+        top_bottom_polygon();
+        mirror([ 1, 0, 0 ]) top_bottom_polygon();
       }
     }
 
@@ -201,14 +202,14 @@ module top_base() {
   }
 }
 
-module top_base_polygon() {
+module top_bottom_helper() {
+  rotate([ 0, 0, 90 ]) rotate_extrude(angle = 180) top_bottom_polygon();
+}
+
+module top_bottom_polygon() {
   polygon(path_join(
       split_path([ [ 0, 0 ], [ w1, 0 ], [ w1, h1 / 2 ], [ 0, h1 / 2 ] ]),
       joint = 3));
-}
-
-module bottom_helper() {
-  rotate([ 0, 0, 90 ]) rotate_extrude(angle = 180) top_base_polygon();
 }
 
 module top_top() {
