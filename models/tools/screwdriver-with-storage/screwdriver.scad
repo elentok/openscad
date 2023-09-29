@@ -38,8 +38,8 @@ thread_tolerance = 0.6;
 
 bottom_height_with_threads = bottom_height_without_threads + thread_height;
 bit_height_inside_bottom = bottom_height_with_threads - bottom_thickness;
-bit_height_inside_top =
-    bit_height + bit_height_padding - bit_height_inside_bottom;
+bit_height_inside_top = bit_height + bit_height_padding -
+                        (bottom_height_without_threads - bottom_thickness);
 top_height = bit_height_inside_top + middle_thickness +
              bit_holder_hexagon_height + bit_holder_round_inset_height;
 
@@ -125,8 +125,7 @@ module bottom() {
 
 module bits_mask() {
   // h = bottom_height_with_threads - bottom_thickness + epsilon;
-
-  move_bits() bit_mask(bit_height_inside_bottom + epsilon);
+  up(bottom_thickness) move_bits() bit_mask(bit_height_inside_bottom + epsilon);
 
   // up(bottom_thickness) {
   //   left(bit_diameter / 2 + bit_spacing_x / 2) bit_mask(h);
@@ -142,7 +141,7 @@ module move_bits() {
   y = bit_width / 2 + honeycomb_spacing_y / 2;
 
   if (bits == 3) {
-    up(bottom_thickness) left(bit_diameter / 2 + honeycomb_spacing_x / 2) {
+    left(bit_diameter / 2 + honeycomb_spacing_x / 2) {
       back(y) right(x) children();
       children();
       fwd(y) right(x) children();
@@ -152,25 +151,21 @@ module move_bits() {
       // back(bit_width / 2 + bit_spacing_y / 2) children();
       // fwd(bit_width / 2 + bit_spacing_y / 2) children();
     }
-  }
-
-  else if (bits == 6) {
+  } else if (bits == 6) {
     // x = bit_diameter / 2 + honeycomb_spacing_x / 2;
     // y = bit_width / 2 + honeycomb_spacing_y / 2;
-    up(bottom_thickness) {
-      children();
-      back(y * 2) children();
-      fwd(y * 2) children();
+    children();
+    back(y * 2) children();
+    fwd(y * 2) children();
 
-      right(x) {
-        back(y) children();
-        fwd(y) children();
-      }
+    right(x) {
+      back(y) children();
+      fwd(y) children();
+    }
 
-      left(x) {
-        back(y) children();
-        fwd(y) children();
-      }
+    left(x) {
+      back(y) children();
+      fwd(y) children();
     }
   }
 
@@ -338,6 +333,7 @@ module top_top_center() {
   }
 }
 
+// bottom();
 top();
 
 // cyl(d = 5, h = 20, anchor = BOTTOM);
