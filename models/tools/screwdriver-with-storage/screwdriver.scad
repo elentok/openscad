@@ -9,6 +9,9 @@ $fn = 64;
 
 epsilon = 0.1;
 
+// For the magnet (I want only one layer above it)
+layer_height = 0.2;
+
 bit_diameter = 7.3;
 bit_width = 6.36;
 bit_height = 25;
@@ -30,9 +33,9 @@ bit_holder_tolerance = 0.2;
 bits = 7;
 
 top_rounding = 10;
-bottom_rounding = 5;
+bottom_rounding = 3;
 bottom_height_without_threads = 7;
-bottom_thickness = 5;
+bottom_thickness = 6;
 middle_thickness = 2;
 side_thickness = 2;
 thread_height = 7;
@@ -41,7 +44,7 @@ thread_pitch = 2;
 thread_tolerance = 0.6;
 
 magnet_d = 20;
-magnet_h = 2;
+magnet_h = 3.72;
 
 bottom_height_with_threads = bottom_height_without_threads + thread_height;
 bit_height_inside_bottom = bottom_height_with_threads - bottom_thickness;
@@ -80,6 +83,16 @@ function split_path(path, i) = is_undef(i) ? split_path(path, 1)
 // ========================================
 // Bottom
 // ========================================
+
+module bottom_with_magnet() {
+  difference() {
+    bottom();
+
+    // magnet
+    up(bottom_thickness - layer_height)
+        cyl(d = magnet_d, h = magnet_h, anchor = TOP);
+  }
+}
 
 module bottom() {
   difference() {
@@ -277,5 +290,6 @@ module bit_holder(color = "cyan", mask = false) {
   }
 }
 
-bottom();
+bottom_with_magnet();
+// bottom();
 // top();
