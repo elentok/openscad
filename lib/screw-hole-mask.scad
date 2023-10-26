@@ -3,7 +3,7 @@ $fn = 64;
 
 epsilon = 0.01;
 
-module screw_hole_mask(d_screw, d_screw_head, l_wall, l_screwdriver,
+module screw_hole_mask(d_screw, d_screw_head, l_wall, l_screwdriver = 0,
                        d_screwdriver = 10, l_countersink = 0, axis = BACK,
                        anchor = CENTER, spin = 0) {
   rotate_angle = axis == FWD     ? [ 90, 0, 180 ]
@@ -23,7 +23,9 @@ module screw_hole_mask(d_screw, d_screw_head, l_wall, l_screwdriver,
                      d2 = is_def(d_screw_head) ? d_screw_head : d_screw + 4,
                      h = l_countersink + epsilon);
       }
-      up(l_wall + epsilon) cylinder(d = d_screwdriver, h = l_screwdriver);
+      if (l_screwdriver > 0) {
+        up(l_wall + epsilon) cylinder(d = d_screwdriver, h = l_screwdriver);
+      }
     }
     children();
   }
