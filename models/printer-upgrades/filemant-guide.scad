@@ -4,19 +4,19 @@ use <../../lib/screw-hole-mask.scad>
 $fn = 64;
 
 thickness = 20;
-base_height = 3;
-base_width = 80;
-arms_height = 40;
-arms_width = 50;
+base_height = 5;
+base_width = 100;
+arms_height = 60;
+arms_width = 60;
 arms_thickness = 8;
 nut_height = 8.5;
-nut_diameter = 18;
+nut_diameter = 18.2;
 nut_inner_diameter = 10.2;
 ptfe_hole_diameter = 5;
 ptfe_hole_inner_radius = 10;
 
 // the thickness that prevents the nut from falling through
-nut_space = 2;
+nut_space = 1;
 
 module guide() {
   difference() {
@@ -43,13 +43,13 @@ module guide() {
 }
 
 module bottom_screw_hole_mask() {
-  down(0.01 / 2) screw_hole_mask(d_screw = 4, d_screw_head = 7,
-                                 l_wall = base_height + 0.01, l_countersink = 1,
-                                 axis = UP, anchor = BOTTOM);
+  down(0.01 / 2) screw_hole_mask(
+      d_screw = 4, d_screw_head = 7, l_wall = base_height + 0.01,
+      l_countersink = 2.5, axis = UP, anchor = BOTTOM);
 }
 
 module ptfe_hole_mask() {
-  up(arms_height / 3 + ptfe_hole_inner_radius + ptfe_hole_diameter / 2)
+  up(arms_height / 2 + ptfe_hole_inner_radius + ptfe_hole_diameter / 2)
       left(arms_width / 2 + 0.01) scale([ 1.5, 1, 1 ]) rotate([ 0, -90, 0 ])
           rotate([ 90, 0, 0 ]) rotate_extrude(angle = 90)
               left(ptfe_hole_diameter / 2 + ptfe_hole_inner_radius)
@@ -75,7 +75,7 @@ module slice() {
   }
 }
 
-// guide();
+guide();
 // slice();
 
 // nut("M10", bevel = false, thread = "fine", $slop = 0.1, blunt_start = false,
