@@ -1,5 +1,6 @@
 include <BOSL2/rounding.scad>
 include <BOSL2/std.scad>
+include <BOSL2/threading.scad>
 $fn = 64;
 
 // without the keycaps
@@ -28,9 +29,10 @@ module base() {
   // rounded_prism(path, height = kb_case_height, joint_top = 3, joint_sides =
   // 5);
 
-  rounded_prism(path3d(path),
-                apply(affine3d_skew_yz(0, -10), path3d(path, kb_case_height)),
-                height = kb_case_height, joint_top = 5, joint_sides = 5);
+  mirror([ 0, 1, 0 ]) rounded_prism(
+      path3d(path),
+      apply(affine3d_skew_yz(0, -8), path3d(path, kb_case_height)),
+      height = kb_case_height, joint_top = 5, joint_sides = 5);
 
   // // apply(affine3d_skew_yz(0, -20),
   // mirror([ 0, 1, 0 ]) offset_sweep(rounded_base, height = kb_case_height,
@@ -38,7 +40,18 @@ module base() {
   // height = kb_case_height, top = os_circle(r = 5), steps = 64);
 }
 
-base();
+difference() {
+  base();
+  right(10) {
+    fwd(10) thread_mask();
+    fwd(rest_depth - 10) thread_mask();
+  }
+  right(back_width - 25) fwd(rest_depth - 18) thread_mask();
+}
+
+module thread_mask() {
+  threaded_rod(d = 10, l = 10, pitch = 1.5, internal = true);
+}
 // top_half(back_width * 2) rotate([ 12, 0, 0 ]) base();
 
 // difference() {
