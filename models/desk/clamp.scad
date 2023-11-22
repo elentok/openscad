@@ -1,6 +1,8 @@
 include <BOSL2/std.scad>
 $fn = 64;
 
+nut_h = 4.5;
+nut_d = 11.2;
 bolt_cover_height = 6;
 height_padding = 6;
 desk_height = 20;
@@ -53,6 +55,10 @@ module clamp_with_mms() {
 }
 
 module clamp() {
+  difference() { clamp_base(); }
+}
+
+module clamp_base() {
   linear_extrude(owidth, convexity = 4) difference() {
     rect([ odepth, oheight ], rounding = rounding, anchor = RIGHT);
     right(0.01) rect([ idepth, iheight ],
