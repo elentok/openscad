@@ -106,5 +106,16 @@ module ball_joint_base() {
   }
 }
 
+module ball_with_screw() {
+  difference() {
+    down(20.9 / 2 + 1.6) import("Ball_v3.stl", center = true);
+
+    // up(0.01) screw("M4", l = 18, anchor = TOP, thread = true);
+    up(0.01) screw_hole("M4", l = 18, anchor = TOP, thread = true);
+  }
+}
+
+ball_with_screw();
+
 // ball_joint_base();
-magnetic_mount_plate(keyboard = false, screw_hole = true);
+// magnetic_mount_plate(keyboard = false, screw_hole = true);
