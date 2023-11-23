@@ -15,18 +15,32 @@ magnet_plate_padding = 10;
 magnet_plate_h = 4;
 magnet_plate_r = magnet_dist / 2 + magnet_d / 2 + magnet_plate_padding;
 
+module magnetic_mount_plate_glue_helper() {}
+
 module magnetic_mount_plate() {
   difference() {
     union() {
       mount_plate();
       magnetic_plate();
     }
-    magnets_mask();
+    magnet_shift() { magnet_mask(); };
+    // magnets_mask();
   }
 }
 
 module magnetic_plate() {
   cyl(r = magnet_plate_r, h = magnet_plate_h, anchor = BOTTOM);
+}
+
+module magnet_shift() {
+  left(magnet_dist / 2) {
+    back(magnet_dist / 2) children();
+    fwd(magnet_dist / 2) children();
+  }
+  right(magnet_dist / 2) {
+    back(magnet_dist / 2) children();
+    fwd(magnet_dist / 2) children();
+  }
 }
 
 module magnets_mask() {
