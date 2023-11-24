@@ -12,7 +12,7 @@ back_width = back_width1 + back_width2;
 back_depth1 = 18;
 back_depth2 = 35;
 
-rest_depth = 60;
+rest_depth = 90;
 
 path = [
   [ 0, 0 ], [ back_width1, 0 ], [ back_width1, back_depth1 ],
@@ -31,7 +31,7 @@ module base() {
 
   mirror([ 0, 1, 0 ]) rounded_prism(
       path3d(path),
-      apply(affine3d_skew_yz(0, -8), path3d(path, kb_case_height)),
+      apply(affine3d_skew_yz(0, -10), path3d(path, kb_case_height)),
       height = kb_case_height, joint_top = 5, joint_sides = 5);
 
   // // apply(affine3d_skew_yz(0, -20),
@@ -46,7 +46,8 @@ difference() {
     fwd(10) thread_mask();
     fwd(rest_depth - 10) thread_mask();
   }
-  right(back_width - 25) fwd(rest_depth - 18) thread_mask();
+  right(back_width - 30) fwd(rest_depth - 15) thread_mask();
+  right(back_width - 25) fwd(rest_depth / 2) thread_mask();
 }
 
 module thread_mask() {
