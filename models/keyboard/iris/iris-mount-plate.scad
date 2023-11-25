@@ -1,4 +1,4 @@
-include <../../lib/screw-hole-mask.scad>
+include <../../../lib/screw-hole-mask.scad>
 include <BOSL2/screws.scad>
 include <BOSL2/std.scad>
 $fn = 64;
@@ -10,7 +10,8 @@ length = dist_between_holes + 3 * 2 + hole_d;
 h = 3;
 
 magnet_d = 15;
-magnet_h = 2.4;
+// magnet_h = 2.4;
+magnet_h = 1.4;
 // distance between the magnets center
 magnet_dist = 25;
 magnet_plate_padding = 10;
@@ -115,7 +116,7 @@ module ball_with_screw() {
   }
 }
 
-ball_with_screw();
+// ball_with_screw();
 
 // ball_joint_base();
-// magnetic_mount_plate(keyboard = false, screw_hole = true);
+magnetic_mount_plate(keyboard = false, screw_hole = true);
