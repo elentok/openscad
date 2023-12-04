@@ -5,22 +5,24 @@ epsilon = 0.01;
 
 base_w = 100;
 base_h = 5;
-base_depth = 110;
+base_depth = 160;
 
 screw_d = 4.2;
 nut_d = 7.5;
 nut_h = 3;
 
-holder_height = 16;
+holder_height = 12;
 holder_depth = 12;
 holder_width = 12;
 holder_front_padding = 5;
 
-arm_thickness = 5;
+arm_thickness = 4;
 
 arm1_width = 50;
 arm1_height = 110;
+arm_connector_d = 7;
 
+tolerance = 0.1;
 space_between_holders = arm1_width - holder_depth * 2;
 
 module base() {
@@ -52,24 +54,33 @@ module holder2d() {
 }
 
 module arm1() {
-  linear_extrude(space_between_holders, center = true)
-      rect([ arm1_height, arm_thickness ], rounding = arm_thickness / 2);
-
-  linear_extrude(arm1_width, center = true)
-      rect([ arm1_height - holder_height * 2, arm_thickness ],
-           rounding = arm_thickness / 2);
+  difference() { arm1_base(); }
 }
 
-module demo() {
+module arm1_base() {
+  w = space_between_holders - tolerance;
+  h = arm1_height - (arm_connector_d - screw_d);
+  linear_extrude(space_between_holders, center = true)
+      rect([ h, arm_thickness ]);
+
+  left(h / 2 + screw_d / 2) tube(od = arm_connector_d, id = screw_d, h = w);
+  right(h / 2 + screw_d / 2) tube(od = arm_connector_d, id = screw_d, h = w);
+}
+
+module demo(angle = 45) {
   base();
-  arm1();
+  up(holder_height / 2)
+      fwd(base_depth / 2 - holder_depth - holder_front_padding)
+          rotate([ angle, 0, 0 ]) up(arm_thickness / 2 + base_h)
+              back(arm1_height / 2) rotate([ 90, 0, 90 ]) arm1();
 }
 
 // holder();
 // holder(nut = true);
 // holder2d();
 // base();
-arm1();
+// arm1();
+demo();
 
 // debug
 // #fwd(base_depth / 2 - holder_depth / 2 - holder_front_padding)
