@@ -2,7 +2,7 @@ include <../../../lib/screw-hole-mask.scad>
 include <BOSL2/std.scad>
 $fn = 64;
 
-size = [ 100, 60, 15 ];
+size = [ 110, 50, 15 ];
 thickness = 3;
 
 module extension() {
