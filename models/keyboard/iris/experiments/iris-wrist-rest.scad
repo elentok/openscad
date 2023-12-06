@@ -31,7 +31,7 @@ module base() {
 
   mirror([ 0, 1, 0 ]) rounded_prism(
       path3d(path),
-      apply(affine3d_skew_yz(0, -10), path3d(path, kb_case_height)),
+      apply(affine3d_skew_yz(0, -4), path3d(path, kb_case_height)),
       height = kb_case_height, joint_top = 5, joint_sides = 5);
 
   // // apply(affine3d_skew_yz(0, -20),
@@ -42,12 +42,12 @@ module base() {
 
 difference() {
   base();
-  right(10) {
-    fwd(10) thread_mask();
-    fwd(rest_depth - 10) thread_mask();
-  }
-  right(back_width - 30) fwd(rest_depth - 15) thread_mask();
-  right(back_width - 25) fwd(rest_depth / 2) thread_mask();
+  // right(10) {
+  //   fwd(10) thread_mask();
+  //   fwd(rest_depth - 10) thread_mask();
+  // }
+  // right(back_width - 30) fwd(rest_depth - 15) thread_mask();
+  // right(back_width - 25) fwd(rest_depth / 2) thread_mask();
 }
 
 module thread_mask() {
