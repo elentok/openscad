@@ -14,14 +14,31 @@ module wrist_rest_left() {
   difference() {
     wrist_rest_left_original();
 
-    translate(bolt_b1) {
+    translate(bolt_mid1) {
       rotate([ 0, 0, 180 ])
           bolt_holder(hole = false, corner = "x", mask = true);
+      screw_hole(bolt_spec, l = case_h - 2, thread = !fast_render,
+                 anchor = BOTTOM);
     }
-    translate(bolt_b2) rotate([ 0, 0, 180 ])
-        bolt_holder(hole = false, mask = true);
-    translate(bolt_b3) rotate([ 0, 0, 180 + bolt_b3_angle ])
-        bolt_holder(hole = false, mask = true);
+    translate(bolt_mid2) {
+      rotate([ 0, 0, 180 ]) bolt_holder(hole = false, mask = true);
+      screw_hole(bolt_spec, l = case_h - 2, thread = !fast_render,
+                 anchor = BOTTOM);
+    }
+    translate(bolt_mid3) {
+      rotate([ 0, 0, 180 + bolt_mid3_angle ])
+          bolt_holder(hole = false, mask = true);
+      screw_hole(bolt_spec, l = case_h - 4, thread = !fast_render,
+                 anchor = BOTTOM);
+    }
+    translate(bolt_b1) {
+      screw_hole(bolt_spec, l = bolt_b1_h, thread = !fast_render,
+                 anchor = BOTTOM);
+    }
+    translate(bolt_b2) {
+      screw_hole(bolt_spec, l = bolt_b1_h, thread = !fast_render,
+                 anchor = BOTTOM);
+    }
   }
 }
 

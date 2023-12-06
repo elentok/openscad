@@ -12,13 +12,13 @@ module mid_layer_left() {
 
   // bottom bolts
   up(bolt_head_h) fwd(case_left_depth) {
-    translate(bolt_b1) rotate([ 0, 0, 180 ]) bolt_holder(corner = "x");
-    translate(bolt_b2) rotate([ 0, 0, 180 ]) bolt_holder();
-    translate(bolt_b3) rotate([ 0, 0, 180 + bolt_b3_angle ]) bolt_holder();
+    translate(bolt_mid1) rotate([ 0, 0, 180 ]) bolt_holder(corner = "x");
+    translate(bolt_mid2) rotate([ 0, 0, 180 ]) bolt_holder();
+    translate(bolt_mid3) rotate([ 0, 0, 180 + bolt_mid3_angle ]) bolt_holder();
   }
 
   //
-  translate(bolt_b4) rotate([ 0, 0, -90 ])
+  translate(bolt_top) rotate([ 0, 0, -90 ])
       bolt_holder(nut = true, full_height = true);
 }
 
