@@ -69,13 +69,13 @@ module foot_bottom() {
 }
 
 module demo() {
-  up(15) foot_adapter();
+  up(5) foot_adapter();
   foot_extender(h = 20);
-  down(foot_adapter_h + 10) foot_bottom();
+  down(foot_adapter_h + 30) foot_bottom();
 }
 
 // demo();
 //
-// mirror([ 0, 0, 1 ]) foot_adapter();
-// mirror([ 0, 0, 1 ]) foot_extender(h = 20);
-foot_bottom();
+// rotate([ 180, 0, 0 ]) foot_adapter();
+rotate([ 180, 0, 0 ]) foot_extender(h = 30);
+// foot_bottom();

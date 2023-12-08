@@ -7,7 +7,7 @@ bolt_spec = "M5";
 bolt_hole_d = 5.1;
 bolt_h_with_head = 19;
 bolt_head_h = 3.5;
-bolt_head_d = 9.4;
+bolt_head_d = 9.6;
 
 // Nut (with tolerances) {{{1
 nut_d = 9;
