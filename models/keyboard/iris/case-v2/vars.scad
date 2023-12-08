@@ -50,4 +50,4 @@ assert(bolt_holder_size.x > bolt_head_d,
 assert(bolt_holder_size.y > bolt_head_d,
        "bolt_holder_size.y must be wider than the bolt head");
 
-fast_render = false;
+fast_render = true;
