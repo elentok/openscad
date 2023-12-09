@@ -18,6 +18,53 @@ nut_m4_w = 6.8;
 m4_screw_hole_d = 4.2;
 screw_hole_d = 5.2;
 
+rect_plate_size = [ 110, 140, 3 ];
+rect_plate_rounding = 30;
+rect_plate_border_h = 4;
+rect_plate_border_thickness = 2;
+
+module trapezoid_plate() {
+  w1 = 95;   // 85
+  w2 = 155;  // 140
+  l = 195;   // 177
+  panel_thickness = 2;
+  border_thickness = 2;
+  border_height = 4;
+
+  linear_extrude(panel_thickness) difference() {
+    half_trapezoid(l = l, w1 = w1, w2 = w2);
+    right(w1 / 2 + (w2 - w1) / 4) circle(d = screw_hole_d);
+  }
+  linear_extrude(panel_thickness + border_height) {
+    difference() {
+      half_trapezoid(l = l, w1 = w1, w2 = w2);
+      right(border_thickness) half_trapezoid(l = l - border_thickness * 2,
+                                             w1 = w1 - border_thickness * 2,
+                                             w2 = w2 - border_thickness * 2);
+    }
+  }
+}
+
+module half_trapezoid(l, w1, w2) {
+  round2d(r = 5) {
+    intersection() {
+      trapezoid(h = l, w1 = w1 * 2, w2 = w2 * 2);
+      rect([ w2, l ], anchor = LEFT);
+    }
+  }
+}
+
+module rect_plate() {
+  s = rect_plate_size;
+  linear_extrude(s.z, convexity = 5) difference() {
+    rect([ s.x, s.y ], rounding = rect_plate_rounding);
+    back(s.y / 2 - 62) left(s.x / 2 - 30) circle(d = screw_hole_d);
+  }
+
+  rect_tube(h = s.z + rect_plate_border_h, size = [ s.x, s.y ],
+            wall = rect_plate_border_thickness, rounding = rect_plate_rounding);
+}
+
 module rod_mount() {
   difference() {
     linear_extrude(rod_mount_panel_size.y, convexity = 4, center = true) {
@@ -81,5 +128,7 @@ module rod_wrapper_2d() {
   }
 }
 
-rod_mount();
+trapezoid_plate();
+// rect_plate();
+// rod_mount();
 // nut_and_screw_slot_mask();
