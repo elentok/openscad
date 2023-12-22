@@ -16,7 +16,9 @@ nut_m4_h = 3.3;
 nut_m4_d = 7.8;
 nut_m4_w = 6.8;
 m4_screw_hole_d = 4.2;
-screw_hole_d = 5.2;
+m5_screw_hole_d = 5.2;
+m5_head_d = 10.2;
+m5_head_h = 3.6;
 
 rect_plate_size = [ 110, 140, 3 ];
 rect_plate_rounding = 30;
@@ -33,7 +35,7 @@ module trapezoid_plate() {
 
   linear_extrude(panel_thickness) difference() {
     half_trapezoid(l = l, w1 = w1, w2 = w2);
-    right(w1 / 2 + (w2 - w1) / 4) circle(d = screw_hole_d);
+    right(w1 / 2 + (w2 - w1) / 4) circle(d = m5_screw_hole_d);
   }
   linear_extrude(panel_thickness + border_height) {
     difference() {
@@ -58,7 +60,7 @@ module rect_plate() {
   s = rect_plate_size;
   linear_extrude(s.z, convexity = 5) difference() {
     rect([ s.x, s.y ], rounding = rect_plate_rounding);
-    back(s.y / 2 - 62) left(s.x / 2 - 30) circle(d = screw_hole_d);
+    back(s.y / 2 - 62) left(s.x / 2 - 30) circle(d = m5_screw_hole_d);
   }
 
   rect_tube(h = s.z + rect_plate_border_h, size = [ s.x, s.y ],
@@ -107,7 +109,7 @@ module nut_and_screw_slot_mask() {
 
 module nut_and_screw_mask() {
   fwd(epsilon / 2) rotate([ -90, 0, 0 ]) {
-    cyl(d = screw_hole_d, h = rod_mount_panel_size.z + epsilon,
+    cyl(d = m5_screw_hole_d, h = rod_mount_panel_size.z + epsilon,
         anchor = BOTTOM);
     linear_extrude(nut_m5_h, convexity = 4)
         hexagon(d = nut_m5_d, align_side = LEFT);
@@ -128,7 +130,36 @@ module rod_wrapper_2d() {
   }
 }
 
-trapezoid_plate();
+tripod_adapter_w = 25;
+tripod_adapter_d = 35;
+tripod_adapter_h = 6.5;
+tripod_bolt_d = 6.5;
+tripod_nut_d = 12.4;
+tripod_nut_h = 5.4;
+
+module tripod_adapter() {
+  difference() {
+    linear_extrude(tripod_adapter_h, convexity = 4) difference() {
+      rect([ tripod_adapter_w, tripod_adapter_d ], rounding = 5);
+      fwd(tripod_adapter_d / 5) circle(d = m5_screw_hole_d);
+      back(tripod_adapter_d / 5) circle(d = tripod_bolt_d);
+    }
+
+    up(tripod_adapter_h + epsilon) fwd(tripod_adapter_d / 5)
+        cyl(d = m5_head_d, h = m5_head_h, anchor = TOP);
+
+    down(epsilon) back(tripod_adapter_d / 5) linear_extrude(tripod_nut_h)
+        hexagon(d = tripod_nut_d);
+  }
+}
+
+module tripod_washer(h = 3) { tube(od = 20, id = tripod_bolt_d, h = h); }
+
+tripod_washer();
+
+// tripod_adapter();
+
+// trapezoid_plate();
 // rect_plate();
 // rod_mount();
 // nut_and_screw_slot_mask();

@@ -10,15 +10,19 @@ length = dist_between_holes + 3 * 2 + hole_d;
 h = 3;
 
 magnet_d = 15;
-// magnet_h = 2.4;
-magnet_h = 1.4;
+magnet_h = 2.4;
+// magnet_h = 1.4;
 // distance between the magnets center
 magnet_dist = 25;
 magnet_plate_padding = 10;
 magnet_plate_h = 4;
 magnet_plate_r = magnet_dist / 2 + magnet_d / 2 + magnet_plate_padding;
 
-tripod_magnet_plate_h = 6;
+tripod_magnet_plate_h = 6.5;
+
+tripod_bolt_d = 6.5;
+tripod_nut_d = 12.4;
+tripod_nut_h = 5.4;
 
 module magnetic_mount_plate_glue_helper() {
   cyl(r = magnet_dist / 2 + magnet_d / 2 + 9 / 2, h = 2, anchor = TOP);
@@ -32,9 +36,14 @@ module magnetic_tripod_plate() {
       magnet_mask();
     };
 
-    down(0.01 / 2)
-        screw_hole("1/4-20", thread = true, l = tripod_magnet_plate_h + 0.01,
-                   anchor = BOTTOM);
+    up(tripod_magnet_plate_h - tripod_nut_h + 0.01) linear_extrude(tripod_nut_h)
+        hexagon(d = tripod_nut_d);
+
+    cyl(d = tripod_bolt_d, h = tripod_magnet_plate_h + 0.01);
+
+    // down(0.01 / 2)
+    //     screw_hole("1/4-20", thread = true, l = tripod_magnet_plate_h + 0.01,
+    //                anchor = BOTTOM);
   }
 }
 
@@ -119,4 +128,6 @@ module ball_with_screw() {
 // ball_with_screw();
 
 // ball_joint_base();
-magnetic_mount_plate(keyboard = false, screw_hole = true);
+// magnetic_mount_plate(keyboard = false, screw_hole = true);
+// magnetic_mount_plate(keyboard = false, screw_hole = true);
+magnetic_tripod_plate();

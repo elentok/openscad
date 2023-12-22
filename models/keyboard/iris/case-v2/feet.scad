@@ -5,7 +5,7 @@ $fn = 64;
 
 foot_adapter_h = 6;
 foot_d = 18;
-foot_bottom_h = 10;
+foot_bottom_extra_h = 0;  // 3;
 sticker_d = 13;
 extender_mid_h = 2;
 thread_spec = "M14";
@@ -55,7 +55,7 @@ module foot_extender(h) {
 }
 
 module foot_bottom() {
-  thread_h = foot_adapter_h + thread_h_tolerance;
+  thread_h = foot_adapter_h + thread_h_tolerance + foot_bottom_extra_h;
   up(thread_h / 2) difference() {
     cyl(d = foot_d, h = thread_h);
     screw_hole("M14", l = thread_h + epsilon, thread = true);
@@ -77,5 +77,5 @@ module demo() {
 // demo();
 //
 // rotate([ 180, 0, 0 ]) foot_adapter();
-rotate([ 180, 0, 0 ]) foot_extender(h = 30);
-// foot_bottom();
+// rotate([ 180, 0, 0 ]) foot_extender(h = 15);
+foot_bottom();
