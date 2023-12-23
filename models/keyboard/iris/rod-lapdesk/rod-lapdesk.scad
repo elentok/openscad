@@ -6,19 +6,22 @@ rod_dist = 100;
 rod_d = 10.8;
 // Thickness around the rod
 rod_wrapper_thickness = 6;
-rod_mount_panel_size = [ 140, 30, 4 ];
+rod_mount_panel_size = [ 140, 30, 6 ];
 sticker_d = 13;
 
 // Nut (with tolerances) {{{1
-nut_m5_d = 9;
+// nut_m5_d = 9;
 nut_m5_h = 2;
-nut_m4_h = 3.3;
-nut_m4_d = 7.8;
-nut_m4_w = 6.8;
+// nut_m4_h = 3.3;
+// nut_m4_d = 7.8;
+// nut_m4_w = 6.8;
 m4_screw_hole_d = 4.2;
 m5_screw_hole_d = 5.2;
 m5_head_d = 10.2;
 m5_head_h = 3.6;
+tripod_bolt_d = 6.5;
+tripod_nut_d = 12.4;
+tripod_nut_h = 5.4;
 
 rect_plate_size = [ 110, 140, 3 ];
 rect_plate_rounding = 30;
@@ -111,14 +114,14 @@ module nut_and_screw_mask() {
   fwd(epsilon / 2) rotate([ -90, 0, 0 ]) {
     cyl(d = m5_screw_hole_d, h = rod_mount_panel_size.z + epsilon,
         anchor = BOTTOM);
-    linear_extrude(nut_m5_h, convexity = 4)
-        hexagon(d = nut_m5_d, align_side = LEFT);
+    linear_extrude(nut_h("m5"), convexity = 4)
+        hexagon(d = nut_d("m5"), align_side = LEFT);
   }
 }
 
 module rod_mount_panel_2d() {
   s = rod_mount_panel_size;
-  rect([ s.x, s.z ], rounding = [ 0, 0, s.z / 2, s.z / 2 ], anchor = FWD);
+  rect([ s.x, s.z ], rounding = s.z / 2, anchor = FWD);
 }
 
 module rod_wrapper_2d() {
@@ -155,11 +158,11 @@ module tripod_adapter() {
 
 module tripod_washer(h = 3) { tube(od = 20, id = tripod_bolt_d, h = h); }
 
-tripod_washer();
+// tripod_washer();
 
 // tripod_adapter();
 
 // trapezoid_plate();
 // rect_plate();
-// rod_mount();
+rod_mount();
 // nut_and_screw_slot_mask();
