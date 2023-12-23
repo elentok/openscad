@@ -73,9 +73,10 @@ module rod_mount() {
     }
 
     // nuts
-    nut_and_screw_mask();
-    left(rod_dist / 3) nut_and_screw_mask();
-    right(rod_dist / 3) nut_and_screw_mask();
+    left(7) nut_and_screw_mask("m5");
+    right(7) nut_and_screw_mask("1/4");
+    left(rod_dist / 4) nut_and_screw_mask("m5");
+    right(rod_dist / 4) nut_and_screw_mask("m5");
 
     // rod strengtheners
     x = rod_dist / 2 + rod_d / 2 + 1;
@@ -104,11 +105,11 @@ module nut_and_screw_slot_mask() {
   }
 }
 
-module nut_and_screw_mask() {
+module nut_and_screw_mask(type) {
   fwd(epsilon / 2) rotate([ -90, 0, 0 ]) {
-    screw_hole_mask("m5", h = rod_mount_panel_size.z + epsilon,
+    screw_hole_mask(type, h = rod_mount_panel_size.z + epsilon,
                     anchor = BOTTOM);
-    nut_mask("m5");
+    nut_mask(type);
   }
 }
 
