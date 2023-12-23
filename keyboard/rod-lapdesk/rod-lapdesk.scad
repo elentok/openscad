@@ -1,3 +1,5 @@
+include <../../lib/screw-masks.scad>
+include <../../lib/screw-sizes.scad>
 include <BOSL2/std.scad>
 $fn = 64;
 
@@ -11,14 +13,6 @@ sticker_d = 13;
 
 // Nut (with tolerances) {{{1
 // nut_m5_d = 9;
-nut_m5_h = 2;
-// nut_m4_h = 3.3;
-// nut_m4_d = 7.8;
-// nut_m4_w = 6.8;
-m4_screw_hole_d = 4.2;
-m5_screw_hole_d = 5.2;
-m5_head_d = 10.2;
-m5_head_h = 3.6;
 tripod_bolt_d = 6.5;
 tripod_nut_d = 12.4;
 tripod_nut_h = 5.4;
@@ -38,7 +32,7 @@ module trapezoid_plate() {
 
   linear_extrude(panel_thickness) difference() {
     half_trapezoid(l = l, w1 = w1, w2 = w2);
-    right(w1 / 2 + (w2 - w1) / 4) circle(d = m5_screw_hole_d);
+    right(w1 / 2 + (w2 - w1) / 4) screw_hole_mask2d("m5");
   }
   linear_extrude(panel_thickness + border_height) {
     difference() {
@@ -63,7 +57,7 @@ module rect_plate() {
   s = rect_plate_size;
   linear_extrude(s.z, convexity = 5) difference() {
     rect([ s.x, s.y ], rounding = rect_plate_rounding);
-    back(s.y / 2 - 62) left(s.x / 2 - 30) circle(d = m5_screw_hole_d);
+    back(s.y / 2 - 62) left(s.x / 2 - 30) circle(d = screw_hole_d("m5"));
   }
 
   rect_tube(h = s.z + rect_plate_border_h, size = [ s.x, s.y ],
@@ -100,22 +94,21 @@ module sticker_mask() {
 }
 
 module nut_and_screw_slot_mask() {
-  fwd(rod_d / 2) rotate([ -90, 0, 0 ]) rotate([ 0, 0, -90 ]) back(nut_m4_h)
+  fwd(rod_d / 2) rotate([ -90, 0, 0 ]) rotate([ 0, 0, -90 ]) back(nut_h("m4"))
       rotate([ 90, 0, 0 ]) {
-    linear_extrude(nut_m4_h) {
-      rect([ nut_m4_w, 20 ], anchor = FWD);
-      hexagon(d = nut_m4_d, align_side = LEFT);
+    linear_extrude(nut_h("m4")) {
+      rect([ nut_w("m4"), 20 ], anchor = FWD);
+      hexagon(d = nut_d("m4"), align_side = LEFT);
     }
-    up(epsilon) cyl(d = m4_screw_hole_d, h = rod_wrapper_thickness * 3);
+    up(epsilon) cyl(d = screw_hole_d("m4"), h = rod_wrapper_thickness * 3);
   }
 }
 
 module nut_and_screw_mask() {
   fwd(epsilon / 2) rotate([ -90, 0, 0 ]) {
-    cyl(d = m5_screw_hole_d, h = rod_mount_panel_size.z + epsilon,
-        anchor = BOTTOM);
-    linear_extrude(nut_h("m5"), convexity = 4)
-        hexagon(d = nut_d("m5"), align_side = LEFT);
+    screw_hole_mask("m5", h = rod_mount_panel_size.z + epsilon,
+                    anchor = BOTTOM);
+    nut_mask("m5");
   }
 }
 
@@ -136,23 +129,19 @@ module rod_wrapper_2d() {
 tripod_adapter_w = 25;
 tripod_adapter_d = 35;
 tripod_adapter_h = 6.5;
-tripod_bolt_d = 6.5;
-tripod_nut_d = 12.4;
-tripod_nut_h = 5.4;
 
 module tripod_adapter() {
   difference() {
     linear_extrude(tripod_adapter_h, convexity = 4) difference() {
       rect([ tripod_adapter_w, tripod_adapter_d ], rounding = 5);
-      fwd(tripod_adapter_d / 5) circle(d = m5_screw_hole_d);
+      fwd(tripod_adapter_d / 5) circle(d = screw_hole_d("m5"));
       back(tripod_adapter_d / 5) circle(d = tripod_bolt_d);
     }
 
     up(tripod_adapter_h + epsilon) fwd(tripod_adapter_d / 5)
-        cyl(d = m5_head_d, h = m5_head_h, anchor = TOP);
+        cyl(d = screw_head_d("m5"), h = screw_head_h("m5"), anchor = TOP);
 
-    down(epsilon) back(tripod_adapter_d / 5) linear_extrude(tripod_nut_h)
-        hexagon(d = tripod_nut_d);
+    down(epsilon) back(tripod_adapter_d / 5) nut_mask("1/4");
   }
 }
 
