@@ -11,7 +11,7 @@ function identify-platform() {
   if [ "$(uname -s)" = "Darwin" ]; then
     PLATFORM=mac
     OPENSCAD_LIB_DIR="$HOME/Documents/OpenSCAD/libraries"
-  elif [[ "$(cat /proc/version)" =~ 'microsoft' ]]; then
+  elif [[ ! "$(cat /proc/version)" =~ 'microsoft' ]]; then
     PLATFORM=linux
     OPENSCAD_LIB_DIR="$HOME/.local/share/OpenSCAD/libraries"
   else
