@@ -1,3 +1,4 @@
+include <../lib/thumb-mask.scad>
 include <BOSL2/std.scad>
 $fn = 64;
 
@@ -9,6 +10,7 @@ notebook_thickness = 4;
 notebooks = 3;
 wall_thickness = 2.4;
 tolerance = [ 1, 1, 1 ];
+thumb_size = [ 20, 30 ];
 
 notebook_size = type == "traveler-regular" ? [ 110, 210 ]
                 : type == "a6"             ? [ 105, 148 ]
@@ -30,6 +32,7 @@ module notebook_case() {
   difference() {
     cuboid(case_outer_size, rounding = wall_thickness, anchor = LEFT);
     right(wall_thickness + 0.01) cuboid(case_inner_size, anchor = LEFT);
+    thumb_mask([])
   };
 }
 
