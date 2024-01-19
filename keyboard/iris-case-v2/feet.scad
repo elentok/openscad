@@ -5,7 +5,7 @@ $fn = 64;
 
 foot_adapter_h = 6;
 foot_d = 18;
-foot_bottom_extra_h = 0;  // 3;
+foot_bottom_extra_h = 2;  // 3;
 sticker_d = 13;
 extender_mid_h = 2;
 thread_spec = "M14";
