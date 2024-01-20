@@ -78,4 +78,6 @@ module demo() {
 //
 // rotate([ 180, 0, 0 ]) foot_adapter();
 // rotate([ 180, 0, 0 ]) foot_extender(h = 15);
-foot_bottom();
+// foot_bottom();
+rotate([ 180, 0, 0 ]) foot_extender(h = 17.1);
+// foot_bottom();
