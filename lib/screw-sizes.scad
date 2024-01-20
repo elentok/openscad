@@ -10,8 +10,8 @@ nut_thicknesses = [ [ "m3", 2.5 ], [ "m4", 3.3 ], [ "m5", 4 ], [ "1/4", 5.6 ] ];
 screw_hole_diameters =
     [ [ "m3", 3.3 ], [ "m4", 4.2 ], [ "m5", 5.2 ], [ "1/4", 6.5 ] ];
 
-screw_head_diameters = [[ "m5", 10.2 ]];
-screw_head_heights = [[ "m5", 3.6 ]];
+screw_head_diameters = [ [ "m4", 7.4 ], [ "m5", 10.2 ] ];
+screw_head_heights = [ [ "m4", 3.3 ], [ "m5", 3.6 ] ];
 
 function screw_hole_d(type) = struct_val(screw_hole_diameters, type);
 function screw_head_d(type) = struct_val(screw_head_diameters, type);

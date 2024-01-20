@@ -1,13 +1,13 @@
 include <../../lib/bin.scad>
-include <../../lib/screw-hole-mask.scad>
+include <../../lib/screw-masks.scad>
 include <BOSL2/std.scad>
 $fn = 64;
 
 // Configurable parameters:
-shelf_size = [ 170, 72, 70 ];
-wall_thickness = 2.5;
+shelf_size = [ 170, 82, 70 ];
+wall_thickness = 2;
 rounding = 10;
-screw_hole_diameter = 4.2;
+// screw_hole_diameter = 4.2;
 screw_hole_distance_from_top = 15;
 screw_hole_distance_from_side = 25;
 
@@ -26,9 +26,10 @@ module shelf() {
 }
 
 module shelf_screw_hole_mask() {
-  screw_hole_mask(axis = BACK, anchor = BACK, d_screw = screw_hole_diameter,
-                  l_wall = wall_thickness, l_screwdriver = shelf_size.y,
-                  l_countersink = wall_thickness * 2 / 3);
+  screw_hole_maskx(axis = BACK, anchor = BACK, screw_type = "m4",
+                   countersink = true, l_wall = wall_thickness,
+                   max_countersink_leftover = 1.5,
+                   l_screwdriver = shelf_size.y);
 }
 
 shelf();
