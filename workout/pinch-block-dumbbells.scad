@@ -2,12 +2,12 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 size = [ 80, 60, 50 ];
-rounding = 5;
-dumbbell_thread_d = 30;
+rounding = 2;
+dumbbell_thread_d = 32;
 
 // hole for the bottom of the dumbbell nut
-nut_d = 46;
-nut_h = 5;
+nut_d = 50;
+nut_h = 6.5;
 
 module block() {
   difference() {
