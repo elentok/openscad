@@ -18,12 +18,12 @@ top_size = hole_size;
 rnd = 2;
 
 paddle_y_tolerance = 1;
-paddle_pin_tolerance = 0.5;
+paddle_pin_tolerance = 1.5;
 paddle_y = hole_size.y - base_thickness * 2 - paddle_y_tolerance;
 paddle_x1 = hole_size.x - 5;
 paddle_x2 = 4;
 paddle_z2 = 10;
-paddle_thickness = 3;
+paddle_thickness = 2;
 
 module base() {
   isize = add_scalar(hole_size, -base_thickness * 2);
@@ -71,7 +71,10 @@ module paddle() {
   ];
 
   linear_extrude(paddle_y) difference() {
-    stroke(path, width = paddle_thickness);
+    union() {
+      circle(d = pin_d + paddle_pin_tolerance + paddle_thickness);
+      stroke(path, width = paddle_thickness);
+    }
     circle(d = pin_d + paddle_pin_tolerance);
   }
 }
