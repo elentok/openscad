@@ -13,7 +13,11 @@ screw_hole_diameters =
 screw_head_diameters = [ [ "m4", 7.4 ], [ "m5", 10.2 ] ];
 screw_head_heights = [ [ "m4", 3.3 ], [ "m5", 3.6 ] ];
 
+screw_threadmaker_diameters = [[ "m4", 3.3 ]];
+
 function screw_hole_d(type) = struct_val(screw_hole_diameters, type);
+function screw_threadmaker_d(type) = struct_val(screw_threadmaker_diameters,
+                                                type);
 function screw_head_d(type) = struct_val(screw_head_diameters, type);
 function screw_head_h(type) = struct_val(screw_head_heights, type);
 function nut_d(type) = struct_val(nut_diameters, type);
