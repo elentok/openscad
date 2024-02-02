@@ -1,19 +1,22 @@
 include <BOSL2/screws.scad>
 include <BOSL2/std.scad>
-use <../../lib/screw-hole-mask.scad>
+// use <../../lib/screw-hole-mask.scad>
+use <../lib/screw-masks.scad>
 $fn = 64;
 
 thickness = 20;
 base_height = 5;
-base_width = 100;
-arms_height = 60;
-arms_width = 60;
+base_width = 140;
+arms_height = 100;
+arms_width = 100;
 arms_thickness = 8;
 nut_height = 8.5;
 nut_diameter = 18.2;
 nut_inner_diameter = 10.2;
+nut_offset = 0.2;
 ptfe_hole_diameter = 5;
 ptfe_hole_inner_radius = 10;
+ptfe_hole_position = 0.35;
 
 // the thickness that prevents the nut from falling through
 nut_space = 1;
@@ -23,13 +26,16 @@ module guide() {
     rotate([ 90, 0, 0 ]) linear_extrude(thickness, center = true, convexity = 4)
         slice();
 
-    // nut
-    up(arms_height - nut_height - nut_space)
-        linear_extrude(nut_height, convexity = 4) hexagon(d = nut_diameter);
+    left(nut_offset * arms_width) {
+      // nut
+      up(arms_height - nut_height - nut_space)
+          linear_extrude(nut_height, convexity = 4) rotate([ 0, 0, 90 ])
+              hexagon(d = nut_diameter);
 
-    // space for the ptfe
-    up(arms_height + 0.01 / 2)
-        cyl(d = nut_inner_diameter, h = nut_space + 0.01, anchor = TOP);
+      // space for the ptfe
+      up(arms_height + 0.01 / 2)
+          cyl(d = nut_inner_diameter, h = nut_space + 0.01, anchor = TOP);
+    }
 
     // side hole for the PTFE tube
 
@@ -43,17 +49,17 @@ module guide() {
 }
 
 module bottom_screw_hole_mask() {
-  down(0.01 / 2) screw_hole_mask(
-      d_screw = 4, d_screw_head = 7, l_wall = base_height + 0.01,
-      l_countersink = 2.5, axis = UP, anchor = BOTTOM);
+  down(0.01 / 2)
+      screw_hole_maskx(screw_type = "m4", l_wall = base_height + 0.01,
+                       countersink = true, axis = UP, anchor = BOTTOM);
 }
 
 module ptfe_hole_mask() {
-  up(arms_height / 2 + ptfe_hole_inner_radius + ptfe_hole_diameter / 2)
-      left(arms_width / 2 + 0.01) scale([ 1.5, 1, 1 ]) rotate([ 0, -90, 0 ])
-          rotate([ 90, 0, 0 ]) rotate_extrude(angle = 90)
-              left(ptfe_hole_diameter / 2 + ptfe_hole_inner_radius)
-                  circle(d = ptfe_hole_diameter);
+  up(arms_height * ptfe_hole_position + ptfe_hole_inner_radius +
+     ptfe_hole_diameter / 2) left(arms_width / 2 + 0.01) scale([ 1.5, 1, 1 ])
+      rotate([ 0, -90, 0 ]) rotate([ 90, 0, 0 ]) rotate_extrude(angle = 90)
+          left(ptfe_hole_diameter / 2 + ptfe_hole_inner_radius)
+              circle(d = ptfe_hole_diameter);
 }
 
 module slice() {
