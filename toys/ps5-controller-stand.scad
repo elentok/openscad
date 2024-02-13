@@ -3,35 +3,52 @@ $fn = 64;
 
 id_bottom = 34;
 id_top = 50;
-thickness = 4;
+thickness = 3.5;
 od_bottom = id_bottom + thickness * 2;
 od_top = id_top + thickness * 2;
 dist = 130;
-bottom_thickness = 5;
+bottom_thickness = 4;
 
 bottom_size = [ dist + od_bottom, od_bottom ];
 holder_height = 34;
 epsilon = 0.01;
 
 back_support = 130;
-font = "Google Sans:style=Bold";
+// font = "Google Sans:style=Bold";
+font = "Chalkboard SE:style=Bold";
+// font = "Luminari:style=Bold";
+// font = "Marker Felt:style=Bold";
+// font = "Rockwell:style=Bold";
+label = "PS5";
+label_size = 17;
 // back_support = dist + od_bottom;
 
 module stand() {
-  base();
+  difference() {
+    union() {
+      base();
 
-  up(bottom_thickness - epsilon) {
-    left(dist / 2) holder();
-    right(dist / 2) holder();
+      color("blue") up(bottom_thickness - epsilon) {
+        left(dist / 2) holder();
+        right(dist / 2) holder();
+      }
+    }
+
+    back(back_support / 4 - 6) up(bottom_thickness / 2 + epsilon)
+        linear_extrude(bottom_thickness / 2)
+            text(label, font = font, size = label_size, halign = "center",
+                 valign = "center");
   }
-
-  back(back_support / 4) up(bottom_thickness - epsilon) linear_extrude(2)
-      text("Hello World", font = font, size = 10, halign = "center",
-           valign = "center");
 }
 
 module base() {
-  linear_extrude(bottom_thickness) round2d(15) {
+  color("white") linear_extrude(bottom_thickness / 2) base2d();
+  up(bottom_thickness / 2) color("blue") linear_extrude(bottom_thickness / 2)
+      base2d();
+}
+
+module base2d() {
+  round2d(15) {
     difference() {
       rect(bottom_size, rounding = od_bottom / 2);
       // fwd(bottom_size.y / 4)
