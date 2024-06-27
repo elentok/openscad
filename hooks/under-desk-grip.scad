@@ -1,11 +1,11 @@
 $fn = 50;
 
-use <../../lib/chamfer.scad>
-use <../../lib/rounded.scad>
+use <../lib-old/chamfer.scad>
+use <../lib-old/rounded.scad>
 
 module grip(grip_depth, object_width, object_height, thingy_depth = 30,
             bottom_wall_width = 3, wall_width = 1.7) {
-  large_fillet_radius = 3;
+  large_fillet_radius = 4;
 
   union() {
     // Horizontal Left
@@ -84,4 +84,7 @@ module grip_thingy(width, depth, height, screw_hole_diameter = 4,
 // 2);
 
 // FX-Audio DAC-X6
-grip(grip_depth = 50, object_width = 96, object_height = 31, wall_width = 2);
+// grip(grip_depth = 50, object_width = 96, object_height = 31, wall_width = 2);
+
+// Aiyima A07 + FX-Audio DAC-X6
+grip(grip_depth = 50, object_width = 100, object_height = 74, wall_width = 3);
