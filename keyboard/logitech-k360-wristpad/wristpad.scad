@@ -14,8 +14,12 @@ puzzle_tolerance_h = 0.6;
 puzzle_dist = 5;
 
 sticker_d = 14;
-sticker_h = 0.6;
+sticker_h = 1;
 sticker_margin = 4;
+
+feet_d = sticker_d + 2;
+feet_h = 4;
+feet_margin = 2;
 
 module left_half() {
   difference() {
@@ -23,16 +27,18 @@ module left_half() {
            except = [ BOTTOM, RIGHT ], anchor = RIGHT + BOTTOM);
     back(depth / 4) puzzle_piece(mask = true);
     fwd(depth / 4) puzzle_piece(mask = true);
-    stickers_mask();
+    // stickers_mask();
   }
+  feet();
 }
 
 module right_half() {
-  difference() {
-    cuboid([ width / 2, depth, height ], rounding = top_rounding,
-           except = [ BOTTOM, LEFT ], anchor = LEFT + BOTTOM);
-    mirror([ 1, 0, 0 ]) stickers_mask();
-  }
+  // difference() {
+  cuboid([ width / 2, depth, height ], rounding = top_rounding,
+         except = [ BOTTOM, LEFT ], anchor = LEFT + BOTTOM);
+  // mirror([ 1, 0, 0 ]) stickers_mask();
+  // }
+  mirror([ 1, 0, 0 ]) feet();
   back(depth / 4) puzzle_piece(mask = false);
   fwd(depth / 4) puzzle_piece(mask = false);
 }
@@ -71,6 +77,30 @@ module stickers_mask() {
   }
 }
 
+module feet() {
+  left(width / 4) foot();
+
+  left(feet_d / 2 + feet_margin) {
+    y = depth / 2 - feet_d / 2;
+    back(y) foot();
+    fwd(y) foot();
+  }
+
+  left(width / 2 - feet_d / 2 - feet_margin) {
+    y = depth / 2 - feet_d / 2;
+    back(y) foot();
+    fwd(y) foot();
+  }
+}
+
+module foot() {
+  difference() {
+    cyl(d = feet_d, h = feet_h, anchor = TOP);
+    down(feet_h - sticker_h + 0.01)
+        cyl(d = sticker_d, h = sticker_h, anchor = TOP);
+  }
+}
+
 // puzzle_piece_2d();
 
 module demo(space = 10) {
@@ -80,8 +110,8 @@ module demo(space = 10) {
 
 module test_tolerance() {
   intersection() {
-    // left_half();
-    right_half();
+    left_half();
+    // right_half();
     cuboid([ puzzle_width * 1.5, depth / 2, height ],
            anchor = FWD + RIGHT + BOTTOM);
   }
@@ -89,5 +119,5 @@ module test_tolerance() {
 
 // test_tolerance();
 // demo();
-// left_half();
-right_half();
+left_half();
+// right_half();
