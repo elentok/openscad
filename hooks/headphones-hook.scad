@@ -1,12 +1,11 @@
-
 include <BOSL2/std.scad>
 
 $fn = 60;
 
 // Variables
 
-monitor_thickness = 18.6;  //  includes 0.4mm margin
-monitor_top_padding = 7.5;
+monitor_thickness = 18.6 + 10;  //  includes 0.4mm margin
+monitor_top_padding = 6;
 headphone_thickness = 60;  // includes 20mm margin;
 headphone_diameter = 120;
 holder_thickness = 5;
@@ -24,7 +23,9 @@ module grip() {
     [ 0, 0 ],
     [ 0, holder_height ],
     [ monitor_thickness + holder_thickness, holder_height ],
-    [ monitor_thickness + holder_thickness, holder_height - monitor_top_padding ],
+    [
+      monitor_thickness + holder_thickness, holder_height - monitor_top_padding
+    ],
   ];
 
   grip_supports_path = [
@@ -51,9 +52,10 @@ module curved_stand() {
       tag("remove") circle(d = headphone_diameter - 15);
     };
 
-    tag("outer-remove") square([ holder_width, headphone_diameter - 14 ], anchor = [ 0, 0 ]);
+    tag("outer-remove")
+        square([ holder_width, headphone_diameter - 14 ], anchor = [ 0, 0 ]);
   }
 }
 
 grip();
-curved_stand();
+// curved_stand();
