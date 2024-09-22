@@ -1,15 +1,15 @@
 include <BOSL2/std.scad>
 // use <../../lib/chamfer.scad>
-use <../../lib/screw-hole-mask.scad>
+use <../lib-old/screw-hole-mask.scad>
 $fn = 64;
 
 epsilon = 0.01;
 width = 20;
-hanging_depth_space = 25;
-wall_mount_height = 40;
+hanging_depth_space = 43;
+wall_mount_height = 50;
 wall_mount_thickness = 5;
 bottom_thickness = 10;
-tooth_height = 15;
+tooth_height = 30;
 tooth_thickness = 4;
 rounding = 15;
 rounding2 = 2;
@@ -59,3 +59,7 @@ module hook2d() {
 }
 
 hook();
+
+// dd = 40;
+// #fwd(hanging_depth_space / 2 + wall_mount_thickness)
+// up(dd / 2 + bottom_thickness) rotate([ 0, 90, 0 ]) cyl(d = dd, h = 100);

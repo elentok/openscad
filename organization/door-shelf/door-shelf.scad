@@ -6,7 +6,7 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 // Configurable parameters:
-shelf_size = [ 170, 84, 70 ];
+shelf_size = [ 170, 110, 70 ];
 wall_thickness = 2.5;
 rounding = 10;
 // screw_hole_diameter = 4.2;
