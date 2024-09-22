@@ -2,18 +2,23 @@ include <BOSL2/std.scad>
 include <BOSL2/threading.scad>
 $fn = 64;
 
+jar_type = "small";
+// jar_type = "large";
+
+// inner dimensions: 90mm x 15mm
+
 epsilon = 0.01;
 
 // Configurable parameters:
-od = 105;  // Outer diameter
-jar_height = 30;
+od = 24;  // Outer diameter
+jar_height = 85;
 lid_height = 14;
-jar_wall = 2;
+jar_wall = jar_type == "large" ? 2 : 1.7;
 jar_rounding = 3;
 
 // Threading-related parameters (took me a few test prints to get to these,
-// chagne with caution)
-thread_wall = 3;
+// change with caution)
+thread_wall = jar_type == "large" ? 3 : 2;
 thread_pitch = 2.5;
 thread_tolerance = 0.6;  // You might have to change this to fit your printer
 
@@ -23,6 +28,7 @@ jar_base_height = jar_height - jar_thread_height;
 lid_base_height = lid_height - jar_thread_height;
 jar_id = od - jar_wall * 2 - thread_wall * 2;
 
+echo("Jar inner height", jar_base_height + lid_height - 2 * jar_wall);
 echo("Jar inner diameter", jar_id);
 
 module jar() {
