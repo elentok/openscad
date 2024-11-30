@@ -15,8 +15,9 @@ epsilon = 0.1;
 // For the magnet (I want only one layer above it)
 layer_height = 0.2;
 
-bit_diameter = bit_size == "normal" ? 7.3 : 4.3;
-bit_width = bit_size == "normal" ? 6.36 : 3.8;
+normal_bit_diameter = 7.3;
+bit_diameter = bit_size == "normal" ? normal_bit_diameter : 5.0;
+bit_width = bit_size == "normal" ? 6.36 : 4.3;
 bit_height = 25;
 bit_height_padding = 5;
 bit_head_height = 8;
@@ -102,8 +103,8 @@ module bottom() {
     bottom_base();
 
     // bits
-    up(bottom_thickness) move_bits()
-        bit_mask(bit_height_inside_bottom + epsilon);
+    up(bottom_height_without_threads) move_bits()
+        bit_mask(bit_height + epsilon);
   }
 }
 
@@ -156,9 +157,9 @@ module bottom_base() {
 // ========================================
 
 w_center = bit_size == "normal" ? 5 : 3;
-w1 = od / 2;
+w1 = bit_size == "normal" ? od / 2 : od / 1.7;
 w2 = bit_size == "normal" ? 16 / 2 : 16 / 3.5;
-w3 = bit_size == "normal" ? 20 / 2 : 20 / 3.5;
+w3 = bit_size == "normal" ? 20 / 2 : 20 / 3.3;
 w4 = w2;
 
 h0 = 10;
@@ -203,12 +204,13 @@ module top() {
       top_top();
     }
 
-    // up(thread_height)
-    //     cyl(d = id + 0.7, h = bit_height_inside_top - thread_height,
-    //         anchor = BOTTOM);
-    // down(epsilon / 2) threaded_rod(
-    //     d = id + thread_tolerance, pitch = thread_pitch,
-    //     h = thread_height + epsilon, anchor = BOTTOM, internal = true);
+    up(thread_height) cyl(d = id + 0.7,
+                          h = bit_height_inside_top - thread_height -
+                              (bit_size == "normal" ? 0 : 8),
+                          anchor = BOTTOM);
+    down(epsilon / 2) threaded_rod(
+        d = id + thread_tolerance, pitch = thread_pitch,
+        h = thread_height + epsilon, anchor = BOTTOM, internal = true);
 
     up(top_bit_holder_offset + epsilon) bit_holder(mask = true);
   }
@@ -297,7 +299,7 @@ module bit_holder(color = "cyan", mask = false) {
 }
 
 module mini_bit_holder(color = "cyan", mask = false) {
-  bit_d = bit_diameter + (mask ? bit_holder_tolerance : 0);
+  bit_d = normal_bit_diameter + (mask ? bit_holder_tolerance : 0);
   linear_extrude(bit_holder_hexagon_height, convexity = 4) hexagon(d = bit_d);
 }
 
