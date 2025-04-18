@@ -6,7 +6,8 @@ jotter_l = 98;
 im_d = 7;
 im_l = 115;
 
-extender_bottom_l = im_l - jotter_l;
+// reducing 2mm because the tip isn't aligned with the pen cover's tip
+extender_bottom_l = im_l - jotter_l - 2;
 extender_sleeve_l = 15;
 extender_od1 = 5.4;
 extender_od2 = im_d;
@@ -16,7 +17,7 @@ sleeve_l = 17;  // 20;
 sleeve_id1 = 3.3;
 sleeve_id2 = 3.2;  // 2.5 + 0.5;
 sleeve_od1 = 5.5;
-sleeve_od2 = 3.5;  // 3;
+sleeve_od2 = 4;
 
 module extender() {
   cyl(d1 = extender_od1, d2 = extender_od2, h = extender_bottom_l, anchor = TOP,
