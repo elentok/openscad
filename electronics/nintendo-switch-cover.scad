@@ -8,14 +8,14 @@ joystick_height = 7;
 joystick_tolerance = 1;
 
 panel_thickness = 2;
-sides_thickness = 3;
+sides_thickness = 2;
 
 // grip
 // grip_id = 3;
 grip_thickness = 3;
-grip_width = 20;
-grip_band_space = 5;
-grip_rounding = 3;
+grip_width = 23;
+grip_band_space = 4;
+grip_rounding = 2;
 grip_edge_width = 2;
 grip_margin = 38;
 
@@ -45,11 +45,22 @@ grip_hook_extra_h = 2;
 module cover() {
   // panel
   difference() {
-    cuboid([ owidth, odepth, oheight ], rounding = oheight, except = BOTTOM,
-           anchor = BOTTOM);
+    union() {
+      // sides panel
+      rect_tube(size = [ owidth, odepth ], isize = [ iwidth, idepth ],
+                rounding = border_radius, h = oheight);
 
-    down(0.01) cuboid([ iwidth, idepth, iheight ], rounding = iheight,
-                      except = BOTTOM, anchor = BOTTOM);
+      // panel
+      up(oheight - panel_thickness) linear_extrude(panel_thickness)
+          rect(size = [ owidth, odepth ], rounding = border_radius);
+    }
+
+    // cuboid([ owidth, odepth, oheight ], rounding = oheight, except =
+    // BOTTOM,
+    //        anchor = BOTTOM);
+
+    // down(0.01) cuboid([ iwidth, idepth, iheight ], rounding = iheight,
+    //                   except = BOTTOM, anchor = BOTTOM);
 
     down(0.01) grips(is_mask = true);
   }
@@ -74,10 +85,10 @@ module grips(is_mask) {
 
 module grip(opening, is_mask = false) {
   difference() {
-    up(grip_oh / 2) rotate([ 90, 0, 90 ]) linear_extrude(
-        grip_width + (is_mask ? grip_edge_width * 2 : 0), convexity = 4,
-        center = true) round2d(r = 1 / 2) difference() {
-      rect([ grip_odepth, grip_oh + (is_mask ? 0.01 : 0) ],
+    fwd(is_mask ? 0.01 : 0) up(grip_oh / 2) rotate([ 90, 0, 90 ])
+        linear_extrude(grip_width + (is_mask ? grip_edge_width * 2 : 0),
+                       convexity = 4, center = true) difference() {
+      rect([ grip_odepth, grip_oh + (is_mask ? 0.03 : 0) ],
            rounding = [ 0, 0, 0, grip_oh / 4 ]);
       if (!is_mask) {
         rect([ grip_idepth, grip_ih ], rounding = [ 0, 0, 0, grip_id / 4 ]);
@@ -104,7 +115,7 @@ module grip(opening, is_mask = false) {
     }
   }
 
-  fwd(grip_thickness)
+  fwd(grip_thickness + 0.5)
       // fwd(grip_thickness / 2 + (grip_od / 2 - grip_hook_h / 2 -
       // grip_thickness / 2))
       up(grip_oh - grip_hook_h) grip_hook(opening = 1);
@@ -125,9 +136,8 @@ module grip(opening, is_mask = false) {
 
 module grip_edge() {
   up(grip_oh / 2) rotate([ 0, 90, 0 ])
-      linear_extrude(grip_edge_width, center = true) round2d(r = 1 / 3)
-          rect([ grip_oh, grip_odepth ],
-               rounding = [ grip_oh / 4, 0, grip_oh / 2, 0 ]);
+      linear_extrude(grip_edge_width, center = true)
+          rect([ grip_oh, grip_odepth ], rounding = [ grip_oh / 4, 0, 0, 0 ]);
 }
 
 module grip_hook(opening) {
@@ -152,8 +162,8 @@ module grip_hook(opening) {
     // notch to help printing
     fwd(grip_hook_d / 5) up(grip_hook_d / 2 + grip_hook_radius)
         rotate([ 0, 0, 90 ])
-            cuboid([ grip_hook_d * 1.5, grip_hook_w / 1.5, grip_hook_d ],
-                   rounding = grip_rounding / 2, anchor = LEFT);
+            cuboid([ grip_hook_d * 1.5, grip_hook_w / 1.2, grip_hook_d ],
+                   rounding = grip_rounding / 8, anchor = LEFT);
 
     down(grip_hook_extra_h) linear_extrude(grip_hook_extra_h)
         back(grip_hook_radius) rect([ grip_hook_w, grip_hook_d ], anchor = FWD,
