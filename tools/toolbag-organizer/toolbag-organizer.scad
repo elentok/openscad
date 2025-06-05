@@ -1,0 +1,83 @@
+include <BOSL2/std.scad>
+$fn = 64;
+
+hole_rounding = 1;
+body_size = [120, 99, 80];
+bottom_thickness = 3;
+wall_thickness = 3;
+
+module organizer() {
+  difference() {
+    body();
+    fwd(wall_thickness) right(wall_thickness) {
+        drill_bits_mask();
+        // fwd(10 / 2) {
+        // cyl_hole(d=10);
+        // right(10 + 3) cyl_hole(d=9);
+        // right(10 + 9 + 3 * 2) cyl_hole(d=8);
+        // right(10 + 9 + 8 + 3 * 3) cyl_hole(d=7);
+        // right(10 + 9 + 8 + 7 + 3 * 4) cyl_hole(d=6);
+        // right(10 + 9 + 8 + 7 + 6 + 3 * 5) cyl_hole(d=5);
+        // right(10 + 9 + 8 + 7 + 6 + 5 + 3 * 6) cyl_hole(d=4);
+        // }
+      }
+  }
+}
+
+function sum_array(arr, stop, i = 0) =
+  i >= stop ? 0 : arr[i] + sum_array(arr, stop, i + 1);
+
+module drill_bits_mask(sizes = [10, 9, 8, 7, 6, 5, 4, 3, 2], gap = 3, angle = 0) {
+  right(sizes[0] / 2) fwd(sizes[0] / 2) rotate([0, 0, angle])for (i = [0:len(sizes) - 1]) {
+        x = sum_array(sizes, i) + i * (hole_rounding + gap);
+        d = sizes[i];
+        right(x) cyl_hole(d);
+      }
+}
+
+module body() {
+  cuboid(size=body_size, anchor=LEFT + BACK + TOP, rounding=2, except=BOTTOM);
+}
+
+module cyl_hole(d, h = body_size.z - bottom_thickness) {
+  d_with_tolerance = d + 0.1;
+  up(0.01) cyl(
+      d=d, h=h, anchor=TOP,
+      rounding1=hole_rounding,
+      rounding2=-hole_rounding,
+    );
+}
+
+module rect_hole(size, h = body_size.z - bottom_thickness) {
+  cuboid([size.x, size.y, h], anchor=TOP, rounding=hole_rounding, except=TOP);
+
+  // #fwd(size.y / 2) cuboid([size.x, hole_rounding, hole_rounding], anchor=TOP);
+
+  // attach(RIGHT + TOP + FWD) {
+  // back(size.y / 2) mirror([0, 0, 1]) rounding_corner_mask(r=2);
+  // }
+
+  // up(0.01) prismoid(
+  //     size1=size, size2=size, h=h, anchor=TOP,
+  //     rounding=hole_rounding,
+  //   ) {
+  //     edge_profile([TOP]) {
+  //       mask2d_roundover(r=9, mask_angle=45);
+  //     }
+  //     // mask2d_roundover(r=1, inset=0, mask_angle=90, excess=0.01, flat_top=flat_top, d=d, h=h, height=height, cut=cut, quarter_round=false, joint=joint, anchor=CENTER, spin=0);
+  //     // mask2d_roundover(r = r, inset = 0, mask_angle = 90, excess = 0.01, flat_top = flat_top, d = d, h = h, height = height, cut = cut, quarter_round = false, joint = joint, anchor = CENTER, spin = 0);}
+  //     // edge_profile([BOTTOM]) {
+  //     //   mask2d_roundover(h=5);
+  //     // }
+  //   }
+
+  // up(0.01) cuboid(
+  //     [size.x, size.y, h], anchor=TOP,
+  //     rounding=-hole_rounding,
+  //     edges=TOP,
+  //   );
+}
+
+rect_hole([30, 20]);
+// drill_bits_mask();
+// organizer();
