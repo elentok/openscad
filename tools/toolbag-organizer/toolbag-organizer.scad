@@ -60,15 +60,23 @@ module negative_3d_roundover(size, positive_rounding = 0) {
       negative_3d_roundover_side(size, positive_rounding);
       fwd(size.y) mirror([0, 1, 0]) negative_3d_roundover_side(size, positive_rounding);
 
-      fwd(positive_rounding) mirror([0, 1, 0]) rotate([0, 90, 90]) linear_extrude(size.y - positive_rounding * 2) mask2d_roundover(r=size.z, excess=0);
-      fwd(positive_rounding) right(size.x) mirror([1, 0, 0]) mirror([0, 1, 0]) rotate([0, 90, 90]) linear_extrude(size.y - positive_rounding * 2) mask2d_roundover(r=size.z, excess=0);
+      fwd(positive_rounding) mirror([0, 1, 0]) rotate([0, 0, 90]) negative_3d_roundover_edge(size.y, size.z, positive_rounding);
+      fwd(positive_rounding) right(size.x) mirror([1, 0, 0]) mirror([0, 1, 0]) rotate([0, 0, 90]) negative_3d_roundover_edge(size.y, size.z, positive_rounding);
     }
 }
 
 module negative_3d_roundover_side(size, positive_rounding) {
-  fwd(positive_rounding) right(positive_rounding) mirror([1, 0, 0]) mirror([0, 0, 1]) rotate_extrude(angle=90) right(positive_rounding) mask2d_roundover(r=size.z, excess=0);
-  fwd(positive_rounding) right(size.x - positive_rounding) mirror([0, 0, 1]) rotate_extrude(angle=90) right(positive_rounding) mask2d_roundover(r=size.z, excess=0);
-  right(positive_rounding) rotate([0, 90, 0]) linear_extrude(size.x - positive_rounding * 2) mask2d_roundover(r=size.z, excess=0);
+  fwd(positive_rounding) right(positive_rounding) mirror([1, 0, 0]) negative_3d_roundover_corner(size, positive_rounding);
+  fwd(positive_rounding) right(size.x - positive_rounding) negative_3d_roundover_corner(size, positive_rounding);
+  right(positive_rounding) negative_3d_roundover_edge(size.x, size.z, positive_rounding);
+}
+
+module negative_3d_roundover_corner(size, positive_rounding) {
+  mirror([0, 0, 1]) rotate_extrude(angle=90) right(positive_rounding) mask2d_roundover(r=size.z, excess=0);
+}
+
+module negative_3d_roundover_edge(w, h, positive_rounding) {
+  rotate([0, 90, 0]) linear_extrude(w - positive_rounding * 2) mask2d_roundover(r=h, excess=0);
 }
 
 // negative_3d_roundover([30, 20, 3], positive_rounding=2);
