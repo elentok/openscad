@@ -49,34 +49,30 @@ module cyl_hole(d, h = body_size.z - bottom_thickness) {
 }
 
 module rect_hole(size, h = body_size.z - bottom_thickness) {
-  cuboid([size.x, size.y, h], anchor=TOP, rounding=hole_rounding, except=TOP);
-
-  // #fwd(size.y / 2) cuboid([size.x, hole_rounding, hole_rounding], anchor=TOP);
-
-  // attach(RIGHT + TOP + FWD) {
-  // back(size.y / 2) mirror([0, 0, 1]) rounding_corner_mask(r=2);
-  // }
-
-  // up(0.01) prismoid(
-  //     size1=size, size2=size, h=h, anchor=TOP,
-  //     rounding=hole_rounding,
-  //   ) {
-  //     edge_profile([TOP]) {
-  //       mask2d_roundover(r=9, mask_angle=45);
-  //     }
-  //     // mask2d_roundover(r=1, inset=0, mask_angle=90, excess=0.01, flat_top=flat_top, d=d, h=h, height=height, cut=cut, quarter_round=false, joint=joint, anchor=CENTER, spin=0);
-  //     // mask2d_roundover(r = r, inset = 0, mask_angle = 90, excess = 0.01, flat_top = flat_top, d = d, h = h, height = height, cut = cut, quarter_round = false, joint = joint, anchor = CENTER, spin = 0);}
-  //     // edge_profile([BOTTOM]) {
-  //     //   mask2d_roundover(h=5);
-  //     // }
-  //   }
-
-  // up(0.01) cuboid(
-  //     [size.x, size.y, h], anchor=TOP,
-  //     rounding=-hole_rounding,
-  //     edges=TOP,
-  //   );
+  up(0.01) {
+    cuboid([size.x, size.y, h], anchor=TOP, rounding=hole_rounding, except=TOP);
+    negative_3d_roundover([size.x, size.y, hole_rounding], positive_rounding=hole_rounding);
+  }
 }
+
+module negative_3d_roundover(size, positive_rounding = 0) {
+  back(size.y / 2) left(size.x / 2) {
+      negative_3d_roundover_side(size, positive_rounding);
+      fwd(size.y) mirror([0, 1, 0]) negative_3d_roundover_side(size, positive_rounding);
+
+      fwd(positive_rounding) mirror([0, 1, 0]) rotate([0, 90, 90]) linear_extrude(size.y - positive_rounding * 2) mask2d_roundover(r=size.z, excess=0);
+      fwd(positive_rounding) right(size.x) mirror([1, 0, 0]) mirror([0, 1, 0]) rotate([0, 90, 90]) linear_extrude(size.y - positive_rounding * 2) mask2d_roundover(r=size.z, excess=0);
+    }
+}
+
+module negative_3d_roundover_side(size, positive_rounding) {
+  fwd(positive_rounding) right(positive_rounding) mirror([1, 0, 0]) mirror([0, 0, 1]) rotate_extrude(angle=90) right(positive_rounding) mask2d_roundover(r=size.z, excess=0);
+  fwd(positive_rounding) right(size.x - positive_rounding) mirror([0, 0, 1]) rotate_extrude(angle=90) right(positive_rounding) mask2d_roundover(r=size.z, excess=0);
+  right(positive_rounding) rotate([0, 90, 0]) linear_extrude(size.x - positive_rounding * 2) mask2d_roundover(r=size.z, excess=0);
+}
+
+// negative_3d_roundover([30, 20, 3], positive_rounding=2);
+// right(4) mask2d_roundover(r=5, excess=0);
 
 rect_hole([30, 20]);
 // drill_bits_mask();
