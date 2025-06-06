@@ -9,6 +9,13 @@ wall_thickness = 3;
 module organizer() {
   difference() {
     body();
+
+    rect_hole([17, 50], x_align=RIGHT, y_align=FWD);
+    // align_back(30) align_right(20) rotate([0, 0, 90]) rect_hole([30, 20]);
+
+    // hole puncher
+    cyl_hole(d=13, x_align=RIGHT, y_align=BACK);
+
     fwd(wall_thickness) right(wall_thickness) {
         drill_bits_mask();
         // fwd(10 / 2) {
@@ -23,6 +30,30 @@ module organizer() {
       }
   }
 }
+
+// @type dir LEFT | RIGHT | undef
+module align_x(width, dir) {
+  if (dir == LEFT) {
+    right(width / 2 + wall_thickness) children();
+  } else if (dir == RIGHT) {
+    right(body_size.x - width / 2 - wall_thickness) children();
+  } else {
+    children();
+  }
+}
+
+// @Type dir FWD | BACK | undef
+module align_y(depth, dir) {
+  if (dir == FWD) {
+    fwd(body_size.y - depth / 2 - wall_thickness) children();
+  } else if (dir == BACK) {
+    fwd(depth / 2 + wall_thickness) children();
+  } else {
+    children();
+  }
+}
+
+module align_back(depth){}
 
 function sum_array(arr, stop, i = 0) =
   i >= stop ? 0 : arr[i] + sum_array(arr, stop, i + 1);
@@ -39,20 +70,20 @@ module body() {
   cuboid(size=body_size, anchor=LEFT + BACK + TOP, rounding=2, except=BOTTOM);
 }
 
-module cyl_hole(d, h = body_size.z - bottom_thickness) {
+module cyl_hole(d, h = body_size.z - bottom_thickness, x_align, y_align) {
   d_with_tolerance = d + 0.1;
-  up(0.01) cyl(
-      d=d, h=h, anchor=TOP,
-      rounding1=hole_rounding,
-      rounding2=-hole_rounding,
-    );
+  align_y(d, y_align) align_x(d, x_align) up(0.01) cyl(
+          d=d, h=h, anchor=TOP,
+          rounding1=hole_rounding,
+          rounding2=-hole_rounding,
+        );
 }
 
-module rect_hole(size, h = body_size.z - bottom_thickness) {
-  up(0.01) {
-    cuboid([size.x, size.y, h], anchor=TOP, rounding=hole_rounding, except=TOP);
-    negative_3d_roundover([size.x, size.y, hole_rounding], positive_rounding=hole_rounding);
-  }
+module rect_hole(size, h = body_size.z - bottom_thickness, x_align, y_align) {
+  align_y(size.y, y_align) align_x(size.x, x_align) up(0.01) {
+        cuboid([size.x, size.y, h], anchor=TOP, rounding=hole_rounding, except=TOP);
+        negative_3d_roundover([size.x, size.y, hole_rounding], positive_rounding=hole_rounding);
+      }
 }
 
 module negative_3d_roundover(size, positive_rounding = 0) {
@@ -82,6 +113,6 @@ module negative_3d_roundover_edge(w, h, positive_rounding) {
 // negative_3d_roundover([30, 20, 3], positive_rounding=2);
 // right(4) mask2d_roundover(r=5, excess=0);
 
-rect_hole([30, 20]);
+// rect_hole([30, 20]);
 // drill_bits_mask();
-// organizer();
+organizer();
