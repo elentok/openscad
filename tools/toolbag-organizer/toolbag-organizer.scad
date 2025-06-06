@@ -10,16 +10,16 @@ module organizer() {
   difference() {
     body();
 
+    // locking pliers
     rect_hole([17, 50], x_align=RIGHT, y_align=FWD);
 
     // hole puncher
     cyl_hole(d=13, x_align=RIGHT, y_align=BACK);
 
+    // bit holder
     cyl_hole_grid(d=8, x=4, y=2, h=20, x_align=LEFT, y_align=FWD);
 
-    fwd(wall_thickness) right(wall_thickness) {
-        drill_bits_mask();
-      }
+    drill_bits_mask(orientation="x", x_align=LEFT, y_align=BACK);
   }
 }
 
@@ -50,11 +50,25 @@ module align_back(depth){}
 function sum_array(arr, stop, i = 0) =
   i >= stop ? 0 : arr[i] + sum_array(arr, stop, i + 1);
 
-module drill_bits_mask(sizes = [10, 9, 8, 7, 6, 5, 4, 3, 2], gap = 3, angle = 0) {
-  right(sizes[0] / 2) fwd(sizes[0] / 2) rotate([0, 0, angle])for (i = [0:len(sizes) - 1]) {
-        x = sum_array(sizes, i) + i * (hole_rounding + gap);
+module drill_bits_mask(sizes = [10, 9, 8, 7, 6, 5, 4, 3, 2], gap = 3, orientation = "x", x_align, y_align) {
+  angle = orientation == "y" ? -90 : 0;
+
+  size1 = sum_array(sizes, len(sizes)) + (gap) * (len(sizes) - 1);
+  // TODO: proper max
+  size2 = sizes[0];
+
+  width = orientation == "y" ? size2 : size1;
+  depth = orientation == "y" ? size1 : size2;
+
+  shift_offset = size1 / 2 - sizes[0] / 2;
+
+  align_x(width, x_align) align_y(depth, y_align) rotate([0, 0, angle])for (i = [0:len(sizes) - 1]) {
+        x = sum_array(sizes, i) - sizes[0] / 2 + sizes[i] / 2 + gap * i;
+        echo("sum_array", sum_array(sizes, i));
+        echo("gap", gap * i);
+        echo("x", x);
         d = sizes[i];
-        right(x) cyl_hole(d);
+        right(x - shift_offset) cyl_hole(d);
       }
 }
 
@@ -121,6 +135,6 @@ module negative_3d_roundover_edge(w, h, positive_rounding) {
 // right(4) mask2d_roundover(r=5, excess=0);
 
 // rect_hole([30, 20]);
-// drill_bits_mask();
+// drill_bits_mask(orientation="y");
 organizer();
 // cyl_hole_grid(d=8, x=3, y=5, h=20);
