@@ -11,22 +11,14 @@ module organizer() {
     body();
 
     rect_hole([17, 50], x_align=RIGHT, y_align=FWD);
-    // align_back(30) align_right(20) rotate([0, 0, 90]) rect_hole([30, 20]);
 
     // hole puncher
     cyl_hole(d=13, x_align=RIGHT, y_align=BACK);
 
+    cyl_hole_grid(d=8, x=4, y=2, h=20, x_align=LEFT, y_align=FWD);
+
     fwd(wall_thickness) right(wall_thickness) {
         drill_bits_mask();
-        // fwd(10 / 2) {
-        // cyl_hole(d=10);
-        // right(10 + 3) cyl_hole(d=9);
-        // right(10 + 9 + 3 * 2) cyl_hole(d=8);
-        // right(10 + 9 + 8 + 3 * 3) cyl_hole(d=7);
-        // right(10 + 9 + 8 + 7 + 3 * 4) cyl_hole(d=6);
-        // right(10 + 9 + 8 + 7 + 6 + 3 * 5) cyl_hole(d=5);
-        // right(10 + 9 + 8 + 7 + 6 + 5 + 3 * 6) cyl_hole(d=4);
-        // }
       }
   }
 }
@@ -70,13 +62,28 @@ module body() {
   cuboid(size=body_size, anchor=LEFT + BACK + TOP, rounding=2, except=BOTTOM);
 }
 
-module cyl_hole(d, h = body_size.z - bottom_thickness, x_align, y_align) {
+module cyl_hole(d, h, x_align, y_align) {
+  hh = is_undef(h) ? body_size.z - bottom_thickness : h;
   d_with_tolerance = d + 0.1;
   align_y(d, y_align) align_x(d, x_align) up(0.01) cyl(
-          d=d, h=h, anchor=TOP,
+          d=d, h=hh, anchor=TOP,
           rounding1=hole_rounding,
           rounding2=-hole_rounding,
         );
+}
+
+module cyl_hole_grid(d, x, y, spacing = 4, h, x_align, y_align) {
+  width = d * x + spacing * (x - 1);
+  depth = d * y + spacing * (y - 1);
+
+  echo("WIDTH", width);
+  echo("DEPTH", depth);
+
+  align_x(width, x_align) align_y(depth, y_align) back(depth / 2 - d / 2) left(width / 2 - d / 2)for (ix = [0:x - 1]) {
+          right(ix * (d + spacing))for (iy = [0:y - 1]) {
+            fwd(iy * (d + spacing)) cyl_hole(d=d, h=h);
+          }
+        }
 }
 
 module rect_hole(size, h = body_size.z - bottom_thickness, x_align, y_align) {
@@ -116,3 +123,4 @@ module negative_3d_roundover_edge(w, h, positive_rounding) {
 // rect_hole([30, 20]);
 // drill_bits_mask();
 organizer();
+// cyl_hole_grid(d=8, x=3, y=5, h=20);
