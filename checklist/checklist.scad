@@ -8,14 +8,17 @@ inner_panel_tolerance = 0.2;
 checkbox_tolerance = [0.1, 0.1, 0.1];
 notch_tolerance = 0.2;
 
+magnet_d = 10;
+magnet_h = 1.6;
+
 // Variables
-tasks = 1;
-list_title_y_size = 15;
-list_gap = 10;
-list_margin = 7;
+tasks = 7;
+list_title_y_size = 12;
+list_gap = 7;
+list_margin = 5;
 list_border_thickness = 3;
-task_gap = 17;
-task_name_size = [60, 15];
+task_gap = 14;
+task_name_size = [60, 12];
 task_rounding = 7;
 
 // How much does the checkbox's bottom part goes behind the inner panel.
@@ -93,7 +96,27 @@ module outer_panel() {
       right(inner_size.x / 2) notch(anchor=LEFT, rounding=0);
       mirror([1, 0, 0]) right(inner_size.x / 2) notch(anchor=LEFT, rounding=0);
     }
+
+    magnet_x = outer_size.x / 2 - magnet_d / 2 - list_margin;
+    magnet_y = outer_size.y / 2 - magnet_d / 2 - list_margin;
+    down(outer_panel_thickness + 0.01) {
+      back(magnet_y) left(magnet_x) magnet_mask();
+      back(magnet_y) right(magnet_x) magnet_mask();
+      fwd(magnet_y) left(magnet_x) magnet_mask();
+      fwd(magnet_y) right(magnet_x) magnet_mask();
+    }
+
+    // hole to push the inner panel out
+    right(list_margin + task_name_size.x) left(outer_size.x / 2) {
+        back(2 * (task_name_size.y + list_gap)) cyl(d=5, h=outer_panel_rounding + 0.02);
+        cyl(d=5, h=outer_panel_rounding + 0.02);
+        fwd(2 * (task_name_size.y + list_gap)) cyl(d=5, h=outer_panel_rounding + 0.02);
+      }
   }
+}
+
+module magnet_mask() {
+  cyl(d=magnet_d, h=magnet_h + 0.01, anchor=BOTTOM);
 }
 
 module inner_panel() {
@@ -186,7 +209,7 @@ module checkbox() {
     }
 
     difference() {
-      padding = 1;
+      padding = 2;
       inner_circle_d = checkbox_top_diameter - padding * 2;
       inner_circle_h = 1;
 
