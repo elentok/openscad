@@ -1,9 +1,9 @@
 include <BOSL2/std.scad>
 $fn = 64;
 
-hex_d = 5.2;
+hex_d = 5.1;
 cap_d = 8.5;
-cap_h = 45;
+cap_h = 25;
 tolerance = 0.8;
 
 module cap() {

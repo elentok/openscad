@@ -2,9 +2,11 @@ include <BOSL2/std.scad>
 $fn = 64;
 
 ih = 18;
-id1 = 7.8;
+id1 = 7.6;
 angle = 4.65;
 id2 = (id1 / 2 - tan(angle) * ih) * 2;
+echo("id2", id2);
+
 thickness = 1;
 
 oh = ih + thickness;

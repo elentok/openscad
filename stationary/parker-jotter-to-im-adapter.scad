@@ -36,8 +36,8 @@ extender_od2 = im_d;
 extender_id = jotter_d + extender_diameter_tolerance;
 
 sleeve_l = 17;
-sleeve_id1 = 3.3;
-sleeve_id2 = 3.2;
+sleeve_id1 = 3.6;
+sleeve_id2 = 3.6;
 sleeve_od1 = 5.5;
 sleeve_od2 = 4;
 
@@ -46,15 +46,20 @@ sleeve_od2 = 4;
 // ========================================
 
 module extender() {
-  cyl(d1 = extender_od1, d2 = extender_od2, h = extender_bottom_l, anchor = TOP,
-      rounding1 = 1);
-  tube(od = extender_od2, id = extender_id, l = extender_sleeve_l,
-       anchor = BOTTOM);
+  cyl(
+    d1=extender_od1, d2=extender_od2, h=extender_bottom_l, anchor=TOP,
+  );
+  tube(
+    od=extender_od2, id=extender_id, l=extender_sleeve_l,
+    anchor=BOTTOM
+  );
 }
 
 module sleeve() {
-  tube(od1 = sleeve_od1, od2 = sleeve_od2, id1 = sleeve_id1, id2 = sleeve_id2,
-       h = sleeve_l);
+  tube(
+    od1=sleeve_od1, od2=sleeve_od2, id1=sleeve_id1, id2=sleeve_id2,
+    h=sleeve_l
+  );
 }
 
 // extender();
