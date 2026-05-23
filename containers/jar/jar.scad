@@ -10,8 +10,7 @@ jar_type = "small";
 epsilon = 0.01;
 
 // Configurable parameters:
-od = 24;  // Outer diameter
-jar_height = 85;
+jar_height = 31 + 10 - 14;
 lid_height = 14;
 jar_wall = jar_type == "large" ? 2 : 1.7;
 jar_rounding = 3;
@@ -20,7 +19,10 @@ jar_rounding = 3;
 // change with caution)
 thread_wall = jar_type == "large" ? 3 : 2;
 thread_pitch = 2.5;
-thread_tolerance = 0.6;  // You might have to change this to fit your printer
+thread_tolerance = 0.6; // You might have to change this to fit your printer
+
+id = 23; // inner diameter
+od = id + 2 * thread_wall + jar_wall * 2; // Outer diameter
 
 lid_wall = jar_wall - thread_tolerance / 2;
 jar_thread_height = 8;
@@ -31,25 +33,33 @@ jar_id = od - jar_wall * 2 - thread_wall * 2;
 echo("Jar inner height", jar_base_height + lid_height - 2 * jar_wall);
 echo("Jar inner diameter", jar_id);
 
+// add cord holes to the lid
+cord_holes = true;
+cord_hole_d = 3;
+
 module jar() {
   jar_base();
-  threaded_neck(od = od - jar_wall * 2, id = jar_id, l = jar_thread_height,
-                pitch = thread_pitch, anchor = BOTTOM);
+  threaded_neck(
+    od=od - jar_wall * 2, id=jar_id, l=jar_thread_height,
+    pitch=thread_pitch, anchor=BOTTOM
+  );
 }
 
 module jar_base() {
   difference() {
-    cyl(d = od, h = jar_base_height, rounding1 = jar_rounding, anchor = TOP);
-    up(epsilon) cyl(d = jar_id, h = jar_base_height - jar_wall,
-                    rounding1 = jar_rounding, anchor = TOP);
+    cyl(d=od, h=jar_base_height, rounding1=jar_rounding, anchor=TOP);
+    up(epsilon) cyl(
+        d=jar_id, h=jar_base_height - jar_wall,
+        rounding1=jar_rounding, anchor=TOP
+      );
   }
 }
 
 module threaded_neck(od, id, l, pitch, anchor, spin, orient) {
-  attachable(anchor, spin, orient, d = od, l = l) {
+  attachable(anchor, spin, orient, d=od, l=l) {
     difference() {
-      threaded_rod(d = od, l = l, pitch = pitch, end_len = 1);
-      cyl(d = id, l = l + epsilon);
+      threaded_rod(d=od, l=l, pitch=pitch, end_len=1);
+      cyl(d=id, l=l + epsilon);
     }
     children();
   }
@@ -57,21 +67,37 @@ module threaded_neck(od, id, l, pitch, anchor, spin, orient) {
 
 module lid() {
   difference() {
-    cyl(d = od, h = lid_base_height, rounding2 = jar_rounding, anchor = BOTTOM);
-    down(epsilon) cyl(d = od - lid_wall * 2, h = lid_base_height - lid_wall,
-                      rounding2 = jar_rounding, anchor = BOTTOM);
+    cyl(d=od, h=lid_base_height, rounding2=jar_rounding, anchor=BOTTOM);
+    down(epsilon) cyl(
+        d=od - lid_wall * 2, h=lid_base_height - lid_wall,
+        rounding2=jar_rounding, anchor=BOTTOM
+      );
+
+    if (cord_holes) {
+      cord_holes_mask();
+    }
   }
 
-  threaded_ring(od = od, wall = lid_wall, l = jar_thread_height,
-                pitch = thread_pitch, anchor = TOP);
+  threaded_ring(
+    od=od, wall=lid_wall, l=jar_thread_height,
+    pitch=thread_pitch, anchor=TOP
+  );
+}
+
+module cord_holes_mask() {
+  left(cord_hole_d)cyl(d = cord_hole_d, h = lid_height);
+  right(cord_hole_d)cyl(d = cord_hole_d, h = lid_height);
+
 }
 
 module threaded_ring(od, wall, l, pitch, anchor, spin, orient) {
-  attachable(anchor, spin, orient, d = od, l = l) {
+  attachable(anchor, spin, orient, d=od, l=l) {
     intersection() {
-      cyl(d = od, h = l + epsilon);
-      threaded_nut(nutwidth = od * 2, id = od - wall * 2, h = l, pitch = pitch,
-                   bevel = false, ibevel = false, end_len = 0.5);
+      cyl(d=od, h=l + epsilon);
+      threaded_nut(
+        nutwidth=od * 2, id=od - wall * 2, h=l, pitch=pitch,
+        bevel=false, ibevel=false, end_len=0.5
+      );
     }
     children();
   }
@@ -87,3 +113,6 @@ module demo(spacing = 5) {
 // jar();
 lid();
 // threaded_ring();
+
+// test inner diameter / outer diameter math
+// %cyl(d=id, h=80);
